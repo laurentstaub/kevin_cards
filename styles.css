@@ -1,0 +1,169 @@
+/* Color Variables */
+:root {
+    --color-blanc: #f7f7f7;
+    --color-gris-clair: #e0e0e0;
+    --color-gris: #717171;
+    --color-primary: #0c4813;    /* Dark Green */
+    --color-secondary: #0b8700;  /* Green */
+    --color-accent: #f41cd8;     /* Pink/Magenta */
+    --color-light: #f7ea8c;      /* Light Yellow */
+    --color-highlight: #a2db48;  /* Light Green */
+    --color-text: #0c4813;       /* Dark Green */
+    --color-text-light: #0b8700; /* Green */
+    --color-disabled: #7aaf6a;   /* Lighter Green */
+    --color-white: #ffffff;      /* White */
+    --color-shadow: rgba(12, 72, 19, 0.1); /* Shadow based on primary color */
+}
+
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-blanc);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+header p {
+    color: var(--color-accent);
+    font-weight: bold;
+}
+
+/* Flashcard Styles */
+.flashcard-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.flashcard {
+    width: 500px;
+    height: 300px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transition: transform 0.6s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid var(--color-gris);
+}
+
+.flashcard-front {
+    background-color: var(--color-blanc);
+    color: var(--color-primary);
+    transform: rotateY(0deg);
+}
+
+.flashcard-back {
+    background-color: var(--color-gris-clair);
+    color: var(--color-gris);
+    transform: rotateY(180deg);
+}
+
+.flashcard.flipped .flashcard-front {
+    transform: rotateY(180deg);
+}
+
+.flashcard.flipped .flashcard-back {
+    transform: rotateY(0deg);
+}
+
+/* Controls Styles */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--color-secondary);
+}
+
+button:disabled {
+    background-color: var(--color-disabled);
+    cursor: not-allowed;
+}
+
+/* Progress Styles */
+.progress-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.progress {
+    font-size: 18px;
+    background-color: var(--color-highlight);
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--color-text-light);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .flashcard {
+        width: 90%;
+        height: 250px;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button {
+        width: 100%;
+        max-width: 200px;
+    }
+}

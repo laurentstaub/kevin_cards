@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes Mémoire pour Pharmaciens</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cartes Mémoire pour Pharmaciens</h1>
+            <p>Phase 1 - Système de cartes de base avec un ensemble fixe de questions/réponses</p>
+        </header>
+
+        <main>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-front" id="question">
+                        <p>Cliquez pour commencer</p>
+                    </div>
+                    <div class="flashcard-back" id="answer">
+                        <p>La réponse apparaîtra ici</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="prev-btn">Précédent</button>
+                <button id="flip-btn">Retourner</button>
+                <button id="next-btn">Suivant</button>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress">
+                    <span id="current-card">0</span>/<span id="total-cards">0</span>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 Cartes Mémoire pour Pharmaciens - Phase 1</p>
+        </footer>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
