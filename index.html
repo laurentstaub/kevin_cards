@@ -3,14 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartes Mémoire pour Pharmaciens</title>
+    <title>Flashcards Pharmacie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="theme-toggle">
+        <span class="theme-toggle-label">Mode</span>
+        <label class="theme-toggle-switch">
+            <input type="checkbox" id="theme-toggle-input">
+            <span class="theme-toggle-slider">
+                <span class="theme-toggle-icon sun">☀️</span>
+                <span class="theme-toggle-icon moon">🌙</span>
+            </span>
+        </label>
+    </div>
     <div class="container">
         <header>
-            <h1>Cartes Mémoire pour Pharmaciens</h1>
-            <p>Phase 1 - Système de cartes de base avec un ensemble fixe de questions/réponses</p>
+            <h1>Flashcards Pharmacie</h1>
+            <p>Système de cartes de base avec un ensemble fixe de questions/réponses</p>
         </header>
 
         <main>
@@ -26,9 +37,9 @@
             </div>
 
             <div class="controls">
-                <button id="prev-btn">Précédent</button>
+                <button id="prev-btn"> << Précédent</button>
                 <button id="flip-btn">Retourner</button>
-                <button id="next-btn">Suivant</button>
+                <button id="next-btn">Suivant >></button>
             </div>
 
             <div class="progress-container">
@@ -39,7 +50,7 @@
         </main>
 
         <footer>
-            <p>&copy; 2023 Cartes Mémoire pour Pharmaciens - Phase 1</p>
+            <p>&copy; 2025 Flashcards pour Pharmaciens - Phase 1</p>
         </footer>
     </div>
 

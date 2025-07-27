@@ -51,30 +51,25 @@ const flipButton = document.getElementById('flip-btn');
 const nextButton = document.getElementById('next-btn');
 const currentCardElement = document.getElementById('current-card');
 const totalCardsElement = document.getElementById('total-cards');
+const themeToggleInput = document.getElementById('theme-toggle-input');
 
 // State variables
 let currentCardIndex = 0;
 let isFlipped = false;
 
-// Initialize the flashcard system
 function initFlashcards() {
     // Set total cards count
     totalCardsElement.textContent = flashcards.length;
-    
-    // Display the first card
     showCard(currentCardIndex);
-    
-    // Update button states
     updateButtonStates();
 }
 
-// Show a specific card
 function showCard(index) {
     const card = flashcards[index];
     questionElement.innerHTML = `<p>${card.question}</p>`;
     answerElement.innerHTML = `<p>${card.answer}</p>`;
     currentCardElement.textContent = index + 1;
-    
+
     // Reset flip state
     isFlipped = false;
     flashcardElement.classList.remove('flipped');
@@ -90,7 +85,6 @@ function flipCard() {
     }
 }
 
-// Go to the previous card
 function prevCard() {
     if (currentCardIndex > 0) {
         currentCardIndex--;
@@ -99,7 +93,6 @@ function prevCard() {
     }
 }
 
-// Go to the next card
 function nextCard() {
     if (currentCardIndex < flashcards.length - 1) {
         currentCardIndex++;
@@ -108,7 +101,6 @@ function nextCard() {
     }
 }
 
-// Update button states based on current position
 function updateButtonStates() {
     prevButton.disabled = currentCardIndex === 0;
     nextButton.disabled = currentCardIndex === flashcards.length - 1;
@@ -120,5 +112,38 @@ flipButton.addEventListener('click', flipCard);
 prevButton.addEventListener('click', prevCard);
 nextButton.addEventListener('click', nextCard);
 
+// Theme toggle functionality
+function initTheme() {
+    // Check if user has a saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme === 'light') {
+        // If light theme was saved, switch to light theme
+        document.documentElement.classList.add('light-theme');
+        themeToggleInput.checked = true;
+    } else {
+        // Default is dark theme (already set in CSS)
+        themeToggleInput.checked = false;
+    }
+}
+
+function toggleTheme() {
+    if (themeToggleInput.checked) {
+        // Switch to light theme
+        document.documentElement.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+    } else {
+        // Switch to dark theme
+        document.documentElement.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Event listener for theme toggle
+themeToggleInput.addEventListener('change', toggleTheme);
+
 // Initialize when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initFlashcards);
+document.addEventListener('DOMContentLoaded', function() {
+    initFlashcards();
+    initTheme();
+});
