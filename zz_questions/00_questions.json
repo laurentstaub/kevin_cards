@@ -70,7 +70,7 @@
     {
       "id": 5,
       "tags": ["Antibiotiques", "Macrolides", "Pharmacocinétique", "Avancé"],
-      "question": "Pourquoi l'azithromycine peut-elle être prescrite sur 3 jours seulement ?",
+      "question": "Pourquoi l'azithromycine peut-elle être prescrite sur seulement 3 jours ?",
       "answer": "L'azithromycine a une demi-vie très longue (68h) et une forte concentration tissulaire. Elle s'accumule dans les tissus avec une concentration 10-100 fois supérieure au plasma. Après arrêt, les concentrations tissulaires restent efficaces pendant 5-7 jours supplémentaires, permettant un traitement de 3 jours équivalent à 7-10 jours d'autres antibiotiques.",
       "difficulty": "medium"
     },
@@ -84,7 +84,7 @@
     {
       "id": 7,
       "tags": ["Antibiotiques", "Fluoroquinolones", "Interactions-majeures", "Pharmacocinétique"],
-      "question": "Pourquoi faut-il espacer la ciprofloxacine des antiacides et du fer de 2 heures ?",
+      "question": "Pourquoi faut-il espacer la prise de ciprofloxacine des antiacides et du fer de 2 heures ?",
       "answer": "Les fluoroquinolones forment des complexes insolubles (chélation) avec les cations divalents (Mg²⁺, Al³⁺, Fe²⁺, Ca²⁺). Cette chélation diminue drastiquement l'absorption digestive (réduction de 50-90%). L'espacement de 2h avant ou 6h après permet d'éviter cette interaction au niveau intestinal et maintenir l'efficacité thérapeutique.",
       "difficulty": "medium"
     },
@@ -98,7 +98,7 @@
     {
       "id": 9,
       "tags": ["Antalgiques", "Paracétamol", "Pharmacocinétique", "Surveillance"],
-      "question": "Pourquoi la dose de paracétamol est-elle réduite à 3g/jour chez le sujet âgé et de faible poids ?",
+      "question": "Pourquoi la dose maximale de paracétamol est-elle réduite à 3g/jour chez le sujet âgé et de faible poids ?",
       "answer": "Chez le sujet âgé et de faible poids, la clairance hépatique du paracétamol est diminuée (réduction du métabolisme phase II, diminution du flux sanguin hépatique). Le risque d'accumulation et d'hépatotoxicité est majoré. La réduction à 3g/jour permet de maintenir l'efficacité tout en évitant la saturation des voies de détoxification hépatique.",
       "difficulty": "medium"
     },
@@ -120,7 +120,7 @@
       "id": 12,
       "tags": ["Antalgiques", "Tramadol", "Syndrome-sérotoninergique", "Interactions-majeures", "Urgences"],
       "question": "Pourquoi le tramadol peut-il provoquer un syndrome sérotoninergique avec les antidépresseurs ?",
-      "answer": "Le tramadol a un double mécanisme : opioïde faible + inhibition de la recapture de sérotonine et noradrénaline. L'association avec des antidépresseurs sérotoninergiques (ISRS, IRSNA) ou des IMAO peut provoquer une accumulation excessive de sérotonine synaptique, causant hyperthermie, rigidité, confusion, et troubles cardiovasculaires potentiellement mortels.",
+      "answer": "Le tramadol a un double mécanisme d'action : opioïde faible + inhibition de la recapture de la sérotonine et de la noradrénaline. L'association avec des antidépresseurs sérotoninergiques (ISRS, IRSNA) ou des IMAO peut provoquer une accumulation excessive de sérotonine synaptique, causant hyperthermie, rigidité, confusion, et troubles cardiovasculaires potentiellement mortels.",
       "difficulty": "hard"
     },
     {
@@ -210,8 +210,8 @@
     {
       "id": 25,
       "tags": ["Gastro-entérologie", "Antiémétiques", "Effets-indésirables-graves", "Avancé"],
-      "question": "Quelle est la différence cruciale entre dompéridone et métoclopramide concernant les effets indésirables neurologiques ?",
-      "answer": "Métoclopramide : traverse la barrière hémato-encéphalique, antagonise les récepteurs D2 centraux. Risque d'effets extrapyramidaux (dyskinésies tardives, syndrome parkinsonien) surtout chez l'enfant et le sujet âgé. Dompéridone : ne traverse pas la BHE, action uniquement périphérique sur les récepteurs D2 de la zone de déclenchement chimioréceptrice. Pas d'effets neurologiques centraux.",
+      "question": "Quelle différence cruciale y-a-t'il entre la dompéridone et le métoclopramide en matière d'effets indésirables neurologiques ?",
+      "answer": "Le métoclopramide traverse la barrière hémato-encéphalique et antagonise les récepteurs D2 centraux. Risque d'effets extrapyramidaux (dyskinésies tardives, syndrome parkinsonien) surtout chez l'enfant et le sujet âgé. La dompéridone ne traverse pas la BHE et possède une action uniquement périphérique sur les récepteurs D2 de la zone de déclenchement chimioréceptrice. Pas d'effets neurologiques centraux.",
       "difficulty": "medium"
     },
     {

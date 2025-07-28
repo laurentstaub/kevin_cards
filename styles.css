@@ -2,67 +2,48 @@
 :root {
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
-    /* Light Theme Colors (default) */
-    --light-color-blanc: #f7f7f7;
-    --light-color-gris-clair: #e0e0e0;
-    --light-color-gris: #717171;
-    --light-color-primary: #0c4813;    /* Dark Green */
-    --light-color-secondary: #0b8700;  /* Green */
-    --light-color-accent: #f41cd8;     /* Pink/Magenta */
-    --light-color-light: #f7ea8c;      /* Light Yellow */
-    --light-color-highlight: #a2db48;  /* Light Green */
-    --light-color-text: #0c4813;       /* Dark Green */
-    --light-color-text-light: #0b8700; /* Green */
-    --light-color-disabled: #7aaf6a;   /* Lighter Green */
-    --light-color-white: #ffffff;      /* White */
-    --light-color-shadow: rgba(12, 72, 19, 0.1); /* Shadow based on primary color */
-
-    /* Dark Theme Colors */
-    --dark-color-blanc: #1a1a1a;       /* Dark background */
-    --dark-color-gris-clair: #2a2a2a;  /* Slightly lighter dark */
-    --dark-color-gris: #aaaaaa;        /* Medium gray */
-    --dark-color-primary: #0b8700;     /* Green (brighter in dark mode) */
-    --dark-color-secondary: #0c4813;   /* Dark Green (darker in dark mode) */
-    --dark-color-accent: #f41cd8;      /* Pink/Magenta (same) */
-    --dark-color-light: #2a2a2a;       /* Dark background for light areas */
-    --dark-color-highlight: #0b8700;   /* Green for highlights */
-    --dark-color-text: #f7f7f7;        /* Light text */
-    --dark-color-text-light: #a2db48;  /* Light Green for secondary text */
-    --dark-color-disabled: #4a4a4a;    /* Dark gray for disabled elements */
-    --dark-color-white: #f7f7f7;       /* Light color for white elements */
-    --dark-color-shadow: rgba(0, 0, 0, 0.3); /* Darker shadow */
 
     /* Default to Dark Theme */
-    --color-blanc: var(--dark-color-blanc);
-    --color-gris-clair: var(--dark-color-gris-clair);
-    --color-gris: var(--dark-color-gris);
-    --color-primary: var(--dark-color-primary);
-    --color-secondary: var(--dark-color-secondary);
-    --color-accent: var(--dark-color-accent);
-    --color-light: var(--dark-color-light);
-    --color-highlight: var(--dark-color-highlight);
-    --color-text: var(--dark-color-text);
-    --color-text-light: var(--dark-color-text-light);
-    --color-disabled: var(--dark-color-disabled);
-    --color-white: var(--dark-color-white);
-    --color-shadow: var(--dark-color-shadow);
+    --color-blanc: #1a1a1A;
+    --color-gris-clair: #2a2a2a;
+    --color-gris: #aaaaaa;
+    --color-background: #0a110a;
+    --color-background-light: #1b261b;
+    --color-background-dark: #161f16;
+    --color-background-darker: #080c08;
+    --color-primary: #0b8700;
+    --color-secondary: #0c4813;
+    --color-accent: #9b1f8b;
+    --color-light: #2a2a2a;
+    --color-highlight: #0b8700;
+    --color-text: #f7f7f7;
+    --color-text-light: #a2db48;
+    --color-disabled: #4a4a4a;
+    --color-white: #f7f7f7;
+    --color-shadow: rgba(0, 0, 0, 0.3);
+    --box-shadow: #49a941;
 }
 
 /* Light Theme Override */
 :root.light-theme {
-    --color-blanc: var(--light-color-blanc);
-    --color-gris-clair: var(--light-color-gris-clair);
-    --color-gris: var(--light-color-gris);
-    --color-primary: var(--light-color-primary);
-    --color-secondary: var(--light-color-secondary);
-    --color-accent: var(--light-color-accent);
-    --color-light: var(--light-color-light);
-    --color-highlight: var(--light-color-highlight);
-    --color-text: var(--light-color-text);
-    --color-text-light: var(--light-color-text-light);
-    --color-disabled: var(--light-color-disabled);
-    --color-white: var(--light-color-white);
-    --color-shadow: var(--light-color-shadow);
+    --color-blanc: #ffffff;
+    --color-gris-clair: #e0e0e0;
+    --color-gris: #717171;
+    --color-background: #ffffff;
+    --color-background-light: #f7f7f7;
+    --color-background-dark: #e0e0e0;
+    --color-background-darker: #717171;
+    --color-primary: #0b8700;
+    --color-secondary: #0c4813;
+    --color-accent: #f41cd8;
+    --color-light: #f7ea8c;
+    --color-highlight: #a2db48;
+    --color-text: #0c4813;
+    --color-text-light: #0b8700;
+    --color-disabled: #7aaf6a;
+    --color-white: #ffffff;
+    --color-shadow: rgba(12, 72, 19, 0.1);
+    --box-shadow: #49a941;
 }
 
 /* General Styles */
@@ -76,7 +57,7 @@ body {
     font-family: var(--font-sans);
     line-height: 1.6;
     color: var(--color-text);
-    background-color: var(--color-blanc);
+    background-color: var(--color-background);
 }
 
 .container {
@@ -97,7 +78,7 @@ header h1 {
 }
 
 header p {
-    color: var(--light-color-blanc);
+    color: var(--color-text);
 }
 
 /* Flashcard Styles */
@@ -109,32 +90,17 @@ header p {
 
 .flashcard {
     border-radius: 8px;
-    box-shadow:
-        0 0 3px #49a941,      /* Lueur intérieure */
-        0 0 6px #0b8700,     /* Première couche */
-        0 0 12px #0b8700,     /* Deuxième couche */
-        inset 0 0 10px rgba(11, 135, 0, 0.1); /* Légère lueur interne */
     cursor: pointer;
-    width: 500px;
+    width: 600px;
     height: 300px;
     perspective: 1000px;
     transition: all 0.3s ease;
 }
 
-/* Effet plus subtil sur mobile */
-@media (max-width: 768px) {
-    .flashcard {
-        box-shadow:
-            0 0 2px #0b8700,
-            0 0 4px #0b8700,
-            0 0 10px rgba(11, 135, 0, 0.6);
-    }
-}
-
 .flashcard:hover {
     transform: translateY(-2px);
     box-shadow:
-        0 0 4px var(--light-color-highlight),
+        0 0 4px var(--color-highlight),
         0 0 8px #0b8700,
         0 0 16px #0b8700,
         0 10px 30px -10px rgba(11, 135, 0, 0.5);
@@ -143,7 +109,7 @@ header p {
 
 .flashcard-front, .flashcard-back {
     border-radius: 8px;
-    border: 2px solid var(--light-color-highlight);
+    border: 2px solid var(--color-text-light);
     position: absolute;
     width: 100%;
     height: 100%;
@@ -157,13 +123,14 @@ header p {
 }
 
 .flashcard-front {
-    background-color: var(--color-blanc);
-    color: var(--color-primary);
+    background-color: var(--color-background-light);
+    color: var(--color-text);
+    font-size: 20px;
     transform: rotateY(0deg);
 }
 
 .flashcard-back {
-    background-color: var(--color-gris-clair);
+    background-color: var(--color-background-dark);
     color: var(--color-gris);
     transform: rotateY(180deg);
 }
@@ -175,6 +142,8 @@ header p {
 .flashcard.flipped .flashcard-back {
     transform: rotateY(0deg);
 }
+
+
 
 /* Controls Styles */
 .controls {
@@ -330,7 +299,10 @@ input:checked + .theme-toggle-slider .theme-toggle-icon.moon {
 @media (max-width: 768px) {
     .flashcard {
         width: 90%;
-        height: 250px;
+        box-shadow:
+            0 0 2px #0b8700,
+            0 0 4px #0b8700,
+            0 0 10px rgba(11, 135, 0, 0.6);
     }
 
     .controls {

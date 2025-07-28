@@ -18,6 +18,16 @@ let currentCardIndex = 0;
 let isFlipped = false;
 let recalledCount = 0;
 
+// Marked configuration for markdown rendering
+marked.setOptions({
+    breaks: true,        // Convertit les sauts de ligne simples en <br>
+    gfm: true,          // Active GitHub Flavored Markdown
+    sanitize: false,    // Permet le HTML dans le Markdown
+    smartLists: true,   // Améliore le rendu des listes
+    smartypants: true   // Améliore la typographie
+});
+
+
 function initFlashcards() {
     // Set total cards count
     totalCardsElement.textContent = flashcards.length;
@@ -29,8 +39,9 @@ function initFlashcards() {
 
 function showCard(index) {
     const card = flashcards[index];
-    questionElement.innerHTML = `<p>${card.question}</p>`;
-    answerElement.innerHTML = `<p>${card.answer}</p>`;
+    questionElement.innerHTML = marked.parse(card.question);
+    answerElement.innerHTML = marked.parse(card.answer);
+
     currentCardElement.textContent = index + 1;
 
     // Reset flip state
@@ -100,11 +111,9 @@ function initTheme() {
 
 function toggleTheme() {
     if (themeToggleInput.checked) {
-        // Switch to light theme
         document.documentElement.classList.add('light-theme');
         localStorage.setItem('theme', 'light');
     } else {
-        // Switch to dark theme
         document.documentElement.classList.remove('light-theme');
         localStorage.setItem('theme', 'dark');
     }
@@ -121,11 +130,7 @@ async function loadQuestions() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-
-        // Get all flashcards from the JSON file
         const allFlashcards = data.flashcards;
-
-        // Randomly select 10 questions
         const selectedFlashcards = getRandomFlashcards(allFlashcards, 10);
 
         // Format the flashcards to match the expected structure
@@ -134,7 +139,6 @@ async function loadQuestions() {
             answer: card.answer
         }));
 
-        // Initialize the flashcards
         initFlashcards();
     } catch (error) {
         console.error('Error loading questions:', error);
