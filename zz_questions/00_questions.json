@@ -1,0 +1,502 @@
+{
+  "metadata": {
+    "title": "Flashcards Pharmacologie - Semaine 1",
+    "description": "Questions/réponses précises sur les classes thérapeutiques fondamentales avec système de tags multiples",
+    "version": "3.0",
+    "total_cards": 65,
+    "available_tags": [
+      "Antibiotiques", "Antalgiques", "Cardiovasculaire", "Psychotropes", "Gastro-entérologie",
+      "Beta-lactamines", "Macrolides", "Fluoroquinolones", "Aminosides", "Tétracyclines",
+      "Pénicillines", "Céphalosporines", "Carbapénèmes", "Nouvelles-classes",
+      "AINS", "Opioïdes", "Paracétamol", "Tramadol", "Codéine", "Fentanyl",
+      "IEC", "ARA2", "Beta-bloquants", "Diurétiques", "Statines",
+      "ISRS", "Benzodiazépines", "Hypnotiques-Z", "Antidépresseurs",
+      "IPP", "Antiémétiques", "Antispasmodiques",
+      "Mécanisme-action", "Pharmacocinétique", "Interactions-majeures", "Cytochromes",
+      "Contre-indications-absolues", "Grossesse", "Pédiatrie", "Insuffisance-rénale",
+      "Effets-indésirables-graves", "Hépatotoxicité", "Néphrotoxicité", "Rhabdomyolyse",
+      "Urgences", "Surdosage", "Syndrome-sérotoninergique", "Hyperkaliémie",
+      "Résistances", "Classification", "Spectre-activité", "Surveillance",
+      "Fondamental", "Avancé", "Expert"
+    ],
+    "tag_categories": {
+      "families": ["Antibiotiques", "Antalgiques", "Cardiovasculaire", "Psychotropes", "Gastro-entérologie"],
+      "sub_families": ["Beta-lactamines", "Macrolides", "Fluoroquinolones", "Aminosides", "Tétracyclines", "Pénicillines", "Céphalosporines", "Carbapénèmes", "AINS", "Opioïdes", "IEC", "ARA2", "Beta-bloquants", "Diurétiques", "Statines", "ISRS", "Benzodiazépines", "IPP", "Antiémétiques"],
+      "concepts": ["Mécanisme-action", "Pharmacocinétique", "Classification", "Spectre-activité", "Résistances"],
+      "clinical_priority": ["Urgences", "Effets-indésirables-graves", "Contre-indications-absolues", "Interactions-majeures"],
+      "special_populations": ["Grossesse", "Pédiatrie", "Insuffisance-rénale"],
+      "toxicity": ["Hépatotoxicité", "Néphrotoxicité", "Rhabdomyolyse", "Syndrome-sérotoninergique", "Hyperkaliémie", "Surdosage"],
+      "monitoring": ["Surveillance", "Cytochromes"],
+      "level": ["Fondamental", "Avancé", "Expert"],
+      "specialized": ["Nouvelles-classes", "Antispasmodiques", "Hypnotiques-Z", "Antidépresseurs"]
+    },
+    "usage_examples": {
+      "filter_by_urgency": "tags includes 'Urgences'",
+      "cardiovascular_interactions": "tags includes 'Cardiovasculaire' AND tags includes 'Interactions-majeures'",
+      "pediatric_contraindications": "tags includes 'Pédiatrie' AND tags includes 'Contre-indications-absolues'",
+      "antibiotic_mechanisms": "tags includes 'Antibiotiques' AND tags includes 'Mécanisme-action'",
+      "expert_level_questions": "tags includes 'Expert'"
+    }
+  },
+  "flashcards": [
+    {
+      "id": 1,
+      "tags": ["Antibiotiques", "Beta-lactamines", "Mécanisme-action", "Fondamental"],
+      "question": "Quel est le mécanisme d'action précis des bêta-lactamines et pourquoi sont-elles bactéricides ?",
+      "answer": "Les bêta-lactamines inhibent la synthèse de la paroi bactérienne en se liant de manière covalente aux PLP (protéines liant les pénicillines), notamment les transpeptidases. Ceci empêche la réticulation du peptidoglycane, fragilisant la paroi. L'effet bactéricide résulte de l'activation des autolysines qui dégradent la paroi défectueuse, provoquant la lyse osmotique de la bactérie.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 2,
+      "tags": ["Antibiotiques", "Beta-lactamines", "Pénicillines", "Résistances", "Avancé"],
+      "question": "Pourquoi associe-t-on l'acide clavulanique à l'amoxicilline dans l'Augmentin® ?",
+      "answer": "L'acide clavulanique est un inhibiteur de bêta-lactamases. Il se lie de manière irréversible aux bêta-lactamases bactériennes, les inactivant. Ceci protège l'amoxicilline de la dégradation enzymatique et restaure son activité contre les bactéries productrices de bêta-lactamases (E. coli, H. influenzae, S. aureus méti-S).",
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "tags": ["Antibiotiques", "Céphalosporines", "Classification", "Spectre-activité", "Avancé"],
+      "question": "Quelle est la différence de spectre entre céfalexine (C1G) et cefixime (C3G) ?",
+      "answer": "Céfalexine (C1G) : spectre étroit, actif sur cocci Gram+ (staphylocoques, streptocoques) et quelques Gram- (E. coli). Utilisé pour infections cutanées. Cefixime (C3G) : spectre large, moins actif sur Gram+ mais très actif sur entérobactéries (E. coli, Klebsiella) et H. influenzae. Utilisé pour infections urinaires et ORL.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 4,
+      "tags": ["Antibiotiques", "Macrolides", "Mécanisme-action", "Fondamental"],
+      "question": "Quel est le mécanisme d'action des macrolides et leur type d'effet antibactérien ?",
+      "answer": "Les macrolides inhibent la synthèse protéique bactérienne en se fixant de manière réversible sur la sous-unité 50S du ribosome, au niveau du site P. Ils bloquent la translocation des peptides naissants. Effet bactériostatique à concentrations usuelles, pouvant devenir bactéricide à fortes concentrations ou sur certaines bactéries sensibles.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 5,
+      "tags": ["Antibiotiques", "Macrolides", "Pharmacocinétique", "Avancé"],
+      "question": "Pourquoi l'azithromycine peut-elle être prescrite sur 3 jours seulement ?",
+      "answer": "L'azithromycine a une demi-vie très longue (68h) et une forte concentration tissulaire. Elle s'accumule dans les tissus avec une concentration 10-100 fois supérieure au plasma. Après arrêt, les concentrations tissulaires restent efficaces pendant 5-7 jours supplémentaires, permettant un traitement de 3 jours équivalent à 7-10 jours d'autres antibiotiques.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 6,
+      "tags": ["Antibiotiques", "Fluoroquinolones", "Mécanisme-action", "Fondamental"],
+      "question": "Quel est le mécanisme d'action des fluoroquinolones et pourquoi sont-elles bactéricides ?",
+      "answer": "Les fluoroquinolones inhibent l'ADN gyrase (topoisomérase II) et la topoisomérase IV bactériennes. Ces enzymes sont essentielles pour le déroulement et le re-bobinage de l'ADN lors de la réplication. L'inhibition provoque des cassures de l'ADN et bloque la division cellulaire. Effet bactéricide rapide concentration-dépendant.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 7,
+      "tags": ["Antibiotiques", "Fluoroquinolones", "Interactions-majeures", "Pharmacocinétique"],
+      "question": "Pourquoi faut-il espacer la ciprofloxacine des antiacides et du fer de 2 heures ?",
+      "answer": "Les fluoroquinolones forment des complexes insolubles (chélation) avec les cations divalents (Mg²⁺, Al³⁺, Fe²⁺, Ca²⁺). Cette chélation diminue drastiquement l'absorption digestive (réduction de 50-90%). L'espacement de 2h avant ou 6h après permet d'éviter cette interaction au niveau intestinal et maintenir l'efficacité thérapeutique.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 8,
+      "tags": ["Antalgiques", "Paracétamol", "Mécanisme-action", "Fondamental"],
+      "question": "Quel est le mécanisme d'action du paracétamol et pourquoi n'a-t-il pas d'effet anti-inflammatoire ?",
+      "answer": "Le paracétamol inhibe les COX au niveau central (SNC) mais pas au niveau périphérique, d'où l'absence d'effet anti-inflammatoire. Il agirait sur une isoforme COX-3 cérébrale et active le système cannabinoïde endogène. L'antalgie résulte de l'inhibition centrale des prostaglandines algogènes sans affecter l'inflammation périphérique.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 9,
+      "tags": ["Antalgiques", "Paracétamol", "Pharmacocinétique", "Surveillance"],
+      "question": "Pourquoi la dose de paracétamol est-elle réduite à 3g/jour chez le sujet âgé et de faible poids ?",
+      "answer": "Chez le sujet âgé et de faible poids, la clairance hépatique du paracétamol est diminuée (réduction du métabolisme phase II, diminution du flux sanguin hépatique). Le risque d'accumulation et d'hépatotoxicité est majoré. La réduction à 3g/jour permet de maintenir l'efficacité tout en évitant la saturation des voies de détoxification hépatique.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 10,
+      "tags": ["Antalgiques", "AINS", "Contre-indications-absolues", "Insuffisance-rénale", "Expert"],
+      "question": "Pourquoi les AINS sont-ils contre-indiqués en cas d'insuffisance rénale ?",
+      "answer": "Les AINS inhibent la synthèse des prostaglandines rénales (PGE2, PGI2) qui maintiennent la vasodilatation des artérioles afférentes et la filtration glomérulaire. En cas d'insuffisance rénale, cette vasodilatation prostaglandine-dépendante devient critique pour maintenir le débit de filtration. L'inhibition des COX peut provoquer une vasoconstriction rénale et une chute brutale de la fonction rénale.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 11,
+      "tags": ["Antalgiques", "Opioïdes", "Effets-indésirables-graves", "Surveillance"],
+      "question": "Quel est le mécanisme de la constipation sous morphine et pourquoi est-elle constante ?",
+      "answer": "La morphine active les récepteurs μ-opioïdes du plexus myentérique intestinal, provoquant : 1) Diminution du péristaltisme, 2) Augmentation de la réabsorption d'eau, 3) Augmentation du tonus des sphincters. Contrairement à la tolérance qui se développe pour l'antalgie, il n'y a pas de tolérance pour les effets intestinaux. D'où la nécessité d'une prévention systématique par laxatifs.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 12,
+      "tags": ["Antalgiques", "Tramadol", "Syndrome-sérotoninergique", "Interactions-majeures", "Urgences"],
+      "question": "Pourquoi le tramadol peut-il provoquer un syndrome sérotoninergique avec les antidépresseurs ?",
+      "answer": "Le tramadol a un double mécanisme : opioïde faible + inhibition de la recapture de sérotonine et noradrénaline. L'association avec des antidépresseurs sérotoninergiques (ISRS, IRSNA) ou des IMAO peut provoquer une accumulation excessive de sérotonine synaptique, causant hyperthermie, rigidité, confusion, et troubles cardiovasculaires potentiellement mortels.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 13,
+      "tags": ["Cardiovasculaire", "IEC", "Effets-indésirables-graves", "Expert"],
+      "question": "Pourquoi la toux sous IEC survient-elle et pourquoi est-elle plus fréquente chez la femme ?",
+      "answer": "Les IEC inhibent l'enzyme de conversion qui dégrade normalement la bradykinine. L'accumulation de bradykinine dans les poumons stimule les récepteurs de la toux et provoque une inflammation bronchique. La toux est plus fréquente chez la femme (20% vs 10%) possiblement par différences hormonales affectant le métabolisme de la bradykinine et la sensibilité des récepteurs.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 14,
+      "tags": ["Cardiovasculaire", "ARA2", "Mécanisme-action", "Avancé"],
+      "question": "Pourquoi les ARA2 ne provoquent-ils pas de toux contrairement aux IEC ?",
+      "answer": "Les ARA2 bloquent spécifiquement les récepteurs AT1 de l'angiotensine II sans affecter l'enzyme de conversion. Ils ne modifient donc pas le métabolisme de la bradykinine, évitant son accumulation pulmonaire. Le système rénine-angiotensine est bloqué en aval sans perturber les autres substrats de l'enzyme de conversion (bradykinine, substance P).",
+      "difficulty": "medium"
+    },
+    {
+      "id": 15,
+      "tags": ["Cardiovasculaire", "Beta-bloquants", "Pharmacocinétique", "Classification", "Expert"],
+      "question": "Quelle est la différence pharmacologique entre bisoprolol et propranolol et ses implications cliniques ?",
+      "answer": "Bisoprolol : β1-sélectif (cardiosélectif), demi-vie longue (10-12h), prise unique. Bloque préférentiellement les récepteurs cardiaques. Propranolol : non sélectif β1/β2, demi-vie courte (3-4h), 2-3 prises/jour. Le propranolol bloque aussi les β2 bronchiques (contre-indication asthme) et a des propriétés anti-arythmiques par blocage sodique.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 16,
+      "tags": ["Cardiovasculaire", "Diurétiques", "Mécanisme-action", "Surveillance", "Expert"],
+      "question": "Quel est le mécanisme de l'hypokaliémie sous diurétiques thiazidiques et comment la prévenir ?",
+      "answer": "Les thiazidiques bloquent le co-transporteur NaCl du tube contourné distal. L'augmentation du sodium délivré au tube collecteur active les canaux ENaC, augmentant la réabsorption de Na+ et la sécrétion de K+. Prévention : association avec diurétique épargneur de K+ (spironolactone), supplémentation potassique, ou surveillance K+ avec correction si nécessaire.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 17,
+      "tags": ["Cardiovasculaire", "Statines", "Pharmacocinétique", "Interactions-majeures", "Cytochromes"],
+      "question": "Pourquoi prendre les statines le soir et quel est le mécanisme de l'interaction avec le pamplemousse ?",
+      "answer": "Prise le soir : la synthèse hépatique de cholestérol est maximale la nuit (rythme circadien). Interaction pamplemousse : inhibition irréversible du CYP3A4 intestinal par les furanocoumarines. Ceci augmente la biodisponibilité des statines métabolisées par cette voie (simvastatine, atorvastatine) de 3-5 fois, majorant le risque de rhabdomyolyse. La pravastatine n'est pas métabolisée par le CYP3A4.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 18,
+      "tags": ["Cardiovasculaire", "Statines", "Rhabdomyolyse", "Effets-indésirables-graves", "Surveillance"],
+      "question": "Par quel est mécanisme les statines peuvent provoquer une rhabdomyolyse et quand doser les CPK ?",
+      "answer": "Les statines peuvent altérer la membrane des myocytes par déplétion du coenzyme Q10 et perturbation du cholestérol membranaire. Ceci provoque une nécrose musculaire avec libération de CPK, myoglobine et potassium. Doser CPK si : myalgies, crampes, faiblesse musculaire. Arrêter si CPK > 5N ou symptômes sévères. Risque majoré par interactions (macrolides, antifongiques azolés).",
+      "difficulty": "hard"
+    },
+    {
+      "id": 19,
+      "tags": ["Psychotropes", "ISRS", "Antidépresseurs", "Mécanisme-action", "Expert"],
+      "question": "Pourquoi y a-t-il un délai d'action de 2 à 4 semaines pour les ISRS et que se passe-t-il au début ?",
+      "answer": "Délai d'action : l'augmentation immédiate de sérotonine active des autorécepteurs 5-HT1A présynaptiques qui inhibent la libération. Il faut 2-4 semaines pour que ces autorécepteurs se désensibilisent. Début : augmentation paradoxale de l'anxiété par activation des récepteurs 5-HT2A/2C avant la désensibilisation. D'où l'importance de rassurer le patient et de débuter à faible dose.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 20,
+      "tags": ["Psychotropes", "ISRS", "Antidépresseurs", "Surveillance", "Avancé"],
+      "question": "Pourquoi faut-il absolument faire un arrêt progressif des ISRS ?",
+      "answer": "L'arrêt brutal provoque un syndrome de discontinuation par rebond cholinergique et déséquilibre des neurotransmetteurs. Symptômes : sensations électriques, vertiges, symptômes pseudo-grippaux, irritabilité. Plus fréquent avec ISRS à demi-vie courte (paroxétine). L'arrêt progressif (diminution de 25% par semaine) permet la réadaptation progressive des récepteurs.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 21,
+      "tags": ["Psychotropes", "Benzodiazépines", "Mécanisme-action", "Surveillance", "Expert"],
+      "question": "Quel est le mécanisme de dépendance des benzodiazépines et pourquoi limiter à 12 semaines ?",
+      "answer": "Les BZD potentialisent l'effet inhibiteur du GABA. L'usage chronique provoque une down-régulation des récepteurs GABA-A et une tolérance. À l'arrêt : hyperexcitabilité neuronale par déséquilibre GABA/glutamate pouvant provoquer convulsions. La dépendance physique apparaît dès 4-6 semaines. Limitation 12 semaines pour l'anxiété pour éviter la dépendance tout en conservant l'efficacité.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 22,
+      "tags": ["Psychotropes", "Hypnotiques-Z", "Benzodiazépines", "Mécanisme-action", "Expert"],
+      "question": "Quelle est la différence de mécanisme entre benzodiazépines et hypnotiques Z ?",
+      "answer": "BZD : agonistes non sélectifs des récepteurs GABA-A (sous-unités α1, α2, α3, α5). Effet anxiolytique, hypnotique, myorelaxant, anticonvulsivant. Hypnotiques Z : agonistes sélectifs de la sous-unité α1 du récepteur GABA-A. Effet principalement hypnotique avec moins d'effet myorelaxant et d'amnésie, mais même potentiel de dépendance.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 23,
+      "tags": ["Gastro-entérologie", "IPP", "Mécanisme-action", "Pharmacocinétique", "Expert"],
+      "question": "Quel est le mécanisme d'action des IPP et pourquoi la prise à jeun est-elle cruciale ?",
+      "answer": "Les IPP sont des prodrogues activées en milieu acide. Dans les canalicules des cellules pariétales, ils forment des liaisons covalentes avec la pompe H+/K+ ATPase, l'inhibant de manière irréversible. Prise à jeun nécessaire : l'activation nécessite un pH acide et les pompes doivent être actives (stimulées par le repas). Prise 30 min avant repas optimise l'efficacité.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 24,
+      "tags": ["Gastro-entérologie", "IPP", "Effets-indésirables-graves", "Surveillance", "Expert"],
+      "question": "Quels sont les mécanismes des effets indésirables à long terme des IPP ?",
+      "answer": "Hypochlorhydrie chronique → 1) Malabsorption fer/B12 (besoin pH acide), 2) Pullulation bactérienne intestinale, 3) Hypomagnésémie (mécanisme incertain), 4) Risque fractures par malabsorption calcique et possible effet direct sur ostéoblastes, 5) Infections (Clostridium, pneumopathies) par diminution de la barrière acide gastrique.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 25,
+      "tags": ["Gastro-entérologie", "Antiémétiques", "Effets-indésirables-graves", "Avancé"],
+      "question": "Quelle est la différence cruciale entre dompéridone et métoclopramide concernant les effets indésirables neurologiques ?",
+      "answer": "Métoclopramide : traverse la barrière hémato-encéphalique, antagonise les récepteurs D2 centraux. Risque d'effets extrapyramidaux (dyskinésies tardives, syndrome parkinsonien) surtout chez l'enfant et le sujet âgé. Dompéridone : ne traverse pas la BHE, action uniquement périphérique sur les récepteurs D2 de la zone de déclenchement chimioréceptrice. Pas d'effets neurologiques centraux.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 26,
+      "tags": ["Interactions-majeures", "AINS", "Effets-indésirables-graves", "Urgences"],
+      "question": "Quel est le mécanisme précis de l'interaction AVK + AINS et comment la gérer ?",
+      "answer": "Double mécanisme : 1) AINS inhibent synthèse des prostaglandines gastroprotectrices → risque ulcérogène, 2) Déplacement de l'AVK de ses liaisons protéiques → augmentation de la fraction libre active, 3) Inhibition de l'agrégation plaquettaire. Gestion : éviter l'association, si indispensable : surveillance INR rapprochée, protection gastrique par IPP, durée minimale.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 27,
+      "tags": ["Interactions-majeures", "IEC", "Diurétiques", "Hyperkaliémie", "Urgences"],
+      "question": "Pourquoi l'association IEC + spironolactone peut-elle être mortelle ?",
+      "answer": "Synergie d'hyperkaliémie : IEC diminuent l'aldostérone (↓ élimination K+), spironolactone antagonise les récepteurs minéralocorticoïdes (↓ élimination K+). L'hyperkaliémie sévère (>7 mmol/L) provoque des troubles du rythme ventriculaire potentiellement mortels (TV, FV). Surveillance K+ impérative à J7-J15 puis mensuelle, surtout si insuffisance rénale ou déshydratation.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 28,
+      "tags": ["Interactions-majeures", "Statines", "Macrolides", "Rhabdomyolyse", "Cytochromes"],
+      "question": "Quel est le mécanisme de l'interaction statine + macrolide conduisant à la rhabdomyolyse ?",
+      "answer": "Les macrolides (sauf azithromycine) inhibent le CYP3A4 hépatique qui métabolise simvastatine et atorvastatine. L'inhibition enzymatique augmente les concentrations plasmatiques de statines de 5-20 fois. Les fortes concentrations provoquent une toxicité musculaire directe par perturbation membranaire et déplétion énergétique mitochondriale, évoluant vers rhabdomyolyse avec insuffisance rénale aiguë.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 29,
+      "tags": ["Contre-indications-absolues", "AINS", "Grossesse", "Expert"],
+      "question": "Quel est le mécanisme précis de la toxicité fœtale des AINS au 3e trimestre ?",
+      "answer": "1) Fermeture prématurée du canal artériel : PGE2 maintient son ouverture in utero. L'inhibition COX supprime PGE2 → constriction/fermeture → hypertension pulmonaire fœtale → insuffisance cardiaque droite. 2) Insuffisance rénale fœtale : PGE2/PGI2 maintiennent perfusion rénale fœtale. Inhibition → vasoconstriction rénale → oligoanurie → oligohydramnios → hypoplasie pulmonaire.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 30,
+      "tags": ["Contre-indications-absolues", "IEC", "ARA2", "Grossesse", "Expert"],
+      "question": "Pourquoi les IEC sont-ils tératogènes dès le 1er trimestre contrairement aux AINS ?",
+      "answer": "1er trimestre : l'angiotensine II est cruciale pour la migration cellulaire et la différenciation tissulaire lors de l'organogenèse. Blocage → malformations cardiovasculaires, anomalies du tube neural. 2e-3e trimestres : l'angiotensine II régule la perfusion utéro-placentaire et le développement rénal fœtal. Blocage → oligohydramnios sévère, hypoplasie rénale et pulmonaire, retard de croissance, hypoplasie crânienne.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 31,
+      "tags": ["Contre-indications-absolues", "Tétracyclines", "Pédiatrie", "Expert"],
+      "question": "Quel est le mécanisme moléculaire de la coloration dentaire par les tétracyclines ?",
+      "answer": "Les tétracyclines chélatent le calcium de l'hydroxyapatite dentaire en formation. Formation de complexes tétracycline-calcium-orthophosphate qui s'incorporent définitivement dans la matrice dentaire pendant la minéralisation (dents de lait in utero, dents définitives jusqu'à 8 ans). Exposition à la lumière : oxydation → coloration jaune-grise-brune permanente. Hypoplasie de l'émail par perturbation des améloblastes.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 32,
+      "tags": ["Contre-indications-absolues", "Codéine", "Pédiatrie", "Pharmacocinétique", "Expert"],
+      "question": "Expliquez le polymorphisme CYP2D6 et le risque mortel de la codéine chez l'enfant.",
+      "answer": "La codéine est une prodrogue convertie en morphine par CYP2D6. Polymorphisme génétique : métaboliseurs ultrarapides (5-10% selon ethnie) ont activité enzymatique 2-5 fois normale. Chez eux, doses standard de codéine → concentrations toxiques de morphine → dépression respiratoire centrale potentiellement mortelle. Immaturité des centres respiratoires chez l'enfant majore le risque. Plusieurs décès documentés, d'où contre-indication < 12 ans.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 33,
+      "tags": ["Contre-indications-absolues", "Fluoroquinolones", "Pédiatrie", "Expert"],
+      "question": "Quel est le mécanisme de l'arthropathie juvénile sous fluoroquinolones ?",
+      "answer": "Les fluoroquinolones se fixent sur le cartilage de croissance riche en magnésium (chélation). Toxicité directe sur les chondrocytes : altération de la synthèse de collagène et protéoglycanes, perturbation de la matrice cartilagineuse. Chez l'animal jeune : érosions, fissures et nécrose du cartilage articulaire irréversibles. Risque théorique chez l'enfant d'arthropathie permanente et troubles de croissance.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 34,
+      "tags": ["Antibiotiques", "Beta-lactamines", "Résistances", "Expert"],
+      "question": "Quels sont les principaux mécanismes de résistance aux bêta-lactamines et comment l'acide clavulanique agit-il ?",
+      "answer": "Mécanismes de résistance : 1) Production de bêta-lactamases (plus fréquent) : enzymes hydrolysant le cycle bêta-lactame, 2) Modification des PLP : diminution d'affinité, 3) Efflux actif, 4) Imperméabilité. Acide clavulanique : inhibiteur suicide des bêta-lactamases de classe A (TEM, SHV). Se lie irréversiblement au site actif, libérant l'amoxicilline de la dégradation enzymatique.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 35,
+      "tags": ["Antibiotiques", "Macrolides", "Gastro-entérologie", "Avancé"],
+      "question": "Pourquoi la clarithromycine est-elle utilisée dans l'éradication d'H. pylori et à quelle posologie ?",
+      "answer": "H. pylori est naturellement résistant aux acides et survit dans l'estomac. La clarithromycine : 1) Concentration élevée dans la muqueuse gastrique, 2) Stabilité en milieu acide, 3) Activité sur H. pylori même à pH gastrique, 4) Pénétration dans le biofilm bactérien. Posologie : 500 mg × 2/jour pendant 7-14 jours en association avec IPP + amoxicilline ou métronidazole (trithérapie).",
+      "difficulty": "medium"
+    },
+    {
+      "id": 36,
+      "tags": ["Antalgiques", "Codéine", "Pharmacocinétique", "Expert"],
+      "question": "Quel est le rapport équianalgésique codéine/morphine et pourquoi cette variabilité ?",
+      "answer": "Rapport théorique : 100-120 mg codéine = 10 mg morphine PO. Mais variabilité importante (facteur 1 à 10) selon le polymorphisme CYP2D6 : métaboliseurs lents (7% caucasiens) : conversion faible → efficacité réduite ; métaboliseurs normaux : efficacité standard ; métaboliseurs ultrarapides : conversion excessive → risque de surdosage morphinique. D'où l'intérêt du tramadol qui n'a pas cette variabilité génétique.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 37,
+      "tags": ["Antalgiques", "Fentanyl", "Opioïdes", "Pharmacocinétique", "Avancé"],
+      "question": "Pourquoi le fentanyl transdermique est-il réservé aux douleurs chroniques stabilisées ?",
+      "answer": "Pharmacocinétique particulière : 1) Délai d'action 12-24h (constitution d'un réservoir cutané), 2) Plateau sur 48-72h, 3) Persistance 24-48h après retrait (réservoir cutané). Impossible de titrer rapidement ou d'arrêter en urgence. Réservé aux douleurs chroniques stables nécessitant opioïdes forts 24h/24. Conversion : 60 mg morphine PO/24h = patch fentanyl 25 μg/h.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 38,
+      "tags": ["Cardiovasculaire", "IEC", "Surveillance", "Insuffisance-rénale"],
+      "question": "Pourquoi surveiller la créatinine et le potassium à J15 sous IEC et que faire si élévation ?",
+      "answer": "IEC diminuent la pression de filtration glomérulaire (vasodilatation artériole efférente) et la sécrétion d'aldostérone. Pic d'effet à J7-J15. Surveillance : créatinine (si augmentation >30% : réduire dose ou arrêter), K+ (si >5,5 mmol/L : arrêter temporairement). Facteurs de risque : déshydratation, insuffisance rénale préexistante, diabète, âge >75 ans, association diurétiques.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 39,
+      "tags": ["Cardiovasculaire", "Beta-bloquants", "Contre-indications-absolues", "Fondamental"],
+      "question": "Pourquoi les bêta-bloquants non cardiosélectifs sont-ils contre-indiqués dans l'asthme ?",
+      "answer": "Les β2-récepteurs bronchiques médient la bronchodilatation. Leur blocage par bêta-bloquants non sélectifs (propranolol) provoque : 1) Bronchoconstriction directe, 2) Perte de la bronchodilatation compensatrice β2-dépendante, 3) Prédominance relative de l'effet cholinergique bronchoconstricteur. Peut déclencher un bronchospasme sévère et potentiellement mortel. Les cardiosélectifs (bisoprolol) restent possibles avec prudence.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 40,
+      "tags": ["Cardiovasculaire", "Diurétiques", "Mécanisme-action", "Effets-indésirables-graves", "Expert"],
+      "question": "Quel est le mécanisme d'action de la spironolactone et ses effets indésirables spécifiques ?",
+      "answer": "Antagoniste compétitif des récepteurs minéralocorticoïdes du tube collecteur. Bloque l'effet de l'aldostérone → diminution de la réabsorption de Na+ et sécrétion de K+. Effets indésirables : 1) Hyperkaliémie (mécanisme d'action), 2) Gynécomastie et troubles sexuels (affinité pour récepteurs androgéniques et progestéroniques), 3) Acidose métabolique hyperchlorémique. Surveillance K+ impérative.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 41,
+      "tags": ["Psychotropes", "Antidépresseurs", "Surveillance", "Avancé"],
+      "question": "Pourquoi faut-il surveiller la tension artérielle sous venlafaxine à fortes doses ?",
+      "answer": "Venlafaxine : IRSNA avec profil dose-dépendant. Faibles doses : effet sérotoninergique prédominant. Fortes doses (>150 mg) : inhibition significative recapture noradrénaline → effet noradrénergique → stimulation α1 et β1 → hypertension artérielle. Surveillance TA recommandée dès 225 mg/j. Mécanisme direct, non lié à une interaction.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 42,
+      "tags": ["Psychotropes", "Benzodiazépines", "Pharmacocinétique", "Avancé"],
+      "question": "Quelle est la différence clinique entre alprazolam (demi-vie courte) et diazépam (demi-vie longue) ?",
+      "answer": "Alprazolam (t½ 12h) : action rapide, élimination rapide → risque rebond d'anxiété entre prises → prise 3×/j → risque dépendance plus élevé → sevrage plus difficile. Diazépam (t½ 30-100h) : action prolongée, accumulation possible → moins de rebond → prise 1-2×/j → sevrage plus facile par décroissance naturelle. Métabolites actifs du diazépam prolongent l'effet.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 43,
+      "tags": ["Gastro-entérologie", "Antispasmodiques", "Mécanisme-action", "Fondamental"],
+      "question": "Quel est le mécanisme d'action du phloroglucinol (Spasfon®) et pourquoi est-il bien toléré ?",
+      "answer": "Phloroglucinol : antispasmodique musculotrope direct. Agit directement sur les fibres musculaires lisses digestives, urinaires et gynécologiques en bloquant les canaux calciques voltage-dépendants. Pas d'effet anticholinergique → pas de sécheresse buccale, rétention urinaire, tachycardie. Pas d'absorption systémique significative → excellent profil de tolérance. Efficace sur spasmes douloureux.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 44,
+      "tags": ["Gastro-entérologie", "Antiémétiques", "Pédiatrie", "Contre-indications-absolues"],
+      "question": "Pourquoi la dompéridone est-elle contre-indiquée chez l'enfant de moins d'1 an ?",
+      "answer": "Immaturité de la barrière hémato-encéphalique chez le nourrisson : la dompéridone peut passer dans le SNC et provoquer des effets extrapyramidaux. Métabolisme hépatique immature → accumulation possible. Plusieurs cas de convulsions et troubles neurologiques rapportés chez nourrissons. Poids <10 kg contre-indication absolue. Alternative : dompéridone en suppositoire dès 15 kg avec surveillance.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 45,
+      "tags": ["Interactions-majeures", "Néphrotoxicité", "Expert"],
+      "question": "Quel est le mécanisme de l'interaction méthotrexate + AINS et comment la prévenir ?",
+      "answer": "Double mécanisme : 1) Compétition pour l'élimination rénale : AINS et méthotrexate utilisent le même transporteur OAT (organic anion transporter) → diminution clairance méthotrexate, 2) AINS diminuent débit de filtration glomérulaire → rétention méthotrexate. Résultat : accumulation → toxicité hématologique et digestive potentiellement mortelle. Prévention : éviter association, si indispensable : surveillance NFS, créatinine.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 46,
+      "tags": ["Syndrome-sérotoninergique", "Urgences", "Effets-indésirables-graves", "Expert"],
+      "question": "Quels sont les signes cliniques du syndrome sérotoninergique et sa prise en charge d'urgence ?",
+      "answer": "Triade clinique : 1) Altération mentale (confusion, agitation), 2) Hyperactivité neurovégétative (hyperthermie, tachycardie, HTA, sudation), 3) Anomalies neuromusculaires (hyperréflexie, clonus, rigidité, trismus). Prise en charge : arrêt immédiat des sérotoninergiques, refroidissement, réhydratation, benzodiazépines, cyproheptadine (antagoniste 5-HT). Peut être mortel par hyperthermie maligne.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 47,
+      "tags": ["Antibiotiques", "Aminosides", "Néphrotoxicité", "Surveillance", "Expert"],
+      "question": "Quel est le mécanisme de néphrotoxicité des aminosides et comment la prévenir ?",
+      "answer": "Accumulation dans les cellules tubulaires proximales par endocytose médiée par mégaline. Perturbation des mitochondries et du réticulum → nécrose tubulaire. Facteurs de risque : durée >7j, doses élevées, déshydratation, âge, néphrotoxiques associés. Prévention : doses adaptées au poids et fonction rénale, hydratation correcte, surveillance créatinine quotidienne, durée minimale efficace.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 48,
+      "tags": ["Antalgiques", "Paracétamol", "Hépatotoxicité", "Surdosage", "Urgences"],
+      "question": "Quel est le mécanisme de l'hépatotoxicité du paracétamol et son antidote ?",
+      "answer": "Surdosage : saturation des voies de conjugaison hépatiques → métabolisme par CYP2E1 → formation NAPQI (métabolite toxique). NAPQI se lie aux protéines hépatocytaires → nécrose hépatique massive. Antidote : N-acétylcystéine IV, précurseur du glutathion qui détoxifie NAPQI. Efficace si donné <8h, encore utile jusqu'à 24h. Surveillance : transaminases, TP, facteur V.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 49,
+      "tags": ["Cardiovasculaire", "Hyperkaliémie", "Urgences", "Expert"],
+      "question": "Quels sont les signes d'hyperkaliémie menaçante et la conduite à tenir en urgence ?",
+      "answer": "Signes ECG : onde T ample et pointue → élargissement QRS → onde P disparaît → rythme idioventriculaire → arrêt. Clinique : paresthésies, faiblesse musculaire, paralysie flasque. CAT urgente : 1) Gluconate de calcium IV (protection membrane), 2) Insuline + glucose (transfert intracellulaire K+), 3) Salbutamol nébulisé, 4) Résines échangeuses, 5) Hémodialyse si sévère. Arrêt IEC/ARA2/anti-aldostérone.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 50,
+      "tags": ["Psychotropes", "Surveillance", "Interactions-majeures", "Expert"],
+      "question": "Quels sont les signes de surdosage en lithium et les interactions à risque ?",
+      "answer": "Surdosage : tremblements, confusion, troubles digestifs, polyurie, convulsions, coma. Marge thérapeutique étroite (0,5-0,8 mmol/L). Interactions majorant lithiémie : IEC/ARA2 (↓ clairance rénale), diurétiques thiazidiques (↓ excrétion), AINS (↓ filtration), déshydratation. Surveillance : lithiémie régulière, créatinine, TSH (hypothyroïdie). Élimination exclusivement rénale → adaptation fonction rénale.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 51,
+      "tags": ["Antibiotiques", "Effets-indésirables-graves", "Résistances", "Avancé"],
+      "question": "Quels antibiotiques favorisent les infections à Clostridium difficile et pourquoi ?",
+      "answer": "Antibiotiques à large spectre détruisant la flore colique protectrice : fluoroquinolones, clindamycine, amoxicilline-clavulanique, céphalosporines. C. difficile sporulé résiste aux antibiotiques → prolifération → production toxines A et B → colite pseudomembraneuse. Prévention : antibiothérapie ciblée, durée minimale, probiotiques discutés. Traitement : métronidazole ou vancomycine PO, arrêt antibiotique responsable.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 52,
+      "tags": ["Gastro-entérologie", "Antibiotiques", "Résistances", "Avancé"],
+      "question": "Pourquoi l'éradication d'H. pylori nécessite-t-elle une trithérapie et quels sont les schémas actuels ?",
+      "answer": "H. pylori développe rapidement des résistances en monothérapie. Trithérapie nécessaire : IPP (alcalinise milieu, optimise antibiotiques) + 2 antibiotiques aux mécanismes différents. Schémas : 1ère ligne : IPP + amoxicilline + clarithromycine 7j (si résistance clarithromycine <15%), 2ème ligne : IPP + amoxicilline + métronidazole 14j, ou quadrithérapie bismuth. Résistance croissante aux macrolides limite l'efficacité.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 53,
+      "tags": ["Insuffisance-rénale", "Surveillance", "Expert"],
+      "question": "Comment adapter la posologie des médicaments selon la fonction rénale et quels sont les critères ?",
+      "answer": "Adaptation selon DFG (Cockcroft ou CKD-EPI) : DFG >60 : dose normale, DFG 30-60 : réduction 25-50% ou espacement, DFG 15-30 : réduction 50-75%, DFG <15 : contre-indication ou hémodialyse. Médicaments à adapter : aminosides, digoxine, lithium, métformine, AINS. Critères : élimination rénale >50%, marge thérapeutique étroite, toxicité cumulative. Surveillance créatinine régulière chez l'âgé.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 54,
+      "tags": ["Cytochromes", "Interactions-majeures", "Pharmacocinétique", "Expert"],
+      "question": "Quels sont les principaux inducteurs et inhibiteurs du CYP3A4 et leurs conséquences cliniques ?",
+      "answer": "Inducteurs : rifampicine, carbamazépine, phénytoïne, millepertuis → ↑ métabolisme → ↓ efficacité (contraceptifs, ciclosporine, statines). Inhibiteurs : macrolides, antifongiques azolés, pamplemousse, jus de cranberry → ↓ métabolisme → ↑ toxicité (statines, benzodiazépines). Délai : induction 1-2 semaines, inhibition immédiate. Conséquences : échecs thérapeutiques ou surdosages selon le sens de l'interaction.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 55,
+      "tags": ["Antalgiques", "Opioïdes", "Surdosage", "Urgences"],
+      "question": "Quels sont les signes de surdosage morphinique et l'antidote spécifique ?",
+      "answer": "Triade de surdosage : 1) Dépression respiratoire (FR <12/min, cyanose), 2) Coma (myosis punctiforme pathognomonique), 3) Hypotension. Antidote : naloxone (Narcan®) 0,4-2 mg IV/IM/SC, antagoniste compétitif des récepteurs μ. Demi-vie courte (30-60 min) < morphine → re-sédation possible → surveillance prolongée ± réinjections. Peut déclencher un syndrome de sevrage brutal chez le dépendant.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 56,
+      "tags": ["Antibiotiques", "Beta-lactamines", "Classification", "Fondamental"],
+      "question": "Quelles sont les 4 grandes classes de bêta-lactamines ? Nommez 2 molécules pour chaque classe avec leurs noms commerciaux.",
+      "answer": "1) **Pénicillines** : Amoxicilline (Clamoxyl®), Pénicilline G (Pénicilline®)\n2) **Céphalosporines** : Céfalexine/Keforal® (C1G), Cefixime/Oroken® (C3G)\n3) **Carbapénèmes** : Imipénème (Tienam®), Méropénème (Meronem®)\n4) **Monobactames** : Aztréonam (Azactam®), Carumonam\n\nToutes partagent le cycle bêta-lactame mais diffèrent par leur spectre et leur résistance aux bêta-lactamases.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 57,
+      "tags": ["Antibiotiques", "Pénicillines", "Classification", "Spectre-activité", "Avancé"],
+      "question": "Classez les pénicillines selon leur spectre d'action et donnez 2 exemples pour chaque sous-classe.",
+      "answer": "1) **Pénicillines G et V** (spectre étroit) : Pénicilline G (Pénicilline®), Pénicilline V (Oracilline®) - actives sur cocci Gram+\n2) **Pénicillines M** (anti-staphylococciques) : Méticilline, Oxacilline - résistantes aux pénicillinases staphylococciques\n3) **Aminopénicillines** (spectre élargi) : Amoxicilline (Clamoxyl®), Ampicilline - actives sur certains Gram-\n4) **Pénicillines + inhibiteurs** : Amoxicilline + ac. clavulanique (Augmentin®), Pipéracilline + tazobactam (Tazocilline®)",
+      "difficulty": "hard"
+    },
+    {
+      "id": 58,
+      "tags": ["Antibiotiques", "Céphalosporines", "Classification", "Spectre-activité", "Expert"],
+      "question": "Classez les céphalosporines par générations avec leurs spectres respectifs et 2 exemples par génération.",
+      "answer": "**C1G** : Spectre étroit, Gram+ ++ : Céfalexine (Keforal®), Céfadroxil (Oracefal®)\n**C2G** : Élargissement vers Gram- : Céfuroxime (Zinnat®), Céfamandole\n**C3G** : Large spectre, Gram- +++ : Cefixime (Oroken®), Ceftriaxone (Rocéphine®)\n**C4G** : Très large spectre + Pseudomonas : Céfépime (Maxipime®), Céfpirome\n**C5G** : Anti-SARM : Ceftaroline (Zinforo®), Ceftobiprole\n\nÉvolution : élargissement du spectre vers les Gram- et résistance croissante aux bêta-lactamases.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 59,
+      "tags": ["Antibiotiques", "Macrolides", "Classification", "Pharmacocinétique", "Avancé"],
+      "question": "Quelles sont les 3 sous-classes de macrolides selon leur structure cyclique ? Donnez leurs représentants et leurs particularités pharmacocinétiques.",
+      "answer": "1) **Macrolides à 14 atomes** : Érythromycine (Érythrocine®), Clarithromycine (Zeclar®) - demi-vie courte, interactions CYP3A4\n2) **Macrolides à 15 atomes** : Azithromycine (Zithromax®) - demi-vie longue (68h), peu d'interactions, 3 jours de traitement\n3) **Macrolides à 16 atomes** : Spiramycine (Rovamycine®), Josamycine (Josacine®) - grossesse autorisée, moins d'interactions\n\nTous inhibent la synthèse protéique en se fixant sur la sous-unité 50S ribosomale.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 60,
+      "tags": ["Antibiotiques", "Fluoroquinolones", "Classification", "Spectre-activité", "Avancé"],
+      "question": "Classez les fluoroquinolones par générations selon leur spectre d'activité et citez 2 molécules par génération.",
+      "answer": "**1ère génération** : Spectre étroit (Gram-, voies urinaires) : Acide nalidixique, Acide pipémidique\n**2ème génération** : Élargissement spectre : Norfloxacine (Noroxine®), Péfloxacine (Péflacine®)\n**3ème génération** : Large spectre + pneumocoque : Ciprofloxacine (Ciflox®), Ofloxacine (Oflocet®)\n**4ème génération** : Anti-pneumocoque renforcé + atypiques : Lévofloxacine (Tavanic®), Moxifloxacine (Izilox®)\n\nÉvolution : élargissement progressif vers Gram+ et bactéries atypiques, amélioration de la pharmacocinétique.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 61,
+      "tags": ["Antibiotiques", "Aminosides", "Classification", "Spectre-activité", "Avancé"],
+      "question": "Quelles sont les 3 principales classes d'aminosides selon leur structure et leur spectre ? Donnez leurs représentants et indications.",
+      "answer": "1) **Streptomycines** : Streptomycine - tuberculose (abandon progressif pour toxicité)\n2) **Néomycines** : Néomycine, Kanamycine - décontamination digestive (très toxiques)\n3) **Gentamicines** : Gentamicine (Gentalline®), Tobramycine (Nebcine®), Amikacine (Amiklin®)\n\n**Gentamicine** : infections sévères Gram-, synergies\n**Tobramycine** : spécialisée Pseudomonas (mucoviscidose)\n**Amikacine** : résistance moindre aux enzymes de résistance",
+      "difficulty": "medium"
+    },
+    {
+      "id": 62,
+      "tags": ["Antibiotiques", "Tétracyclines", "Classification", "Pharmacocinétique", "Avancé"],
+      "question": "Classez les tétracyclines selon leur pharmacocinétique et donnez leurs indications spécifiques avec 2 exemples par classe.",
+      "answer": "1) **Tétracyclines anciennes** (demi-vie courte) : Tétracycline, Oxytétracycline - abandonnées pour pharmacocinétique défavorable\n2) **Tétracyclines modernes** (demi-vie longue) : Doxycycline (Vibramycine®), Minocycline (Mynocine®)\n3) **Nouvelles tétracyclines** : Tigécycline (Tygacil®) - résistances multiples, infections nosocomiales\n\n**Indications** : infections à Chlamydia, Mycoplasma, Rickettsia, acné, paludisme (doxycycline), infections multirésistantes (tigécycline).",
+      "difficulty": "medium"
+    },
+    {
+      "id": 63,
+      "tags": ["Antibiotiques", "Classification", "Mécanisme-action", "Expert"],
+      "question": "Citez 4 autres familles d'antibiotiques avec leur mécanisme d'action principal et un représentant pour chaque.",
+      "answer": "1) **Glycopeptides** (inhibition synthèse paroi) : Vancomycine (Vancocine®) - SARM, entérocoques\n2) **Lincosamides** (inhibition synthèse protéique, 50S) : Clindamycine (Dalacine®) - anaérobies, os\n3) **Phénicolés** (inhibition synthèse protéique, 50S) : Chloramphénicol - méningites (pays en développement)\n4) **Sulfamides** (inhibition synthèse folates) : Sulfaméthoxazole + triméthoprime (Bactrim®) - infections urinaires\n5) **Nitro-imidazolés** (altération ADN) : Métronidazole (Flagyl®) - anaérobies stricts",
+      "difficulty": "hard"
+    },
+    {
+      "id": 64,
+      "tags": ["Antibiotiques", "Nouvelles-classes", "Résistances", "Expert"],
+      "question": "Quelles sont les 3 nouvelles classes d'antibiotiques développées contre les résistances et leurs cibles thérapeutiques ?",
+      "answer": "1) **Oxazolidinones** : Linézolide (Zyvoxid®), Tedizolide - SARM, entérocoques résistants à la vancomycine (ERV)\n2) **Lipopeptides cycliques** : Daptomycine (Cubicin®) - SARM, endocardites à staphylocoques\n3) **Glycylcyclines** : Tigécycline (Tygacil®) - bactéries multirésistantes, infections nosocomiales complexes\n\n**Mécanismes** : Oxazolidinones (inhibition initiation synthèse protéique), Daptomycine (déstabilisation membrane), Tigécycline (inhibition synthèse protéique, résistance aux mécanismes classiques).",
+      "difficulty": "hard"
+    },
+    {
+      "id": 65,
+      "tags": [
+        "Antibiotiques",
+        "Classification",
+        "Spectre-activité",
+        "Avancé"
+      ],
+      "question": "Classez ces antibiotiques selon leur spectre (étroit/large) et leur activité principale : pénicilline G, amoxicilline-clavulanique, ciprofloxacine, vancomycine, imipénème.",
+      "answer": "**Spectre étroit** :\n- **Pénicilline G** : Cocci Gram+ (streptocoques, pneumocoque sensible)\n- **Vancomycine** : Cocci Gram+ résistants (SARM, entérocoques)\n\n**Spectre large** :\n- **Amoxicilline-clavulanique** : Gram+ et Gram- communs, anaérobies\n- **Ciprofloxacine** : Gram- ++, certains Gram+, atypiques\n\n**Très large spectre** :\n- **Imipénème** : Quasi-universel (Gram+, Gram-, anaérobies) sauf SARM, entérocoques, Stenotrophomonas\n\nChoix selon écologie locale et gravité de l'infection."
+    }
+  ]
+}

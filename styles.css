@@ -134,9 +134,9 @@ header p {
 .flashcard:hover {
     transform: translateY(-2px);
     box-shadow:
-        0 0 6px var(--light-color-highlight),
-        0 0 12px #0b8700,
-        0 0 24px #0b8700,
+        0 0 4px var(--light-color-highlight),
+        0 0 8px #0b8700,
+        0 0 16px #0b8700,
         0 10px 30px -10px rgba(11, 135, 0, 0.5);
     border-color: #a2db48; /* Bordure plus claire au hover */
 }
@@ -217,6 +217,15 @@ button:disabled {
     border-radius: 4px;
     display: inline-block;
     color: var(--light-color-blanc);
+    font-weight: bold;
+}
+
+.recalled-counter {
+    margin-left: 15px;
+    background-color: var(--color-accent);
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: var(--color-white);
     font-weight: bold;
 }
 
