@@ -302,13 +302,13 @@
       "id": 39,
       "tags": ["Cardiovasculaire", "Beta-bloquants", "Contre-indications-absolues", "Fondamental"],
       "question": "<div class=\"question\"><p>Pourquoi les <strong>bêta-bloquants non cardiosélectifs</strong> sont-ils contre-indiqués dans l'asthme ?</p></div>",
-      "answer": "<div class=\"answer\"><p>Les <strong>β2-récepteurs bronchiques</strong> médient la bronchodilatation. Leur blocage par bêta-bloquants non sélectifs (propranolol) provoque :</p><ol class=\"broncho-effects\"><li>Bronchoconstriction directe</li><li>Perte de la bronchodilatation compensatrice β2-dépendante</li><li>Prédominance relative de l'effet cholinergique bronchoconstricteur</li></ol><p>Peut déclencher un <span class=\"critical\">bronchospasme sévère et potentiellement mortel</span>. Les cardiosélectifs (bisoprolol) restent possibles avec prudence.</p></div>",
+      "answer": "<div class=\"answer\"><p>Les <strong>β2-récepteurs bronchiques</strong> médient la bronchodilatation. Leur blocage par bêta-bloquants non sélectifs (propranolol) provoque :</p><ol class=\"broncho-effects\"><li>Bronchoconstriction directe</li><li>Perte de la bronchodilatation compensatrice β2-dépendante</li><li>Prédominance relative de l'effet cholinergique bronchoconstricteur</li></ol><p>Ces bêta-bloquants peuvent déclencher un <span class=\"critical\">bronchospasme sévère et potentiellement mortel</span>. L'utilisation de bêta-bloquants cardiosélectifs (bisoprolol) reste possibles mais avec prudence.</p></div>",
       "difficulty": "medium"
     },
     {
       "id": 40,
       "tags": ["Cardiovasculaire", "Diurétiques", "Mécanisme-action", "Effets-indésirables-graves", "Expert"],
-      "question": "<div class=\"question\"><p>Quel est le mécanisme d'action de la <span class=\"drug-name\">spironolactone</span> et ses effets indésirables spécifiques ?</p></div>",
+      "question": "<div class=\"question\"><p>Quel est le mécanisme d'action de la <span class=\"drug-name\">spironolactone</span> ? Quels sont ses effets indésirables spécifiques ?</p></div>",
       "answer": "<div class=\"answer\"><p><strong>Antagoniste compétitif</strong> des récepteurs minéralocorticoïdes du tube collecteur. Bloque l'effet de l'aldostérone → diminution de la réabsorption de Na+ et sécrétion de K+.</p><h4>Effets indésirables</h4><ol class=\"side-effects-list\"><li><strong>Hyperkaliémie</strong> (mécanisme d'action)</li><li><strong>Gynécomastie et troubles sexuels</strong> (affinité pour récepteurs androgéniques et progestéroniques)</li><li><strong>Acidose métabolique hyperchlorémique</strong></li></ol><p>Surveillance K+ impérative.</p></div>",
       "difficulty": "hard"
     },
@@ -371,8 +371,8 @@
     {
       "id": 49,
       "tags": ["Cardiovasculaire", "Hyperkaliémie", "Urgences", "Expert"],
-      "question": "<div class=\"question\"><p>Quels sont les signes d'<strong>hyperkaliémie menaçante</strong> et la conduite à tenir en urgence ?</p></div>",
-      "answer": "<div class=\"answer\"><h4>Signes ECG</h4><p>Onde T ample et pointue → élargissement QRS → onde P disparaît → rythme idioventriculaire → <span class=\"critical\">arrêt</span>.</p><p><strong>Clinique :</strong> paresthésies, faiblesse musculaire, paralysie flasque.</p><h4>CAT urgente</h4><ol class=\"emergency-protocol\"><li><strong>Gluconate de calcium IV</strong> (protection membrane)</li><li><strong>Insuline + glucose</strong> (transfert intracellulaire K+)</li><li><strong>Salbutamol nébulisé</strong></li><li>Résines échangeuses</li><li>Hémodialyse si sévère</li></ol><p>Arrêt IEC/ARA2/anti-aldostérone.</p></div>",
+      "question": "<div class=\"question\"><p>Quels sont les signes d'une<strong>hyperkaliémie menaçante</strong> ? Quelle est la conduite à tenir en urgence ?</p></div>",
+      "answer": "<div class=\"answer\"><h4>Signes ECG</h4><p>Onde T ample et pointue → élargissement QRS → onde P disparaît → rythme idioventriculaire → <span class=\"critical\">arrêt</span>.</p><p><strong>Clinique :</strong> paresthésies, faiblesse musculaire, paralysie flasque.</p><h4>Conduite à tenir en urgence</h4><ol class=\"emergency-protocol\"><li><strong>Gluconate de calcium IV</strong> (protection membrane)</li><li><strong>Insuline + glucose</strong> (transfert intracellulaire K+)</li><li><strong>Salbutamol nébulisé</strong></li><li>Résines échangeuses</li><li>Hémodialyse si sévère</li></ol><p>Arrêt IEC/ARA2/anti-aldostérone.</p></div>",
       "difficulty": "hard"
     },
     {
@@ -476,7 +476,7 @@
     {
       "id": 64,
       "tags": ["Antibiotiques", "Nouvelles-classes", "Résistances", "Expert"],
-      "question": "<div class=\"question\"><p>Quelles sont les <strong>3 nouvelles classes d'antibiotiques</strong> développées contre les résistances et leurs cibles thérapeutiques ?</p></div>",
+      "question": "<div class=\"question\"><p>Citez <strong>3 nouvelles classes d'antibiotiques</strong> développés contre les résistances bactériennes ? Quelles sont leurs cibles thérapeutiques respectives?</p></div>",
       "answer": "<div class=\"answer\"><ol class=\"new-antibiotics\"><li><strong>Oxazolidinones :</strong> Linézolide (Zyvoxid®), Tedizolide - SARM, entérocoques résistants à la vancomycine (ERV)</li><li><strong>Lipopeptides cycliques :</strong> Daptomycine (Cubicin®) - SARM, endocardites à staphylocoques</li><li><strong>Glycylcyclines :</strong> Tigécycline (Tygacil®) - bactéries multirésistantes, infections nosocomiales complexes</li></ol><h4>Mécanismes</h4><ul class=\"new-mechanisms\"><li><strong>Oxazolidinones :</strong> inhibition initiation synthèse protéique</li><li><strong>Daptomycine :</strong> déstabilisation membrane</li><li><strong>Tigécycline :</strong> inhibition synthèse protéique, résistance aux mécanismes classiques</li></ul></div>",
       "difficulty": "hard"
     },

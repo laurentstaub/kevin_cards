@@ -2,12 +2,14 @@
 :root {
     font-size: clamp(14px, 2.5vw, 18px);
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-roboto: 'Roboto', sans-serif;
+    --font-cascadia: 'Cascadia Code', monospace;
     --font-mono: 'JetBrains Mono', monospace;
 
     /* Default to Dark Theme */
     --color-blanc: #1a1a1A;
     --color-gris-clair: #2a2a2a;
-    --color-gris: #aaaaaa;
+    --color-gris: #535751;
     --color-background: #0a110a;
     --color-background-light: #1b261b;
     --color-background-dark: #161f16;
@@ -30,17 +32,17 @@
     --color-blanc: #ffffff;
     --color-gris-clair: #e0e0e0;
     --color-gris: #717171;
-    --color-background: #ffffff;
-    --color-background-light: #f7f7f7;
+    --color-background: #f5f5f5;
+    --color-background-light: var(--color-blanc);
     --color-background-dark: #e0e0e0;
     --color-background-darker: #717171;
     --color-primary: #0b8700;
     --color-secondary: #0c4813;
     --color-accent: #f41cd8;
     --color-light: #f7ea8c;
-    --color-highlight: #a2db48;
+    --color-highlight: #79db48;
     --color-text: #0c4813;
-    --color-text-light: #0b8700;
+    --color-text-light: #6a8d40;
     --color-disabled: #7aaf6a;
     --color-white: #ffffff;
     --color-shadow: rgba(12, 72, 19, 0.1);
@@ -59,28 +61,56 @@ body {
     line-height: 1.6;
     color: var(--color-text);
     background-color: var(--color-background);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header Styles */
 header {
+    border-bottom: 1px solid var(--color-text-light);
+    font-family: var(--font-mono);
     text-align: center;
     margin-bottom: 60px;
 }
 
 header h1 {
     color: var(--color-primary);
-    font-size: 2rem;
-    margin: 30px 0;
+    font-family: var(--font-mono);
+    font-size: 2.5rem;
+    margin: 20px 0 0 0;
 }
 
 header p {
-    color: var(--color-text);
+    color: var(--color-gris);
+    font-weight: lighter;
+    margin-bottom: 20px;
+}
+
+.tag-container {
+    display: flex;
+    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    font-weight: lighter;
+    justify-content: center;
+    margin-bottom: 30px;
 }
 
 /* Flashcard Styles */
@@ -91,7 +121,9 @@ header p {
 }
 
 .flashcard {
-    border-radius: 8px;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none;
     cursor: pointer;
     width: 700px;
     height: 400px;
@@ -100,18 +132,14 @@ header p {
 }
 
 .flashcard:hover {
-    transform: translateY(-2px);
-    box-shadow:
-        0 0 4px var(--color-highlight),
-        0 0 8px #0b8700,
-        0 0 16px #0b8700,
-        0 10px 30px -10px rgba(11, 135, 0, 0.5);
+    transform: translateY(-4px);
     border-color: #a2db48; /* Bordure plus claire au hover */
 }
 
 .flashcard-front, .flashcard-back {
     border-radius: 8px;
     border: 2px solid var(--color-text-light);
+    color: var(--color-text);
     position: absolute;
     width: 100%;
     height: 100%;
@@ -120,20 +148,26 @@ header p {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 30px;
     text-align: center;
+}
+
+.flashcard-front:hover, .flashcard-back:hover {
+    box-shadow:
+        0 0 4px var(--color-highlight),
+        0 0 8px #0b8700,
+        0 0 16px #0b8700,
+        0 10px 30px -10px rgba(11, 135, 0, 0.5);
 }
 
 .flashcard-front {
     background-color: var(--color-background-light);
-    color: var(--color-text);
     font-size: 1.1rem;
     transform: rotateY(0deg);
 }
 
 .flashcard-back {
     background-color: var(--color-background-dark);
-    color: var(--color-gris);
     font-size: 0.9rem;
     text-align: left;
     transform: rotateY(180deg);
@@ -147,7 +181,19 @@ header p {
     transform: rotateY(0deg);
 }
 
+.flashcard-front *,
+.flashcard-back * {
+    text-align: left;
+}
 
+.flashcard-front ol,
+.flashcard-front ul,
+.flashcard-back ol,
+.flashcard-back ul {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+    list-style-position: inside; /* Ou outside avec plus de padding */
+}
 
 /* Controls Styles */
 .controls {
@@ -172,12 +218,11 @@ button:hover {
     background-color: var(--color-secondary);
 }
 
-button:disabled {
-    background-color: var(--color-disabled);
-    cursor: not-allowed;
+#not-known-btn {
+    background-color: var(--color-gris);
 }
 
-#not-known-btn {
+#not-known-btn:hover {
     background-color: var(--color-gris-clair);
 }
 
@@ -206,21 +251,23 @@ button:disabled {
     font-weight: bold;
 }
 
-/* Footer Styles */
 footer {
-    text-align: center;
-    margin-top: 40px;
+    border-top: 1px solid var(--color-gris-clair);
     color: var(--color-text-light);
+    font-weight: 400;
+    margin-top: auto;
+    padding: 20px 0;
+    text-align: center;
 }
 
 /* Theme Toggle Styles */
 .theme-toggle {
+    cursor: pointer;
     position: absolute;
     top: 20px;
     right: 20px;
     display: flex;
     align-items: center;
-    cursor: pointer;
     z-index: 100;
 }
 

@@ -5,6 +5,7 @@ let flashcards = [];
 const flashcardElement = document.getElementById('flashcard');
 const questionElement = document.getElementById('question');
 const answerElement = document.getElementById('answer');
+const tagsElement = document.getElementById('tags');
 const notKnownButton = document.getElementById('not-known-btn');
 const recalledButton = document.getElementById('recalled-btn');
 const currentCardElement = document.getElementById('current-card');
@@ -28,6 +29,7 @@ function initFlashcards() {
 
 function showCard(index) {
     const card = flashcards[index];
+    tagsElement.innerHTML = `Tags: #${card.tags.join(" #")}`;
     questionElement.innerHTML = card.question;
     answerElement.innerHTML = card.answer;
 
@@ -81,7 +83,7 @@ flashcardElement.addEventListener('click', flipCard);
 notKnownButton.addEventListener('click', handleNotKnown);
 recalledButton.addEventListener('click', handleRecalled);
 
-// Theme toggle functionality
+// Theme toggle
 function initTheme() {
     // Check if user has a saved theme preference
     const savedTheme = localStorage.getItem('theme');
@@ -122,6 +124,7 @@ async function loadQuestions() {
 
         // Format the flashcards to match the expected structure
         flashcards = selectedFlashcards.map(card => ({
+            tags: card.tags,
             question: card.question,
             answer: card.answer
         }));
@@ -137,7 +140,6 @@ async function loadQuestions() {
 
 // Function to randomly select n flashcards from an array
 function getRandomFlashcards(array, n) {
-    // Make a copy of the array to avoid modifying the original
     const shuffled = [...array];
 
     // Fisher-Yates shuffle algorithm
@@ -146,7 +148,6 @@ function getRandomFlashcards(array, n) {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    // Return the first n elements
     return shuffled.slice(0, n);
 }
 

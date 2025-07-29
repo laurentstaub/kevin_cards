@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Viewer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: #f5f5f5;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #007bff;
+        }
+
+        .upload-area.dragover {
+            border-color: #007bff;
+            background: #f8f9fa;
+        }
+
+        #fileInput {
+            margin: 10px 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-id {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: #495057;
+        }
+
+        .question {
+            margin-bottom: 15px;
+        }
+
+        .question h3 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .answer {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 3px solid #28a745;
+        }
+
+        .answer h3 {
+            color: #28a745;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .stats {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #searchInput {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .page-info {
+            align-self: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Flashcards Pharmacie</h1>
+    <p>Upload your JSON file to view flashcards without HTML formatting</p>
+</div>
+
+<div class="upload-area" id="uploadArea">
+    <p>📁 Drag & drop your JSON file here or click to select</p>
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+    <button onclick="document.getElementById('fileInput').click()">Choose File</button>
+</div>
+
+<div id="content" style="display: none;">
+    <div class="stats" id="stats"></div>
+
+    <div class="search">
+        <input type="text" id="searchInput" placeholder="🔍 Search in questions and answers..." />
+    </div>
+
+    <div class="controls">
+        <button onclick="showAll()">Show All</button>
+        <button onclick="toggleAnswers()">Toggle Answers</button>
+        <button onclick="exportClean()">Export Clean Text</button>
+        <select id="tagFilter">
+            <option value="">All Tags</option>
+        </select>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+
+    <div id="cards"></div>
+
+    <div class="pagination" id="paginationBottom"></div>
+</div>
+
+<script>
+    let flashcardsData = null;
+    let filteredCards = [];
+    let showAnswers = true;
+    let currentPage = 1;
+    const cardsPerPage = 10;
+
+    // File handling
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    function handleFile(file) {
+        if (!file.name.endsWith('.json')) {
+            alert('Please select a JSON file');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                flashcardsData = JSON.parse(e.target.result);
+                if (!flashcardsData.flashcards) {
+                    alert('Invalid flashcard JSON format');
+                    return;
+                }
+                loadFlashcards();
+            } catch (error) {
+                alert('Error parsing JSON file: ' + error.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function stripHtmlTags(html) {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        return div.textContent || div.innerText || '';
+    }
+
+    function loadFlashcards() {
+        document.getElementById('uploadArea').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+
+        filteredCards = flashcardsData.flashcards;
+        populateTagFilter();
+        updateStats();
+        renderCards();
+        setupSearch();
+    }
+
+    function populateTagFilter() {
+        const tagFilter = document.getElementById('tagFilter');
+        const allTags = new Set();
+
+        flashcardsData.flashcards.forEach(card => {
+            card.tags.forEach(tag => allTags.add(tag));
+        });
+
+        Array.from(allTags).sort().forEach(tag => {
+            const option = document.createElement('option');
+            option.value = tag;
+            option.textContent = tag;
+            tagFilter.appendChild(option);
+        });
+
+        tagFilter.addEventListener('change', filterByTag);
+    }
+
+    function filterByTag() {
+        const selectedTag = document.getElementById('tagFilter').value;
+        if (selectedTag) {
+            filteredCards = flashcardsData.flashcards.filter(card =>
+                card.tags.includes(selectedTag)
+            );
+        } else {
+            filteredCards = flashcardsData.flashcards;
+        }
+        currentPage = 1;
+        updateStats();
+        renderCards();
+    }
+
+    function setupSearch() {
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            if (query) {
+                filteredCards = flashcardsData.flashcards.filter(card => {
+                    const question = stripHtmlTags(card.question).toLowerCase();
+                    const answer = stripHtmlTags(card.answer).toLowerCase();
+                    return question.includes(query) || answer.includes(query);
+                });
+            } else {
+                filteredCards = flashcardsData.flashcards;
+            }
+            currentPage = 1;
+            updateStats();
+            renderCards();
+        });
+    }
+
+    function updateStats() {
+        const stats = document.getElementById('stats');
+        stats.innerHTML = `
+                <strong>Total Cards:</strong> ${flashcardsData.flashcards.length} |
+                <strong>Filtered:</strong> ${filteredCards.length} |
+                <strong>Title:</strong> ${flashcardsData.metadata.title}
+            `;
+    }
+
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
+        const paginationHTML = `
+                <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+                <span class="page-info">Page ${currentPage} of ${totalPages}</span>
+                <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+            `;
+
+        document.getElementById('pagination').innerHTML = paginationHTML;
+        document.getElementById('paginationBottom').innerHTML = paginationHTML;
+    }
+
+    function changePage(page) {
+        const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
+        if (page >= 1 && page <= totalPages) {
+            currentPage = page;
+            renderCards();
+        }
+    }
+
+    function renderCards() {
+        const cardsContainer = document.getElementById('cards');
+
+        if (filteredCards.length === 0) {
+            cardsContainer.innerHTML = '<div class="no-results">No cards found</div>';
+            document.getElementById('pagination').innerHTML = '';
+            document.getElementById('paginationBottom').innerHTML = '';
+            return;
+        }
+
+        const startIndex = (currentPage - 1) * cardsPerPage;
+        const endIndex = startIndex + cardsPerPage;
+        const pageCards = filteredCards.slice(startIndex, endIndex);
+
+        cardsContainer.innerHTML = pageCards.map(card => `
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-id">Card #${card.id}</span>
+                        <div class="tags">
+                            ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="question">
+                        <h3>Question:</h3>
+                        <p>${stripHtmlTags(card.question)}</p>
+                    </div>
+                    ${showAnswers ? `
+                        <div class="answer">
+                            <h3>Answer:</h3>
+                            <p>${stripHtmlTags(card.answer)}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+        renderPagination();
+    }
+
+    function showAll() {
+        filteredCards = flashcardsData.flashcards;
+        document.getElementById('tagFilter').value = '';
+        document.getElementById('searchInput').value = '';
+        currentPage = 1;
+        updateStats();
+        renderCards();
+    }
+
+    function toggleAnswers() {
+        showAnswers = !showAnswers;
+        renderCards();
+    }
+
+    function exportClean() {
+        const cleanText = filteredCards.map(card => {
+            const question = stripHtmlTags(card.question);
+            const answer = stripHtmlTags(card.answer);
+            return `CARD #${card.id}\nTags: ${card.tags.join(', ')}\n\nQ: ${question}\n\nA: ${answer}\n\n${'='.repeat(50)}\n`;
+        }).join('\n');
+
+        const blob = new Blob([cleanText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'flashcards_clean.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+</body>
+</html>
