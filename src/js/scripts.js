@@ -1,11 +1,10 @@
-// Flashcard data - Will be loaded from JSON file
+
 let flashcards = [];
 
 // DOM elements
 const flashcardElement = document.getElementById('flashcard');
 const questionElement = document.getElementById('question');
 const answerElement = document.getElementById('answer');
-const flipButton = document.getElementById('flip-btn');
 const notKnownButton = document.getElementById('not-known-btn');
 const recalledButton = document.getElementById('recalled-btn');
 const currentCardElement = document.getElementById('current-card');
@@ -18,16 +17,6 @@ let currentCardIndex = 0;
 let isFlipped = false;
 let recalledCount = 0;
 
-// Marked configuration for markdown rendering
-marked.setOptions({
-    breaks: true,        // Convertit les sauts de ligne simples en <br>
-    gfm: true,          // Active GitHub Flavored Markdown
-    sanitize: false,    // Permet le HTML dans le Markdown
-    smartLists: true,   // Améliore le rendu des listes
-    smartypants: true   // Améliore la typographie
-});
-
-
 function initFlashcards() {
     // Set total cards count
     totalCardsElement.textContent = flashcards.length;
@@ -39,17 +28,15 @@ function initFlashcards() {
 
 function showCard(index) {
     const card = flashcards[index];
-    questionElement.innerHTML = marked.parse(card.question);
-    answerElement.innerHTML = marked.parse(card.answer);
+    questionElement.innerHTML = card.question;
+    answerElement.innerHTML = card.answer;
 
     currentCardElement.textContent = index + 1;
 
-    // Reset flip state
     isFlipped = false;
     flashcardElement.classList.remove('flipped');
 }
 
-// Flip the card
 function flipCard() {
     isFlipped = !isFlipped;
     if (isFlipped) {
@@ -125,7 +112,7 @@ themeToggleInput.addEventListener('change', toggleTheme);
 // Function to load questions from JSON file
 async function loadQuestions() {
     try {
-        const response = await fetch('zz_questions/00_questions.json');
+        const response = await fetch('/zz_questions/00_questions.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
