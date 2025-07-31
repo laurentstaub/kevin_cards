@@ -6,13 +6,13 @@
     <title>FlashPharma</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <header>
         <h1>FlashPharma</h1>
-        <p>Système de cartes pour réviser vos connaissances pharmaceutiques</p>
+        <p>Cartes pour révision</p>
         <div class="theme-toggle">
             <span class="theme-toggle-label">Mode</span>
             <label class="theme-toggle-switch">
@@ -26,7 +26,6 @@
     </header>
     <div class="container">
         <main>
-
             <div class="flashcard-container">
                 <div class="flashcard" id="flashcard">
                     <div class="flashcard-front" id="question">
@@ -37,18 +36,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="flashcard-tags">
-                <div class="tag-container">
-                    <div class="tags" id="tags">
-                        <span class="tag-name">Tag 1</span>
-                    </div>
-                </div>
-            </div>
-
             <div class="controls">
                 <button id="not-known-btn">X Non sue</button>
-                <button id="recalled-btn">Rappelée</button>
+                <button id="recalled-btn">Je sais !</button>
             </div>
 
             <div class="progress-container">
@@ -58,11 +48,11 @@
                 </div>
             </div>
         </main>
-
-        <footer>
-            <p>2025 - FlashPharma - Flashcards pour Pharmaciens... et tous ceux que la pharmacie intéresse</p>
-        </footer>
     </div>
+
+    <footer>
+        <p>2025 - FlashPharma - Flashcards pour Pharmaciens... et tous ceux que la pharmacie intéresse</p>
+    </footer>
 
     <script type="module" src="js/scripts.js"></script>
 </body>

@@ -5,7 +5,6 @@ let flashcards = [];
 const flashcardElement = document.getElementById('flashcard');
 const questionElement = document.getElementById('question');
 const answerElement = document.getElementById('answer');
-const tagsElement = document.getElementById('tags');
 const notKnownButton = document.getElementById('not-known-btn');
 const recalledButton = document.getElementById('recalled-btn');
 const currentCardElement = document.getElementById('current-card');
@@ -29,8 +28,18 @@ function initFlashcards() {
 
 function showCard(index) {
     const card = flashcards[index];
-    tagsElement.innerHTML = `Tags: #${card.tags.join(" #")}`;
-    questionElement.innerHTML = card.question;
+
+    const tags = `
+        <div class="card-header">
+            <div class="tag-container">
+                <div class="tags" id="tags">
+                    ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+            </div>
+        </div>`;
+
+    questionElement.innerHTML = tags + card.question;
+    console.log(questionElement);
     answerElement.innerHTML = card.answer;
 
     currentCardElement.textContent = index + 1;

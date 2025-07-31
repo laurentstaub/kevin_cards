@@ -96,10 +96,23 @@
             color: #007bff;
         }
 
+        .difficulty {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .difficulty.easy { background: #d4edda; color: #155724; }
+        .difficulty.medium { background: #fff3cd; color: #856404; }
+        .difficulty.hard { background: #f8d7da; color: #721c24; }
+
         .tags {
             display: flex;
             gap: 5px;
             flex-wrap: wrap;
+            margin-top: 5px;
         }
 
         .tag {
@@ -120,7 +133,65 @@
             font-size: 1.1em;
         }
 
-        .answer {
+        .question-content, .answer-content {
+            line-height: 1.7;
+        }
+
+        /* Styling for formatted content */
+        .question-content strong, .answer-content strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .question-content em, .answer-content em {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .question-content code, .answer-content code {
+            background: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9em;
+            color: #e74c3c;
+        }
+
+        .question-content pre, .answer-content pre {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border-left: 3px solid #007bff;
+        }
+
+        .question-content ul, .answer-content ul,
+        .question-content ol, .answer-content ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .question-content li, .answer-content li {
+            margin-bottom: 5px;
+        }
+
+        .question-content blockquote, .answer-content blockquote {
+            border-left: 4px solid #007bff;
+            margin: 15px 0;
+            padding-left: 15px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .question-content h1, .answer-content h1,
+        .question-content h2, .answer-content h2,
+        .question-content h3, .answer-content h3,
+        .question-content h4, .answer-content h4 {
+            color: #2c3e50;
+            margin: 15px 0 10px 0;
+        }
+
+        .answer-content {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 4px;
@@ -128,7 +199,7 @@
         }
 
         .answer h3 {
-            color: #28a745;
+            color: #2c3e50;
             margin-bottom: 8px;
             font-size: 1em;
         }
@@ -174,12 +245,25 @@
             align-self: center;
             font-weight: bold;
         }
+
+        .format-indicator {
+            display: inline-block;
+            padding: 1px 6px;
+            background: #6c757d;
+            color: white;
+            font-size: 0.7em;
+            border-radius: 8px;
+            margin-left: 8px;
+        }
+
+        .format-indicator.markdown { background: #17a2b8; }
+        .format-indicator.html { background: #fd7e14; }
     </style>
 </head>
 <body>
 <div class="header">
     <h1>Flashcards Pharmacie</h1>
-    <p>Upload your JSON file to view flashcards without HTML formatting</p>
+    <p>Upload your JSON file to view flashcards with proper formatting support</p>
 </div>
 
 <div class="upload-area" id="uploadArea">
@@ -199,8 +283,15 @@
         <button onclick="showAll()">Show All</button>
         <button onclick="toggleAnswers()">Toggle Answers</button>
         <button onclick="exportClean()">Export Clean Text</button>
+        <button onclick="exportFormatted()">Export Formatted HTML</button>
         <select id="tagFilter">
             <option value="">All Tags</option>
+        </select>
+        <select id="difficultyFilter">
+            <option value="">All Difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
         </select>
     </div>
 
@@ -267,6 +358,34 @@
         reader.readAsText(file);
     }
 
+    function detectFormat(text) {
+        // Auto-detect format if not specified
+        if (text.includes('**') || text.includes('##') || text.includes('```') || text.includes('\n-') || text.includes('\n1.')) {
+            return 'markdown';
+        }
+        if (text.includes('<strong>') || text.includes('<em>') || text.includes('<p>') || text.includes('<br>')) {
+            return 'html';
+        }
+        return 'plain';
+    }
+
+    function formatContent(content, format) {
+        if (!content) return '';
+
+        // Use card format or global format or auto-detect
+        const actualFormat = format || flashcardsData.metadata?.default_format || detectFormat(content);
+
+        switch (actualFormat) {
+            case 'markdown':
+                return marked.parse(content);
+            case 'html':
+                return content;
+            default:
+                // Convert plain text to HTML with line breaks
+                return content.replace(/\n/g, '<br>');
+        }
+    }
+
     function stripHtmlTags(html) {
         const div = document.createElement('div');
         div.innerHTML = html;
@@ -279,6 +398,7 @@
 
         filteredCards = flashcardsData.flashcards;
         populateTagFilter();
+        populateDifficultyFilter();
         updateStats();
         renderCards();
         setupSearch();
@@ -289,7 +409,9 @@
         const allTags = new Set();
 
         flashcardsData.flashcards.forEach(card => {
-            card.tags.forEach(tag => allTags.add(tag));
+            if (card.tags) {
+                card.tags.forEach(tag => allTags.add(tag));
+            }
         });
 
         Array.from(allTags).sort().forEach(tag => {
@@ -299,18 +421,24 @@
             tagFilter.appendChild(option);
         });
 
-        tagFilter.addEventListener('change', filterByTag);
+        tagFilter.addEventListener('change', applyFilters);
     }
 
-    function filterByTag() {
+    function populateDifficultyFilter() {
+        const difficultyFilter = document.getElementById('difficultyFilter');
+        difficultyFilter.addEventListener('change', applyFilters);
+    }
+
+    function applyFilters() {
         const selectedTag = document.getElementById('tagFilter').value;
-        if (selectedTag) {
-            filteredCards = flashcardsData.flashcards.filter(card =>
-                card.tags.includes(selectedTag)
-            );
-        } else {
-            filteredCards = flashcardsData.flashcards;
-        }
+        const selectedDifficulty = document.getElementById('difficultyFilter').value;
+
+        filteredCards = flashcardsData.flashcards.filter(card => {
+            const tagMatch = !selectedTag || (card.tags && card.tags.includes(selectedTag));
+            const difficultyMatch = !selectedDifficulty || card.difficulty === selectedDifficulty;
+            return tagMatch && difficultyMatch;
+        });
+
         currentPage = 1;
         updateStats();
         renderCards();
@@ -337,20 +465,22 @@
 
     function updateStats() {
         const stats = document.getElementById('stats');
+        const defaultFormat = flashcardsData.metadata?.default_format || 'auto-detect';
         stats.innerHTML = `
-                <strong>Total Cards:</strong> ${flashcardsData.flashcards.length} |
-                <strong>Filtered:</strong> ${filteredCards.length} |
-                <strong>Title:</strong> ${flashcardsData.metadata.title}
-            `;
+            <strong>Total Cards:</strong> ${flashcardsData.flashcards.length} |
+            <strong>Filtered:</strong> ${filteredCards.length} |
+            <strong>Title:</strong> ${flashcardsData.metadata.title} |
+            <strong>Format:</strong> ${defaultFormat}
+        `;
     }
 
     function renderPagination() {
         const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
         const paginationHTML = `
-                <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
-                <span class="page-info">Page ${currentPage} of ${totalPages}</span>
-                <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
-            `;
+            <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+            <span class="page-info">Page ${currentPage} of ${totalPages}</span>
+            <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+        `;
 
         document.getElementById('pagination').innerHTML = paginationHTML;
         document.getElementById('paginationBottom').innerHTML = paginationHTML;
@@ -362,6 +492,11 @@
             currentPage = page;
             renderCards();
         }
+    }
+
+    function getFormatIndicator(card) {
+        const format = card.format || flashcardsData.metadata?.default_format || detectFormat(card.question + card.answer);
+        return `<span class="format-indicator ${format}">${format}</span>`;
     }
 
     function renderCards() {
@@ -378,26 +513,37 @@
         const endIndex = startIndex + cardsPerPage;
         const pageCards = filteredCards.slice(startIndex, endIndex);
 
-        cardsContainer.innerHTML = pageCards.map(card => `
+        cardsContainer.innerHTML = pageCards.map(card => {
+            const questionContent = formatContent(card.question, card.format);
+            const answerContent = formatContent(card.answer, card.format);
+            const tags = card.tags || [];
+            const difficulty = card.difficulty || 'unknown';
+
+            return `
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-id">Card #${card.id}</span>
+                        <div>
+                            <span class="card-id">Card #${card.id}</span>
+                            <span class="difficulty ${difficulty}">${difficulty}</span>
+                            ${getFormatIndicator(card)}
+                        </div>
                         <div class="tags">
-                            ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                         </div>
                     </div>
                     <div class="question">
                         <h3>Question:</h3>
-                        <p>${stripHtmlTags(card.question)}</p>
+                        <div class="question-content">${questionContent}</div>
                     </div>
                     ${showAnswers ? `
                         <div class="answer">
                             <h3>Answer:</h3>
-                            <p>${stripHtmlTags(card.answer)}</p>
+                            <div class="answer-content">${answerContent}</div>
                         </div>
                     ` : ''}
                 </div>
-            `).join('');
+            `;
+        }).join('');
 
         renderPagination();
     }
@@ -405,6 +551,7 @@
     function showAll() {
         filteredCards = flashcardsData.flashcards;
         document.getElementById('tagFilter').value = '';
+        document.getElementById('difficultyFilter').value = '';
         document.getElementById('searchInput').value = '';
         currentPage = 1;
         updateStats();
@@ -418,16 +565,53 @@
 
     function exportClean() {
         const cleanText = filteredCards.map(card => {
-            const question = stripHtmlTags(card.question);
-            const answer = stripHtmlTags(card.answer);
-            return `CARD #${card.id}\nTags: ${card.tags.join(', ')}\n\nQ: ${question}\n\nA: ${answer}\n\n${'='.repeat(50)}\n`;
+            const question = stripHtmlTags(formatContent(card.question, card.format));
+            const answer = stripHtmlTags(formatContent(card.answer, card.format));
+            const tags = card.tags ? card.tags.join(', ') : 'No tags';
+            return `CARD #${card.id}\nDifficulty: ${card.difficulty || 'Unknown'}\nTags: ${tags}\n\nQ: ${question}\n\nA: ${answer}\n\n${'='.repeat(50)}\n`;
         }).join('\n');
 
-        const blob = new Blob([cleanText], { type: 'text/plain' });
+        downloadFile(cleanText, 'flashcards_clean.txt', 'text/plain');
+    }
+
+    function exportFormatted() {
+        const formattedHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>${flashcardsData.metadata.title}</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .card { border: 1px solid #ddd; margin: 20px 0; padding: 15px; border-radius: 8px; }
+        .question { font-weight: bold; color: #333; margin-bottom: 10px; }
+        .answer { color: #666; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; }
+        .tags { font-size: 0.8em; color: #999; margin-top: 10px; }
+        code { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>${flashcardsData.metadata.title}</h1>
+    ${filteredCards.map(card => `
+        <div class="card">
+            <div class="question">${formatContent(card.question, card.format)}</div>
+            <div class="answer">${formatContent(card.answer, card.format)}</div>
+            <div class="tags">Tags: ${card.tags ? card.tags.join(', ') : 'None'} | Difficulty: ${card.difficulty || 'Unknown'}</div>
+        </div>
+    `).join('')}
+</body>
+</html>`;
+
+        downloadFile(formattedHTML, 'flashcards_formatted.html', 'text/html');
+    }
+
+    function downloadFile(content, filename, type) {
+        const blob = new Blob([content], { type: type });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'flashcards_clean.txt';
+        a.download = filename;
         a.click();
         URL.revokeObjectURL(url);
     }
