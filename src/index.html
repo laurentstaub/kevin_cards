@@ -10,39 +10,42 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <header>
-        <h1>FlashPharma</h1>
-        <p>Cartes pour révision</p>
-        <div class="theme-toggle">
-            <span class="theme-toggle-label">Mode</span>
-            <label class="theme-toggle-switch">
+    <header class="header">
+        <div class="theme-toggle" id="themeToggle">
+            <span class="theme-label">Mode</span>
+            <label class="toggle-switch" id="toggleSwitch">
                 <input type="checkbox" id="theme-toggle-input">
-                <span class="theme-toggle-slider">
-                    <span class="theme-toggle-icon sun">☀️</span>
-                    <span class="theme-toggle-icon moon">🌙</span>
+                <span class="toggle-slider">
+                    <span class="toggle-icon sun">☀️</span>
+                    <span class="toggle-icon moon">🌙</span>
                 </span>
             </label>
         </div>
+        <h1 class="fade-in">FlashPharma</h1>
+        <p>Cartes pour révision</p>
+
     </header>
     <div class="container">
-        <main>
-            <div class="flashcard-container">
+        <main class="main-content">
+            <div class="flashcard-container fade-in">
                 <div class="flashcard" id="flashcard">
-                    <div class="flashcard-front" id="question">
-                        <p>Cliquez pour commencer</p>
-                    </div>
-                    <div class="flashcard-back" id="answer">
-                        <p>La réponse apparaîtra ici</p>
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front" id="question">
+                            <p>Cliquez pour commencer</p>
+                        </div>
+                        <div class="flashcard-back" id="answer">
+                            <p>La réponse apparaîtra ici</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="controls">
-                <button id="not-known-btn">X Non sue</button>
-                <button id="recalled-btn">Je sais !</button>
+            <div class="controls fade-in">
+                <button class="btn btn-secondary" id="notKnownBtn">X Non sue</button>
+                <button class="btn btn-primary" id="recalledBtn">Je sais !</button>
             </div>
 
-            <div class="progress-container">
-                <div class="progress">
+            <div class="progress-section fade-in">
+                <div class="progress-item">
                     <span id="current-card">0</span>/<span id="total-cards">0</span>
                     <span class="recalled-counter">Rappelées: <span id="recalled-count">0</span></span>
                 </div>
@@ -50,7 +53,7 @@
         </main>
     </div>
 
-    <footer>
+    <footer class="footer">
         <p>2025 - FlashPharma - Flashcards pour Pharmaciens... et tous ceux que la pharmacie intéresse</p>
     </footer>
 

@@ -5,12 +5,13 @@ let flashcards = [];
 const flashcardElement = document.getElementById('flashcard');
 const questionElement = document.getElementById('question');
 const answerElement = document.getElementById('answer');
-const notKnownButton = document.getElementById('not-known-btn');
-const recalledButton = document.getElementById('recalled-btn');
+const notKnownBtn = document.getElementById('notKnownBtn');
+const recalledBtn = document.getElementById('recalledBtn');
 const currentCardElement = document.getElementById('current-card');
 const totalCardsElement = document.getElementById('total-cards');
 const recalledCountElement = document.getElementById('recalled-count');
 const themeToggleInput = document.getElementById('theme-toggle-input');
+const themeToggle = document.getElementById('themeToggle');
 
 // State variables
 let currentCardIndex = 0;
@@ -18,10 +19,9 @@ let isFlipped = false;
 let recalledCount = 0;
 
 function initFlashcards() {
-    // Set total cards count
-    totalCardsElement.textContent = flashcards.length;
+    totalCardsElement.textContent = String(flashcards.length);
     // Initialize recalled count
-    recalledCountElement.textContent = recalledCount;
+    recalledCountElement.textContent = String(recalledCount);
     showCard(currentCardIndex);
     updateButtonStates();
 }
@@ -31,16 +31,22 @@ function showCard(index) {
 
     const tags = `
         <div class="card-header">
-            <div class="tag-container">
-                <div class="tags" id="tags">
-                    ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                </div>
+            <div class="question-indicator">Question</div>
+            <div class="tags-container" id="questionTags">
+                ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+        </div>`;
+
+    const tagsBack = `
+        <div class="card-header">
+            <div class="answer-indicator">Réponse</div>
+            <div class="tags-container" id="answerTags">
+                ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
             </div>
         </div>`;
 
     questionElement.innerHTML = tags + card.question;
-    console.log(questionElement);
-    answerElement.innerHTML = card.answer;
+    answerElement.innerHTML = tagsBack + card.answer;
 
     currentCardElement.textContent = index + 1;
 
@@ -50,75 +56,82 @@ function showCard(index) {
 
 function flipCard() {
     isFlipped = !isFlipped;
-    if (isFlipped) {
-        flashcardElement.classList.add('flipped');
-    } else {
-        flashcardElement.classList.remove('flipped');
-    }
+    flashcardElement.classList.toggle('flipped', isFlipped);
 }
 
 function nextCard(isRecalled) {
     if (currentCardIndex < flashcards.length - 1) {
-        // If the card was recalled, increment the counter
         if (isRecalled) {
             recalledCount++;
             recalledCountElement.textContent = recalledCount;
         }
 
-        // Move to the next card
         currentCardIndex++;
         showCard(currentCardIndex);
         updateButtonStates();
     }
 }
 
-function handleNotKnown() {
-    nextCard(false);
-}
-
-function handleRecalled() {
-    nextCard(true);
-}
 
 function updateButtonStates() {
     // Disable both buttons if we're at the last card
     const isLastCard = currentCardIndex === flashcards.length - 1;
-    notKnownButton.disabled = isLastCard;
-    recalledButton.disabled = isLastCard;
+    notKnownBtn.disabled = isLastCard;
+    recalledBtn.disabled = isLastCard;
 }
 
 // Event listeners
 flashcardElement.addEventListener('click', flipCard);
-notKnownButton.addEventListener('click', handleNotKnown);
-recalledButton.addEventListener('click', handleRecalled);
+notKnownBtn.addEventListener('click', () => nextCard(false));
+recalledBtn.addEventListener('click', () => nextCard(true));
 
 // Theme toggle
 function initTheme() {
-    // Check if user has a saved theme preference
     const savedTheme = localStorage.getItem('theme');
+    const toggleSwitch = document.getElementById('toggleSwitch');
 
     if (savedTheme === 'light') {
-        // If light theme was saved, switch to light theme
-        document.documentElement.classList.add('light-theme');
+        document.documentElement.setAttribute('data-theme', 'light');
         themeToggleInput.checked = true;
+        toggleSwitch.classList.add('active');
     } else {
-        // Default is dark theme (already set in CSS)
+        document.documentElement.removeAttribute('data-theme');
         themeToggleInput.checked = false;
+        toggleSwitch.classList.remove('active');
     }
 }
 
 function toggleTheme() {
+    const toggleSwitch = document.getElementById('toggleSwitch');
+
     if (themeToggleInput.checked) {
-        document.documentElement.classList.add('light-theme');
+        document.documentElement.setAttribute('data-theme', 'light');
         localStorage.setItem('theme', 'light');
+        toggleSwitch.classList.add('active');
     } else {
-        document.documentElement.classList.remove('light-theme');
+        document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme', 'dark');
+        toggleSwitch.classList.remove('active');
     }
 }
 
-// Event listener for theme toggle
+// Event listeners for theme toggle
 themeToggleInput.addEventListener('change', toggleTheme);
+
+// Add click event to the theme toggle container
+themeToggle.addEventListener('click', function(e) {
+    // Don't handle clicks on the input itself, let the browser handle those
+    if (e.target === themeToggleInput) {
+        return;
+    }
+
+    // Prevent default behavior
+    e.preventDefault();
+    // Toggle the checked state
+    themeToggleInput.checked = !themeToggleInput.checked;
+    // Call the toggle theme function
+    toggleTheme();
+});
 
 // Function to load questions from JSON file
 async function loadQuestions() {
