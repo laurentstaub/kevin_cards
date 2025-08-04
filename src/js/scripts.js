@@ -1,4 +1,3 @@
-
 let flashcards = [];
 
 // DOM elements
@@ -10,17 +9,16 @@ const recalledBtn = document.getElementById('recalledBtn');
 const currentCardElement = document.getElementById('current-card');
 const totalCardsElement = document.getElementById('total-cards');
 const recalledCountElement = document.getElementById('recalled-count');
-const themeToggleInput = document.getElementById('theme-toggle-input');
 const themeToggle = document.getElementById('themeToggle');
 
 // State variables
 let currentCardIndex = 0;
 let isFlipped = false;
 let recalledCount = 0;
+let isLightTheme = false;
 
 function initFlashcards() {
     totalCardsElement.textContent = String(flashcards.length);
-    // Initialize recalled count
     recalledCountElement.textContent = String(recalledCount);
     showCard(currentCardIndex);
     updateButtonStates();
@@ -72,66 +70,33 @@ function nextCard(isRecalled) {
     }
 }
 
-
 function updateButtonStates() {
-    // Disable both buttons if we're at the last card
     const isLastCard = currentCardIndex === flashcards.length - 1;
     notKnownBtn.disabled = isLastCard;
     recalledBtn.disabled = isLastCard;
 }
 
-// Event listeners
-flashcardElement.addEventListener('click', flipCard);
-notKnownBtn.addEventListener('click', () => nextCard(false));
-recalledBtn.addEventListener('click', () => nextCard(true));
-
-// Theme toggle
+// Theme toggle functions
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
+    document.documentElement.setAttribute('data-theme', 'dark');
     const toggleSwitch = document.getElementById('toggleSwitch');
-
-    if (savedTheme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        themeToggleInput.checked = true;
-        toggleSwitch.classList.add('active');
-    } else {
-        document.documentElement.removeAttribute('data-theme');
-        themeToggleInput.checked = false;
+    if (toggleSwitch) {
         toggleSwitch.classList.remove('active');
     }
 }
 
 function toggleTheme() {
+    isLightTheme = !isLightTheme;
     const toggleSwitch = document.getElementById('toggleSwitch');
 
-    if (themeToggleInput.checked) {
+    if (isLightTheme) {
         document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
-        toggleSwitch.classList.add('active');
+        if (toggleSwitch) toggleSwitch.classList.add('active');
     } else {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'dark');
-        toggleSwitch.classList.remove('active');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        if (toggleSwitch) toggleSwitch.classList.remove('active');
     }
 }
-
-// Event listeners for theme toggle
-themeToggleInput.addEventListener('change', toggleTheme);
-
-// Add click event to the theme toggle container
-themeToggle.addEventListener('click', function(e) {
-    // Don't handle clicks on the input itself, let the browser handle those
-    if (e.target === themeToggleInput) {
-        return;
-    }
-
-    // Prevent default behavior
-    e.preventDefault();
-    // Toggle the checked state
-    themeToggleInput.checked = !themeToggleInput.checked;
-    // Call the toggle theme function
-    toggleTheme();
-});
 
 // Function to load questions from JSON file
 async function loadQuestions() {
@@ -144,7 +109,6 @@ async function loadQuestions() {
         const allFlashcards = data.flashcards;
         const selectedFlashcards = getRandomFlashcards(allFlashcards, 10);
 
-        // Format the flashcards to match the expected structure
         flashcards = selectedFlashcards.map(card => ({
             tags: card.tags,
             question: card.question,
@@ -154,7 +118,6 @@ async function loadQuestions() {
         initFlashcards();
     } catch (error) {
         console.error('Error loading questions:', error);
-        // Fallback to empty array if there's an error
         flashcards = [];
         initFlashcards();
     }
@@ -172,6 +135,12 @@ function getRandomFlashcards(array, n) {
 
     return shuffled.slice(0, n);
 }
+
+// Event listeners
+flashcardElement.addEventListener('click', flipCard);
+notKnownBtn.addEventListener('click', () => nextCard(false));
+recalledBtn.addEventListener('click', () => nextCard(true));
+themeToggle.addEventListener('click', toggleTheme);
 
 // Initialize when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
