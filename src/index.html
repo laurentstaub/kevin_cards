@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body data-theme="dark">
 <header class="header">
     <div class="theme-toggle" id="themeToggle">
         <span class="theme-label">Mode</span>
@@ -43,8 +43,16 @@
 
         <div class="progress-section fade-in">
             <div class="progress-item">
-                <span id="current-card">0</span>/<span id="total-cards">0</span>
-                <span class="recalled-counter">Rappelées: <span id="recalled-count">0</span></span>
+                <span>Progression</span>
+                <div class="progress-item">
+                    <span id="currentCard">0</span>
+                    /
+                    <span id="totalCards">0</span>
+                </div>
+            </div>
+            <div class="progress-item">
+                <span>Rappelées</span>
+                <div class="recalled-badge" id="recalledCount">0</div>
             </div>
         </div>
     </main>
