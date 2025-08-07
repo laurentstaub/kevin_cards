@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body data-theme="dark">
@@ -15,8 +16,8 @@
         <span class="theme-label">Mode</span>
         <div class="toggle-switch" id="toggleSwitch">
             <div class="toggle-slider"></div>
-            <span class="toggle-icon sun">☀️</span>
-            <span class="toggle-icon moon">🌙</span>
+            <span class="toggle-icon sun"><i class="fas fa-sun"></i></span>
+            <span class="toggle-icon moon"><i class="fas fa-moon"></i></span>
         </div>
     </div>
     <h1 class="fade-in">FlashPharma</h1>
@@ -37,8 +38,9 @@
             </div>
         </div>
         <div class="controls fade-in">
-            <button class="btn btn-secondary" id="notKnownBtn">❌ Non sue</button>
-            <button class="btn btn-primary" id="recalledBtn">✅ Je sais !</button>
+            <button class="btn btn-secondary" id="notKnownBtn"><i class="fas fa-times"></i> Non sue</button>
+            <button class="btn btn-primary" id="recalledBtn"><i class="fas fa-check"></i> Je sais !</button>
+            <button class="btn btn-reset" id="resetBtn" style="display: none;"><i class="fas fa-redo"></i> Recommencer</button>
         </div>
 
         <div class="progress-section fade-in">

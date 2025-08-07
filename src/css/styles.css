@@ -418,6 +418,18 @@ body::before {
   border-color: var(--primary-color);
 }
 
+.btn-reset {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-reset:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
 /* Progress */
 .progress-section {
   background: var(--bg-elevated);

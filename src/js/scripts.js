@@ -7,7 +7,7 @@ let recalledCount = 0;
 
 // DOM elements
 let flashcardElement, questionElement, answerElement;
-let notKnownBtn, recalledBtn, currentCardElement, totalCardsElement, recalledCountElement;
+let notKnownBtn, recalledBtn, resetBtn, currentCardElement, totalCardsElement, recalledCountElement;
 let themeToggle, toggleSwitch;
 
 function initFlashcards() {
@@ -69,6 +69,11 @@ function updateButtonStates() {
     const isLastCard = currentCardIndex === flashcards.length - 1;
     notKnownBtn.disabled = isLastCard;
     recalledBtn.disabled = isLastCard;
+    
+    // Show reset button when we reach the last card
+    if (resetBtn) {
+        resetBtn.style.display = isLastCard ? 'flex' : 'none';
+    }
 }
 
 function initTheme() {
@@ -126,6 +131,16 @@ function getRandomFlashcards(array, count) {
     return shuffled.slice(0, count);
 }
 
+function resetGame() {
+    // Reset state variables
+    currentCardIndex = 0;
+    isFlipped = false;
+    recalledCount = 0;
+    
+    // Load new set of questions and restart
+    loadQuestions();
+}
+
 function initializeApp() {
     // Get DOM elements
     flashcardElement = document.getElementById('flashcard');
@@ -133,6 +148,7 @@ function initializeApp() {
     answerElement = document.getElementById('answer');
     notKnownBtn = document.getElementById('notKnownBtn');
     recalledBtn = document.getElementById('recalledBtn');
+    resetBtn = document.getElementById('resetBtn');
     currentCardElement = document.getElementById('currentCard');
     totalCardsElement = document.getElementById('totalCards');
     recalledCountElement = document.getElementById('recalledCount');
@@ -150,6 +166,10 @@ function initializeApp() {
 
     if (recalledBtn) {
         recalledBtn.addEventListener('click', () => nextCard(true));
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', resetGame);
     }
 
     if (themeToggle) {
