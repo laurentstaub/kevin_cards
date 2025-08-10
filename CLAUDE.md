@@ -4,10 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FlashPharma is a French-language flashcard application designed for pharmacy students and professionals. The current implementation is Phase 1 (MVP) of a planned multi-phase project that will eventually evolve into a full Vue.js PWA with backend API.
+FlashPharma is a French-language flashcard application designed for pharmacy students and professionals. The current implementation is Phase 1 (MVP) of a planned multi-phase project that will eventually evolve into a full React PWA with backend API.
 
 **Current State:** Simple client-side flashcard application with Express.js static file server
-**Target State:** Full-stack PWA with Vue.js frontend, Node.js/Express API, PostgreSQL database, and spaced repetition algorithm
+**Target State:** Full-stack PWA with React frontend, Node.js/Express API, PostgreSQL database, and spaced repetition algorithm
 
 ## Development Commands
 
@@ -124,7 +124,7 @@ La surveillance de la tension artérielle est recommandée dès une dose de 225 
 
 ### Future Migration Path (Phases 2-4)
 The requirements document (`00_requirements.md`) outlines the planned evolution:
-- **Phase 2:** Vue.js frontend with Pinia state management
+- **Phase 2:** React frontend with Redux or Zustand state management
 - **Phase 3:** Node.js/Express API with PostgreSQL and Prisma ORM  
 - **Phase 4:** PWA with Capacitor for mobile deployment
 
