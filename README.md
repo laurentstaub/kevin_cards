@@ -1,7 +1,9 @@
-# Cartes Mémoire pour Pharmaciens
+# Flashcards pour Pharmaciens
 
 ## Description
-Ce projet est une application web de cartes mémoire (flashcards) conçue spécifiquement pour les pharmaciens. Il s'agit de la phase 1 du développement, qui comprend un système de cartes de base avec un ensemble fixe de questions et réponses en français.
+Ce projet est une application web de flashcards conçue spécifiquement pour les pharmaciens. Il s'agit de la phase 1 du développement, qui comprend un système de cartes de base avec un ensemble fixe de questions et réponses en français.
+
+![flashcards_screen.png](flashcards_screen.png)
 
 ## Fonctionnalités
 - Interface utilisateur simple et intuitive
@@ -36,6 +38,3 @@ Le jeu de cartes actuel contient 10 questions/réponses couvrant divers sujets p
 - Possibilité pour les utilisateurs d'ajouter leurs propres cartes
 - Système de suivi des performances
 - Mode quiz
-
-## Licence
-© 2023 Cartes Mémoire pour Pharmaciens
