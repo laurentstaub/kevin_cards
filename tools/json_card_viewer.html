@@ -107,6 +107,21 @@
         .difficulty.easy { background: #d4edda; color: #155724; }
         .difficulty.medium { background: #fff3cd; color: #856404; }
         .difficulty.hard { background: #f8d7da; color: #721c24; }
+        
+        .difficulty.editing {
+            padding: 0;
+        }
+        
+        .difficulty-select {
+            padding: 2px 8px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: #e9ecef;
+            cursor: pointer;
+        }
 
         .tags {
             display: flex;
@@ -258,6 +273,106 @@
 
         .format-indicator.markdown { background: #17a2b8; }
         .format-indicator.html { background: #fd7e14; }
+        
+        /* Editing styles */
+        .editable {
+            position: relative;
+            cursor: text;
+            min-height: 20px;
+        }
+        
+        .editable:hover {
+            background: rgba(0, 123, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .editable.editing {
+            background: white;
+            border: 2px solid #007bff;
+            border-radius: 4px;
+        }
+        
+        .edit-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: none;
+            outline: none;
+            resize: vertical;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+        
+        .edit-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-small {
+            padding: 4px 12px;
+            font-size: 0.8em;
+        }
+        
+        .tag-editor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            min-height: 30px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .tag-input {
+            border: none;
+            outline: none;
+            min-width: 100px;
+            font-size: 0.8em;
+        }
+        
+        .tag.removable {
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            padding-right: 20px;
+        }
+        
+        .tag.removable:hover {
+            background: #0056b3;
+        }
+        
+        .tag .remove-tag {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .edit-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card.modified {
+            border-left-color: #28a745;
+            border-left-width: 6px;
+        }
     </style>
 </head>
 <body>
@@ -284,6 +399,8 @@
         <button onclick="toggleAnswers()">Toggle Answers</button>
         <button onclick="exportClean()">Export Clean Text</button>
         <button onclick="exportFormatted()">Export Formatted HTML</button>
+        <button onclick="exportModifiedJSON()" id="exportJSONBtn" style="display: none;">Export Modified JSON</button>
+        <button onclick="toggleEditMode()" id="editModeBtn">Enable Edit Mode</button>
         <select id="tagFilter">
             <option value="">All Tags</option>
         </select>
@@ -308,12 +425,20 @@
     let showAnswers = true;
     let currentPage = 1;
     const cardsPerPage = 10;
+    let editMode = false;
+    let modifiedCards = new Set();
+    let allTags = new Set();
 
     // File handling
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
 
-    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('click', (e) => {
+        // Only trigger file input if clicking the area itself, not the button
+        if (e.target === uploadArea || e.target.closest('p')) {
+            fileInput.click();
+        }
+    });
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
         uploadArea.classList.add('dragover');
@@ -397,6 +522,15 @@
         document.getElementById('content').style.display = 'block';
 
         filteredCards = flashcardsData.flashcards;
+        
+        // Collect all tags for autocomplete
+        allTags = new Set();
+        flashcardsData.flashcards.forEach(card => {
+            if (card.tags) {
+                card.tags.forEach(tag => allTags.add(tag));
+            }
+        });
+        
         populateTagFilter();
         populateDifficultyFilter();
         updateStats();
@@ -518,27 +652,27 @@
             const answerContent = formatContent(card.answer, card.format);
             const tags = card.tags || [];
             const difficulty = card.difficulty || 'unknown';
+            const isModified = modifiedCards.has(card.id);
 
             return `
-                <div class="card">
+                <div class="card ${isModified ? 'modified' : ''}" data-card-id="${card.id}">
+                    ${isModified ? '<div class="edit-indicator">✓</div>' : ''}
                     <div class="card-header">
                         <div>
                             <span class="card-id">Card #${card.id}</span>
-                            <span class="difficulty ${difficulty}">${difficulty}</span>
+                            ${renderDifficultyEditor(card, difficulty)}
                             ${getFormatIndicator(card)}
                         </div>
-                        <div class="tags">
-                            ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
+                        ${renderTagsEditor(card, tags)}
                     </div>
                     <div class="question">
                         <h3>Question:</h3>
-                        <div class="question-content">${questionContent}</div>
+                        ${renderContentEditor(card, 'question', questionContent, card.question)}
                     </div>
                     ${showAnswers ? `
                         <div class="answer">
                             <h3>Answer:</h3>
-                            <div class="answer-content">${answerContent}</div>
+                            ${renderContentEditor(card, 'answer', answerContent, card.answer)}
                         </div>
                     ` : ''}
                 </div>
@@ -546,6 +680,11 @@
         }).join('');
 
         renderPagination();
+        
+        // Add event listeners for editing
+        if (editMode) {
+            addEditEventListeners();
+        }
     }
 
     function showAll() {
@@ -605,6 +744,201 @@
 
         downloadFile(formattedHTML, 'flashcards_formatted.html', 'text/html');
     }
+    
+    // Edit mode functions
+    function toggleEditMode() {
+        editMode = !editMode;
+        const btn = document.getElementById('editModeBtn');
+        const exportBtn = document.getElementById('exportJSONBtn');
+        
+        if (editMode) {
+            btn.textContent = 'Disable Edit Mode';
+            btn.style.background = '#dc3545';
+            if (modifiedCards.size > 0) {
+                exportBtn.style.display = 'inline-block';
+            }
+        } else {
+            btn.textContent = 'Enable Edit Mode';
+            btn.style.background = '#007bff';
+            exportBtn.style.display = 'none';
+        }
+        
+        renderCards();
+    }
+    
+    function renderDifficultyEditor(card, difficulty) {
+        if (!editMode) {
+            return `<span class="difficulty ${difficulty}">${difficulty}</span>`;
+        }
+        
+        return `
+            <select class="difficulty-select" onchange="updateCardField(${card.id}, 'difficulty', this.value)">
+                <option value="easy" ${difficulty === 'easy' ? 'selected' : ''}>Easy</option>
+                <option value="medium" ${difficulty === 'medium' ? 'selected' : ''}>Medium</option>
+                <option value="hard" ${difficulty === 'hard' ? 'selected' : ''}>Hard</option>
+            </select>
+        `;
+    }
+    
+    function renderTagsEditor(card, tags) {
+        if (!editMode) {
+            return `
+                <div class="tags">
+                    ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+            `;
+        }
+        
+        return `
+            <div class="tags tag-editor" data-card-id="${card.id}">
+                ${tags.map(tag => `<span class="tag removable" data-tag="${tag}">${tag}<span class="remove-tag">×</span></span>`).join('')}
+                <input type="text" class="tag-input" placeholder="Add tag..." data-card-id="${card.id}">
+            </div>
+        `;
+    }
+    
+    function renderContentEditor(card, field, formattedContent, rawContent) {
+        if (!editMode) {
+            return `<div class="${field}-content">${formattedContent}</div>`;
+        }
+        
+        return `
+            <div class="${field}-content editable" data-card-id="${card.id}" data-field="${field}" data-raw="${encodeURIComponent(rawContent)}">
+                ${formattedContent}
+            </div>
+        `;
+    }
+    
+    function addEditEventListeners() {
+        // Content editing
+        document.querySelectorAll('.editable').forEach(element => {
+            element.addEventListener('click', startEditingContent);
+        });
+        
+        // Tag removal
+        document.querySelectorAll('.tag.removable').forEach(tag => {
+            tag.addEventListener('click', removeTag);
+        });
+        
+        // Tag addition
+        document.querySelectorAll('.tag-input').forEach(input => {
+            input.addEventListener('keypress', addTag);
+            input.addEventListener('blur', finishTagEdit);
+        });
+    }
+    
+    function startEditingContent(e) {
+        const element = e.currentTarget;
+        if (element.classList.contains('editing')) return;
+        
+        const cardId = parseInt(element.dataset.cardId);
+        const field = element.dataset.field;
+        const rawContent = decodeURIComponent(element.dataset.raw);
+        
+        element.classList.add('editing');
+        element.innerHTML = `
+            <textarea class="edit-textarea">${rawContent}</textarea>
+            <div class="edit-actions">
+                <button class="btn btn-small btn-primary" onclick="saveContentEdit(${cardId}, '${field}')">Save</button>
+                <button class="btn btn-small btn-secondary" onclick="cancelContentEdit(${cardId}, '${field}')">Cancel</button>
+            </div>
+        `;
+        
+        element.querySelector('textarea').focus();
+    }
+    
+    function saveContentEdit(cardId, field) {
+        const element = document.querySelector(`[data-card-id="${cardId}"][data-field="${field}"]`);
+        const textarea = element.querySelector('textarea');
+        const newValue = textarea.value;
+        
+        updateCardField(cardId, field, newValue);
+        element.classList.remove('editing');
+        
+        // Re-render the content
+        const formattedContent = formatContent(newValue);
+        element.innerHTML = formattedContent;
+        element.dataset.raw = encodeURIComponent(newValue);
+    }
+    
+    function cancelContentEdit(cardId, field) {
+        const element = document.querySelector(`[data-card-id="${cardId}"][data-field="${field}"]`);
+        const rawContent = decodeURIComponent(element.dataset.raw);
+        
+        element.classList.remove('editing');
+        element.innerHTML = formatContent(rawContent);
+    }
+    
+    function removeTag(e) {
+        e.stopPropagation();
+        const tagElement = e.currentTarget;
+        const tagValue = tagElement.dataset.tag;
+        const cardId = parseInt(tagElement.closest('.tag-editor').dataset.cardId);
+        
+        const card = flashcardsData.flashcards.find(c => c.id === cardId);
+        if (card && card.tags) {
+            card.tags = card.tags.filter(tag => tag !== tagValue);
+            modifiedCards.add(cardId);
+            updateExportButton();
+            renderCards();
+        }
+    }
+    
+    function addTag(e) {
+        if (e.key === 'Enter' && e.target.value.trim()) {
+            const cardId = parseInt(e.target.dataset.cardId);
+            const newTag = e.target.value.trim();
+            
+            const card = flashcardsData.flashcards.find(c => c.id === cardId);
+            if (card) {
+                if (!card.tags) card.tags = [];
+                if (!card.tags.includes(newTag)) {
+                    card.tags.push(newTag);
+                    allTags.add(newTag);
+                    modifiedCards.add(cardId);
+                    updateExportButton();
+                    renderCards();
+                }
+            }
+        }
+    }
+    
+    function finishTagEdit(e) {
+        if (e.target.value.trim()) {
+            addTag({key: 'Enter', target: e.target});
+        }
+    }
+    
+    function updateCardField(cardId, field, value) {
+        const card = flashcardsData.flashcards.find(c => c.id === cardId);
+        if (card) {
+            card[field] = value;
+            modifiedCards.add(cardId);
+            updateExportButton();
+            
+            if (field !== 'difficulty') {
+                renderCards(); // Only re-render for content changes
+            }
+        }
+    }
+    
+    function updateExportButton() {
+        const exportBtn = document.getElementById('exportJSONBtn');
+        if (editMode && modifiedCards.size > 0) {
+            exportBtn.style.display = 'inline-block';
+            exportBtn.textContent = `Export Modified JSON (${modifiedCards.size} changes)`;
+        } else {
+            exportBtn.style.display = 'none';
+        }
+    }
+    
+    function exportModifiedJSON() {
+        const modifiedData = JSON.parse(JSON.stringify(flashcardsData));
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `flashcards_modified_${timestamp}.json`;
+        
+        downloadFile(JSON.stringify(modifiedData, null, 2), filename, 'application/json');
+    }
 
     function downloadFile(content, filename, type) {
         const blob = new Blob([content], { type: type });
@@ -615,6 +949,13 @@
         a.click();
         URL.revokeObjectURL(url);
     }
+    
+    // Make functions globally available
+    window.updateCardField = updateCardField;
+    window.saveContentEdit = saveContentEdit;
+    window.cancelContentEdit = cancelContentEdit;
+    window.toggleEditMode = toggleEditMode;
+    window.exportModifiedJSON = exportModifiedJSON;
 </script>
 </body>
 </html>

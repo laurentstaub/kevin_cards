@@ -14,7 +14,15 @@ app.use(express.static(path.join(__dirname, 'src')));
 // Serve static files from the zz_questions directory
 app.use('/zz_questions', express.static(path.join(__dirname, 'zz_questions')));
 
-// Serve the index.html file for all routes
+// Serve admin panel static files
+app.use('/admin', express.static(path.join(__dirname, 'admin')));
+
+// Serve admin panel index
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin', 'index.html'));
+});
+
+// Serve the main app index.html file for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'src', 'index.html'));
 });
