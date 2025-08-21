@@ -223,46 +223,39 @@ class AdminApp {
     grid.innerHTML = questions.map(question => `
       <div class="question-card">
         <div class="question-header">
-          <span class="question-id">Question #${question.id}</span>
-          <span class="question-status status-${question.status}">
-            ${this.getStatusLabel(question.status)}
-          </span>
+          <div class="question-header-left">
+            <span class="question-id">Question #${question.id}</span>
+            <span class="question-status status-${question.status}">
+              ${this.getStatusLabel(question.status)}
+            </span>
+          </div>
+          <div class="question-header-right">
+            <span class="question-date">${this.formatDate(question.createdAt)}</span>
+            <div class="question-actions-compact">
+              <button class="btn btn-xs btn-outline" onclick="adminApp.editQuestion(${question.id})" title="Modifier">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-xs btn-primary" onclick="adminApp.previewQuestion(${question.id})" title="Aperçu">
+                <i class="fas fa-eye"></i>
+              </button>
+              ${this.getCompactStatusActions(question)}
+            </div>
+          </div>
+        </div>
+        
+        <div class="question-tags">
+          ${(question.tags || []).map(tag => `
+            <span class="tag">
+              ${tag.name}
+            </span>
+          `).join('')}
         </div>
         
         <div class="question-content">
-          <h3>Question:</h3>
           <div class="question-preview">${this.stripHtml(question.questionText)}</div>
           ${this.showAnswers ? `
-            <h3 style="margin-top: 1rem;">Réponse:</h3>
-            <div class="question-preview" style="color: var(--text-secondary);">${this.stripHtml(question.answerText)}</div>
+            <div class="question-preview answer-preview">${this.stripHtml(question.answerText)}</div>
           ` : ''}
-        </div>
-        
-        <div class="question-meta">
-          <div class="question-tags">
-            ${(question.tags || []).map(tag => `
-              <span class="tag" style="background-color: ${tag.color}20; color: ${tag.color}">
-                ${tag.name}
-              </span>
-            `).join('')}
-          </div>
-          
-          <div class="question-info">
-            <span>Par ${question.authorName || 'Inconnu'}</span>
-            <span>• ${this.formatDate(question.createdAt)}</span>
-          </div>
-        </div>
-        
-        <div class="question-actions">
-          <button class="btn btn-sm btn-outline" onclick="adminApp.editQuestion(${question.id})">
-            <i class="fas fa-edit"></i>
-            Modifier
-          </button>
-          <button class="btn btn-sm btn-primary" onclick="adminApp.previewQuestion(${question.id})">
-            <i class="fas fa-eye"></i>
-            Aperçu
-          </button>
-          ${this.getStatusActions(question)}
         </div>
       </div>
     `).join('');
@@ -349,7 +342,7 @@ class AdminApp {
           <div class="question-meta">
             <div class="question-tags">
               ${(question.tags || []).map(tag => `
-                <span class="tag" style="background-color: ${tag.color}20; color: ${tag.color}">
+                <span class="tag">
                   ${tag.name}
                 </span>
               `).join('')}
@@ -974,6 +967,36 @@ class AdminApp {
           <button class="btn btn-sm btn-secondary" onclick="adminApp.disableQuestion(${question.id})">
             <i class="fas fa-eye-slash"></i>
             Désactiver
+          </button>
+        `);
+        break;
+    }
+    
+    return actions.join('');
+  }
+
+  getCompactStatusActions(question) {
+    const actions = [];
+    
+    switch (question.status) {
+      case 'draft':
+        actions.push(`
+          <button class="btn btn-xs btn-warning" onclick="adminApp.submitForReview(${question.id})" title="Soumettre pour révision">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        `);
+        break;
+      case 'validated':
+        actions.push(`
+          <button class="btn btn-xs btn-success" onclick="adminApp.publishQuestion(${question.id})" title="Publier">
+            <i class="fas fa-check"></i>
+          </button>
+        `);
+        break;
+      case 'published':
+        actions.push(`
+          <button class="btn btn-xs btn-secondary" onclick="adminApp.disableQuestion(${question.id})" title="Désactiver">
+            <i class="fas fa-eye-slash"></i>
           </button>
         `);
         break;

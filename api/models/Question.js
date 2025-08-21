@@ -122,8 +122,16 @@ class Question {
       }
 
       if (search) {
-        whereConditions.push(`q.search_vector @@ plainto_tsquery('french', $${paramIndex++})`);
-        queryParams.push(search);
+        // Combine full-text search with trigram matching for better partial word support
+        const searchParam1 = paramIndex++;
+        const searchParam2 = paramIndex++;
+        const searchParam3 = paramIndex++;
+        whereConditions.push(`(
+          q.search_vector @@ plainto_tsquery('french', $${searchParam1}) OR
+          q.question_text ILIKE $${searchParam2} OR
+          q.answer_text ILIKE $${searchParam3}
+        )`);
+        queryParams.push(search, `%${search}%`, `%${search}%`);
       }
 
       if (tagIds && tagIds.length > 0) {
@@ -147,6 +155,13 @@ class Question {
       queryParams.push(limit, offset);
       const limitOffset = `LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
 
+      // Build the rank column - use parameterized query for search term
+      let rankColumn = '1 as rank';
+      if (search) {
+        queryParams.push(search); // Add search param for ts_rank
+        rankColumn = `ts_rank(q.search_vector, plainto_tsquery('french', $${paramIndex++})) as rank`;
+      }
+
       const result = await query(`
         SELECT q.*, 
                u.name as author_name,
@@ -162,7 +177,7 @@ class Question {
                  ) FILTER (WHERE t.id IS NOT NULL), 
                  '[]'::json
                ) as tags,
-               ${search ? `ts_rank(q.search_vector, plainto_tsquery('french', '${search}')) as rank` : '1 as rank'}
+               ${rankColumn}
         FROM questions q
         LEFT JOIN users u ON q.created_by = u.id
         LEFT JOIN users v ON q.validated_by = v.id
@@ -370,8 +385,16 @@ class Question {
       }
 
       if (search) {
-        whereConditions.push(`q.search_vector @@ plainto_tsquery('french', $${paramIndex++})`);
-        queryParams.push(search);
+        // Combine full-text search with trigram matching for better partial word support
+        const searchParam1 = paramIndex++;
+        const searchParam2 = paramIndex++;
+        const searchParam3 = paramIndex++;
+        whereConditions.push(`(
+          q.search_vector @@ plainto_tsquery('french', $${searchParam1}) OR
+          q.question_text ILIKE $${searchParam2} OR
+          q.answer_text ILIKE $${searchParam3}
+        )`);
+        queryParams.push(search, `%${search}%`, `%${search}%`);
       }
 
       if (tagIds && tagIds.length > 0) {

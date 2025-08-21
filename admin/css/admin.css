@@ -1,24 +1,39 @@
-/* FlashPharma Admin CSS */
+/* FlashPharma Admin CSS - Matching Frontend Design */
 :root {
-  --primary-color: #3498db;
-  --primary-dark: #2980b9;
-  --secondary-color: #95a5a6;
-  --success-color: #27ae60;
-  --warning-color: #f39c12;
-  --danger-color: #e74c3c;
-  --info-color: #17a2b8;
+  /* Modern Color Palette - Matching Frontend */
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --primary-color: #667eea;
+  --primary-dark: #5a67d8;
+  --secondary-color: #764ba2;
+  --accent-color: #f093fb;
   
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --text-primary: #2c3e50;
-  --text-secondary: #6c757d;
-  --text-light: #95a5a6;
+  /* Status Colors */
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --info-color: #3b82f6;
   
-  --border-color: #dee2e6;
-  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  /* Dark Theme Colors */
+  --bg-dark: #0f0f23;
+  --bg-card-dark: #1a1a2e;
+  --bg-elevated-dark: #16213e;
+  --text-primary-dark: #e2e8f0;
+  --text-secondary-dark: #94a3b8;
+  --border-dark: #2d3748;
+  
+  /* Light Theme Colors */
+  --bg-light: #f8fafc;
+  --bg-card-light: #ffffff;
+  --bg-elevated-light: #f1f5f9;
+  --text-primary-light: #1e293b;
+  --text-secondary-light: #64748b;
+  --border-light: #e2e8f0;
+  
+  /* Effects - Matching Frontend */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --border-radius: 8px;
@@ -32,12 +47,46 @@
   box-sizing: border-box;
 }
 
+/* Default dark theme */
 body {
+  --bg-primary: var(--bg-card-dark);
+  --bg-secondary: var(--bg-dark);
+  --bg-tertiary: var(--bg-elevated-dark);
+  --text-primary: var(--text-primary-dark);
+  --text-secondary: var(--text-secondary-dark);
+  --border-color: var(--border-dark);
+  
   font-family: var(--font-family);
-  background-color: var(--bg-secondary);
+  background: var(--bg-secondary);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Light theme override */
+body[data-theme="light"] {
+  --bg-primary: var(--bg-card-light);
+  --bg-secondary: var(--bg-light);
+  --bg-tertiary: var(--bg-elevated-light);
+  --text-primary: var(--text-primary-light);
+  --text-secondary: var(--text-secondary-light);
+  --border-color: var(--border-light);
+}
+
+/* Add animated background like frontend */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+      radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Navigation */
@@ -61,8 +110,11 @@ body {
   align-items: center;
   gap: 0.75rem;
   font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--primary-color);
+  font-weight: 700;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-right: 3rem;
 }
 
@@ -175,6 +227,7 @@ body {
   border-radius: var(--border-radius);
   font-size: 0.9rem;
   background: var(--bg-primary);
+  color: var(--text-primary);
   transition: border-color 0.2s ease;
 }
 
@@ -314,13 +367,52 @@ select:focus {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.question-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.question-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.question-date {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.question-actions-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-xs {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  min-width: auto;
+  line-height: 1.2;
+}
+
+.question-tags {
+  margin-bottom: 0.75rem;
+}
+
+.question-content {
+  margin-top: 0;
 }
 
 .question-id {
-  font-size: 0.8rem;
-  color: var(--text-light);
-  font-weight: 500;
+  font-size: 1rem;
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
 .question-status {
@@ -352,6 +444,15 @@ select:focus {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.answer-preview {
+  color: var(--success-color);
+  font-style: italic;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  -webkit-line-clamp: 2;
 }
 
 .question-meta {
