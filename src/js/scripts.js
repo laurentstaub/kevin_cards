@@ -38,8 +38,27 @@ function initFlashcards() {
 function showCard(index) {
     const card = flashcards[index];
 
-    // Default source if not provided in the card data
-    const source = card.source || 'Pharmacologie générale';
+    // Reset flip state for new card
+    isFlipped = false;
+    flashcardElement.classList.remove('flipped');
+
+    // Handle multiple sources with clickable links
+    let sourceHtml;
+    if (Array.isArray(card.source)) {
+        sourceHtml = card.source.map(source => 
+            source.url ? 
+                `<a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${source.text}</a>` : 
+                source.text
+        ).join(', ');
+    } else if (typeof card.source === 'object' && card.source !== null) {
+        sourceHtml = card.source.url ? 
+            `<a href="${card.source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${card.source.text}</a>` : 
+            card.source.text;
+    } else if (card.source) {
+        sourceHtml = card.source;
+    } else {
+        sourceHtml = 'Pharmacologie générale';
+    }
 
     const questionContent = `
         <div class="card-header">
@@ -50,7 +69,7 @@ function showCard(index) {
         </div>
         ${card.question}
         <div class="card-source">
-            <span class="source-label">Source:</span> <span class="source-text">${source}</span>
+            <span class="source-label">Source:</span> <span class="source-text">${sourceHtml}</span>
         </div>`;
 
     const answerContent = `
@@ -62,16 +81,12 @@ function showCard(index) {
         </div>
         ${card.answer}
         <div class="card-source">
-            <span class="source-label">Source:</span> <span class="source-text">${source}</span>
+            <span class="source-label">Source:</span> <span class="source-text">${sourceHtml}</span>
         </div>`;
 
     questionElement.innerHTML = questionContent;
     answerElement.innerHTML = answerContent;
     currentCardElement.textContent = index + 1;
-
-    // Reset card flip state
-    isFlipped = false;
-    flashcardElement.classList.remove('flipped');
 }
 
 function flipCard() {
@@ -178,8 +193,8 @@ async function loadQuestions() {
         allFlashcards = data.questions.map(card => ({
             id: card.id,
             tags: card.tags.map(tag => tag.name), // Extract tag names from tag objects
-            question: card.questionText,
-            answer: card.answerText,
+            question: card.questionHtml || card.questionText, // Use HTML if available, fallback to text
+            answer: card.answerHtml || card.answerText, // Use HTML if available, fallback to text
             difficulty: card.difficulty || 'medium',
             source: extractSource(card.sources) // Extract source from sources array
         }));
@@ -201,9 +216,14 @@ function extractSource(sources) {
         return 'Pharmacologie générale';
     }
     
-    // Return the first source's title or URL
-    const source = sources[0];
-    return source.title || source.url || 'Source externe';
+    // Return all sources as objects with text and optional URL
+    const sourceObjects = sources.map(source => ({
+        text: source.title || source.url || 'Source externe',
+        url: source.url || null
+    }));
+    
+    // If there's only one source, return as single object, otherwise return as array
+    return sourceObjects.length === 1 ? sourceObjects[0] : sourceObjects;
 }
 
 function extractTagCategories(questions) {
@@ -593,7 +613,7 @@ function initializeApp() {
     sidebarClose = document.getElementById('sidebarClose');
     sidebarOverlay = document.getElementById('sidebarOverlay');
 
-    // Add event listeners
+    // Add flip event listener for flashcard
     if (flashcardElement) {
         flashcardElement.addEventListener('click', flipCard);
     }

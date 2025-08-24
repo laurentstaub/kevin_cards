@@ -6,6 +6,8 @@ class Question {
     this.id = data.id;
     this.questionText = data.question_text;
     this.answerText = data.answer_text;
+    this.questionHtml = data.question_html;
+    this.answerHtml = data.answer_html;
     this.status = data.status;
     this.sources = data.sources || [];
     this.metadata = data.metadata || {};
@@ -21,8 +23,8 @@ class Question {
   static async create({ questionText, answerText, createdBy, sources = [], tagIds = [] }) {
     try {
       // Process markdown to extract metadata
-      const questionProcessed = processMarkdown(questionText);
-      const answerProcessed = processMarkdown(answerText);
+      const questionProcessed = processMarkdown(questionText, 'question');
+      const answerProcessed = processMarkdown(answerText, 'answer');
       
       // Combine entities from both question and answer
       const combinedEntities = {
@@ -41,11 +43,15 @@ class Question {
         last_processed: new Date().toISOString()
       };
 
+      // Generate HTML from markdown
+      const questionHtml = questionProcessed.html;
+      const answerHtml = answerProcessed.html;
+
       const result = await query(`
-        INSERT INTO questions (question_text, answer_text, sources, metadata, created_by)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO questions (question_text, answer_text, question_html, answer_html, sources, metadata, created_by)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *
-      `, [questionText, answerText, JSON.stringify(sources), JSON.stringify(metadata), createdBy]);
+      `, [questionText, answerText, questionHtml, answerHtml, JSON.stringify(sources), JSON.stringify(metadata), createdBy]);
 
       const question = new Question(result.rows[0]);
 
@@ -207,9 +213,16 @@ class Question {
     try {
       // Process markdown if content changed
       let metadata = this.metadata;
+      let questionHtml = this.questionHtml;
+      let answerHtml = this.answerHtml;
+      
       if (questionText !== this.questionText || answerText !== this.answerText) {
-        const questionProcessed = processMarkdown(questionText || this.questionText);
-        const answerProcessed = processMarkdown(answerText || this.answerText);
+        const questionProcessed = processMarkdown(questionText || this.questionText, 'question');
+        const answerProcessed = processMarkdown(answerText || this.answerText, 'answer');
+        
+        // Update HTML
+        questionHtml = questionProcessed.html;
+        answerHtml = answerProcessed.html;
         
         const combinedEntities = {
           drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
@@ -233,15 +246,19 @@ class Question {
         UPDATE questions 
         SET question_text = COALESCE($1, question_text),
             answer_text = COALESCE($2, answer_text),
-            status = COALESCE($3, status),
-            sources = COALESCE($4, sources),
-            metadata = $5,
+            question_html = COALESCE($3, question_html),
+            answer_html = COALESCE($4, answer_html),
+            status = COALESCE($5, status),
+            sources = COALESCE($6, sources),
+            metadata = $7,
             updated_at = CURRENT_TIMESTAMP
-        WHERE id = $6
+        WHERE id = $8
         RETURNING *
       `, [
         questionText, 
-        answerText, 
+        answerText,
+        questionHtml,
+        answerHtml,
         status,
         sources ? JSON.stringify(sources) : null,
         JSON.stringify(metadata),
@@ -445,6 +462,8 @@ class Question {
       id: this.id,
       questionText: this.questionText,
       answerText: this.answerText,
+      questionHtml: this.questionHtml,
+      answerHtml: this.answerHtml,
       status: this.status,
       sources: this.sources,
       metadata: this.metadata,

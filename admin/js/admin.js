@@ -7,7 +7,7 @@ class AdminApp {
     this.itemsPerPage = 10;
     this.selectedTags = [];
     this.availableTags = [];
-    this.showAnswers = false;
+    this.showAnswers = true;
     this.orderBy = 'id';
     this.orderDirection = 'ASC';
     

@@ -256,14 +256,19 @@ export const extractEntities = (text) => {
 };
 
 // Main markdown processing function
-export const processMarkdown = (markdownText) => {
+export const processMarkdown = (markdownText, wrapperType = 'content') => {
   if (!markdownText || typeof markdownText !== 'string') {
     return { html: '', entities: {}, stats: {} };
   }
 
   try {
-    // Generate HTML
-    const html = marked.parse(markdownText);
+    // Generate HTML from markdown
+    const innerHtml = marked.parse(markdownText);
+    
+    // Wrap in card-content div with appropriate ID
+    const wrapperId = wrapperType === 'question' ? 'questionContent' : 
+                     wrapperType === 'answer' ? 'answerContent' : 'content';
+    const html = `<div class="card-content" id="${wrapperId}">${innerHtml}</div>`;
     
     // Extract entities for metadata
     const entities = extractEntities(markdownText);
@@ -282,7 +287,7 @@ export const processMarkdown = (markdownText) => {
   } catch (error) {
     console.error('Markdown processing error:', error);
     return {
-      html: `<p class="error">Error processing markdown: ${error.message}</p>`,
+      html: `<div class="card-content"><p class="error">Error processing markdown: ${error.message}</p></div>`,
       entities: {},
       stats: { error: error.message }
     };
