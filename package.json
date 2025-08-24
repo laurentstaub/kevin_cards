@@ -12,7 +12,8 @@
     "db:setup": "psql -d flashpharma -f database/schema.sql",
     "db:reset": "dropdb --if-exists flashpharma && createdb flashpharma && npm run db:setup",
     "migrate:preview": "node database/migrate-questions.js",
-    "migrate:execute": "node database/migrate-questions.js --execute"
+    "migrate:execute": "node database/migrate-questions.js --execute",
+    "load:questions": "node load_questions.js"
   },
   "repository": {
     "type": "git",

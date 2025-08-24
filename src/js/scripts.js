@@ -160,19 +160,28 @@ function toggleTheme() {
 
 async function loadQuestions() {
     try {
-        const response = await fetch('/zz_questions/00_questions.json');
+        const response = await fetch('http://localhost:3001/api/questions');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        questionData = await response.json();
-        allFlashcards = questionData.flashcards.map(card => ({
+        const data = await response.json();
+        questionData = {
+            metadata: {
+                title: 'Questions from Database',
+                total_cards: data.questions.length,
+                tag_categories: extractTagCategories(data.questions)
+            },
+            flashcards: data.questions
+        };
+        
+        allFlashcards = data.questions.map(card => ({
             id: card.id,
-            tags: card.tags,
-            question: card.question,
-            answer: card.answer,
-            difficulty: card.difficulty,
-            source: card.source
+            tags: card.tags.map(tag => tag.name), // Extract tag names from tag objects
+            question: card.questionText,
+            answer: card.answerText,
+            difficulty: card.difficulty || 'medium',
+            source: extractSource(card.sources) // Extract source from sources array
         }));
 
         // Apply current filters or use all cards
@@ -184,6 +193,37 @@ async function loadQuestions() {
         allFlashcards = [];
         initFlashcards();
     }
+}
+
+// Helper functions for processing database data
+function extractSource(sources) {
+    if (!sources || sources.length === 0) {
+        return 'Pharmacologie générale';
+    }
+    
+    // Return the first source's title or URL
+    const source = sources[0];
+    return source.title || source.url || 'Source externe';
+}
+
+function extractTagCategories(questions) {
+    const tagsByCategory = {};
+    
+    questions.forEach(question => {
+        if (question.tags && Array.isArray(question.tags)) {
+            question.tags.forEach(tag => {
+                const category = tag.category || 'autres';
+                if (!tagsByCategory[category]) {
+                    tagsByCategory[category] = [];
+                }
+                if (!tagsByCategory[category].includes(tag.name)) {
+                    tagsByCategory[category].push(tag.name);
+                }
+            });
+        }
+    });
+    
+    return tagsByCategory;
 }
 
 function getRandomFlashcards(array, count) {
