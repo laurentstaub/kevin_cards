@@ -38,6 +38,9 @@ function initFlashcards() {
 function showCard(index) {
     const card = flashcards[index];
 
+    // Default source if not provided in the card data
+    const source = card.source || 'Pharmacologie générale';
+
     const questionContent = `
         <div class="card-header">
             <div class="question-indicator">Question</div>
@@ -45,7 +48,10 @@ function showCard(index) {
                 ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
             </div>
         </div>
-        ${card.question}`;
+        ${card.question}
+        <div class="card-source">
+            <span class="source-label">Source:</span> <span class="source-text">${source}</span>
+        </div>`;
 
     const answerContent = `
         <div class="card-header">
@@ -54,7 +60,10 @@ function showCard(index) {
                 ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
             </div>
         </div>
-        ${card.answer}`;
+        ${card.answer}
+        <div class="card-source">
+            <span class="source-label">Source:</span> <span class="source-text">${source}</span>
+        </div>`;
 
     questionElement.innerHTML = questionContent;
     answerElement.innerHTML = answerContent;
@@ -162,7 +171,8 @@ async function loadQuestions() {
             tags: card.tags,
             question: card.question,
             answer: card.answer,
-            difficulty: card.difficulty
+            difficulty: card.difficulty,
+            source: card.source
         }));
 
         // Apply current filters or use all cards

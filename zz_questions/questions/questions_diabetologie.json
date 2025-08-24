@@ -1,0 +1,300 @@
+{
+  "metadata": {
+    "title": "Flashcards Diabétologie - Version Complète",
+    "description": "Questions/réponses sur les médicaments antidiabétiques selon les guidelines : un concept par question, réponses avec phrases complètes",
+    "version": "1.0",
+    "total_cards": 37,
+    "domain": "Diabétologie",
+    "available_tags": [
+      "Diabétologie",
+      "Insulines",
+      "Insulines-ultra-rapides",
+      "Insulines-rapides", 
+      "Insulines-basales",
+      "NPH",
+      "Metformine",
+      "Inhibiteurs-SGLT2",
+      "Inhibiteurs-DPP4",
+      "Sulfamides",
+      "Agonistes-GLP1",
+      "Mécanisme-action",
+      "Pharmacocinétique",
+      "Contre-indications",
+      "Effets-indésirables",
+      "Surveillance",
+      "Interactions",
+      "Dosage",
+      "Administration",
+      "Bénéfices-cardiovasculaires",
+      "Hypoglycémie",
+      "Acidose-lactique",
+      "Perte-pondérale",
+      "DFG",
+      "HbA1c",
+      "Grossesse",
+      "Sujet-âgé",
+      "Fondamental"
+    ]
+  },
+  "flashcards": [
+    {
+      "id": 1,
+      "tags": ["Diabétologie", "Insulines", "Mécanisme-action"],
+      "question": "<div class=\"card-content\"><p>Quel est le <strong>mécanisme d'action</strong> de l'insuline au niveau cellulaire ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>L'insuline se lie à son récepteur membranaire à activité tyrosine kinase, déclenchant une cascade de phosphorylations intracellulaires.</p><p>Cette activation permet la <strong>translocation des transporteurs GLUT4</strong> vers la membrane cellulaire, facilitant l'entrée du glucose dans la cellule. Elle stimule également la glycogénogenèse hépatique et inhibe la néoglucogenèse.</p></div>",
+      "difficulty": "hard"
+    },
+    {
+      "id": 2,
+      "tags": ["Diabétologie", "Insulines-ultra-rapides", "Pharmacocinétique"],
+      "question": "<div class=\"card-content\"><p>Quelle différence de <strong>délai d'action</strong> existe-t-il entre <span class=\"drug-name\">Fiasp</span> et <span class=\"drug-name\">Lyumjev</span> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Le Lyumjev (insuline lispro-aabc) apparaît dans le sang en <strong>~1 minute</strong> après injection sous-cutanée.</p><p>Le Fiasp (insuline aspart avec niacinamide) apparaît en <strong>2,5 minutes</strong>. Ces délais ultra-rapides permettent une administration jusqu'à 2 minutes avant les repas, contre 15-20 minutes pour les insulines rapides classiques.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "tags": ["Diabétologie", "Insulines-ultra-rapides", "Administration"],
+      "question": "<div class=\"card-content\"><p>Quel avantage clinique offrent les <strong>insulines ultra-rapides</strong> par rapport aux insulines rapides classiques ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les insulines ultra-rapides permettent une <strong>plus grande flexibilité d'administration</strong> avec une injection possible de 0-2 minutes avant les repas, voire jusqu'à 20 minutes après le début du repas.</p><p>Elles offrent un meilleur contrôle des glycémies post-prandiales précoces et une réduction des hypoglycémies tardives grâce à leur durée d'action plus courte.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 4,
+      "tags": ["Diabétologie", "Insulines-basales", "Pharmacocinétique"],
+      "question": "<div class=\"card-content\"><p>Pourquoi <span class=\"drug-name\">Tresiba (degludec)</span> permet-elle une <strong>flexibilité horaire d'administration</strong> unique ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Tresiba possède une <strong>demi-vie exceptionnelle de 25 heures</strong> grâce à la formation d'un dépôt sous-cutané à libération très prolongée.</p><p>Cette pharmacocinétique stable permet une variation de l'heure d'injection de ±8 heures sans altérer significativement le contrôle glycémique, contrairement aux autres insulines basales nécessitant une administration à heure fixe.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 5,
+      "tags": ["Diabétologie", "NPH", "Insulines-basales"],
+      "question": "<div class=\"card-content\"><p>Pourquoi l'insuline <strong>NPH</strong> a-t-elle été largement remplacée par les analogues lents ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La NPH (Neutral Protamine Hagedorn) présente un <strong>profil d'action avec pic marqué</strong> entre 4-10 heures et une variabilité d'absorption importante.</p><p>Les analogues lents modernes offrent un profil plus plat sans pic, une durée d'action de 24 heures, une meilleure reproductibilité et un risque d'hypoglycémie nocturne réduit, optimisant ainsi le contrôle glycémique basal.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 6,
+      "tags": ["Diabétologie", "Metformine", "Mécanisme-action"],
+      "question": "<div class=\"card-content\"><p>Quel est le <strong>mécanisme d'action principal</strong> de la metformine ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La metformine active l'<strong>AMPK (AMP-activated protein kinase) hépatique</strong>, enzyme clé de la régulation énergétique cellulaire.</p><p>Cette activation inhibe la néoglucogenèse hépatique, principal mécanisme de production de glucose à jeun. Elle améliore également la sensibilité à l'insuline au niveau musculaire et réduit l'absorption intestinale du glucose.</p></div>",
+      "difficulty": "hard"
+    },
+    {
+      "id": 7,
+      "tags": ["Diabétologie", "Metformine", "Acidose-lactique", "Contre-indications"],
+      "question": "<div class=\"card-content\"><p>Pourquoi la metformine est-elle contre-indiquée si le <strong>DFG < 30 mL/min/1,73m²</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>L'élimination de la metformine est exclusivement rénale. En cas d'insuffisance rénale sévère, l'accumulation du médicament augmente le <strong>risque d'acidose lactique</strong>.</p><p>Bien que ce risque reste extrêmement faible (2,4-15 cas pour 100 000 patients-années), l'acidose lactique métforminique peut être mortelle, justifiant cette contre-indication stricte.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 8,
+      "tags": ["Diabétologie", "Inhibiteurs-SGLT2", "Mécanisme-action"],
+      "question": "<div class=\"card-content\"><p>Quel est le <strong>mécanisme d'action</strong> des inhibiteurs de SGLT2 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les inhibiteurs de SGLT2 bloquent le <strong>co-transporteur sodium-glucose 2</strong> au niveau du tube contourné proximal rénal.</p><p>Ce blocage empêche la réabsorption de 80-90% du glucose filtré, induisant une glycosurie et une diurèse osmotique. L'effet antidiabétique est indépendant de l'insuline et proportionnel à la glycémie.</p></div>",
+      "difficulty": "hard"
+    },
+    {
+      "id": 9,
+      "tags": ["Diabétologie", "Inhibiteurs-SGLT2", "Bénéfices-cardiovasculaires"],
+      "question": "<div class=\"card-content\"><p>Quel bénéfice cardiovasculaire majeur a démontré l'<span class=\"drug-name\">empagliflozine</span> dans l'étude EMPA-REG ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>L'étude EMPA-REG a démontré une <strong>réduction de 38% de la mortalité cardiovasculaire</strong> avec l'empagliflozine chez les diabétiques de type 2 à haut risque cardiovasculaire.</p><p>Cette réduction s'accompagne d'une diminution des hospitalisations pour insuffisance cardiaque et d'une protection rénale, faisant des inhibiteurs de SGLT2 des médicaments de choix chez ces patients.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 10,
+      "tags": ["Diabétologie", "Inhibiteurs-SGLT2", "Effets-indésirables"],
+      "question": "<div class=\"card-content\"><p>Quels sont les <strong>effets indésirables principaux</strong> des inhibiteurs de SGLT2 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les principaux effets indésirables sont les <strong>infections mycosiques génitales</strong> (risque multiplié par 3-6), favorisées par la glycosurie.</p><p>Plus rarement mais plus grave, l'<strong>acidocétose diabétique</strong> peut survenir, même avec des glycémies modérément élevées. Les infections urinaires et la déshydratation sont également possibles.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 11,
+      "tags": ["Diabétologie", "Inhibiteurs-DPP4", "Mécanisme-action"],
+      "question": "<div class=\"card-content\"><p>Quel est le <strong>mécanisme d'action</strong> des inhibiteurs de DPP-4 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les inhibiteurs de DPP-4 bloquent l'enzyme <strong>dipeptidyl peptidase-4</strong> qui dégrade normalement les incrétines endogènes (GLP-1, GIP).</p><p>Cette inhibition prolonge la demi-vie des incrétines, maintenant leur effet glucose-dépendant sur la sécrétion d'insuline et la suppression du glucagon. L'effet n'existe qu'en présence de glucose élevé, évitant les hypoglycémies.</p></div>",
+      "difficulty": "hard"
+    },
+    {
+      "id": 12,
+      "tags": ["Diabétologie", "Inhibiteurs-DPP4", "HbA1c"],
+      "question": "<div class=\"card-content\"><p>Quelle <strong>efficacité sur l'HbA1c</strong> peut-on attendre des inhibiteurs de DPP-4 en monothérapie ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les inhibiteurs de DPP-4 offrent une efficacité <strong>modeste avec une réduction d'HbA1c de 0,5-0,8%</strong> en monothérapie.</p><p>Cette efficacité limitée est compensée par l'absence de prise pondérale, le faible risque hypoglycémique et la bonne tolérance générale. Ils constituent une option de deuxième ligne malgré leur coût élevé.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 13,
+      "tags": ["Diabétologie", "Sulfamides", "Hypoglycémie"],
+      "question": "<div class=\"card-content\"><p>Pourquoi les <strong>sulfamides hypoglycémiants</strong> ont-ils une place limitée dans le traitement actuel du diabète ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les sulfamides présentent un <strong>risque hypoglycémique significatif</strong> car leur action est indépendante de la glycémie, et ils provoquent une prise pondérale de 3-5 kg en moyenne.</p><p>Leur mécanisme de stimulation de la sécrétion d'insuline contribue également à l'épuisement des cellules β pancréatiques. Ces inconvénients limitent leur usage aux situations où les autres options sont contre-indiquées.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 14,
+      "tags": ["Diabétologie", "Sulfamides", "Sujet-âgé", "Contre-indications"],
+      "question": "<div class=\"card-content\"><p>Pourquoi le <span class=\"drug-name\">glibenclamide</span> doit-il être évité chez le sujet âgé ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Le glibenclamide figure dans les <strong>critères de Beers</strong> des médicaments potentiellement inappropriés chez la personne âgée.</p><p>Sa demi-vie longue et ses métabolites actifs majorent le risque d'hypoglycémie prolongée et sévère. La diminution de la fonction rénale liée à l'âge aggrave ce risque par accumulation du médicament.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 15,
+      "tags": ["Diabétologie", "Agonistes-GLP1", "Mécanisme-action"],
+      "question": "<div class=\"card-content\"><p>Quel est le <strong>mécanisme d'action</strong> des agonistes du GLP-1 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les agonistes du GLP-1 miment l'hormone incrétine naturelle en activant les <strong>récepteurs GLP-1</strong> avec plusieurs effets synergiques :</p><ul><li>Stimulation glucose-dépendante de la sécrétion d'insuline</li><li>Inhibition de la sécrétion de glucagon</li><li>Ralentissement de la vidange gastrique</li><li>Effet de satiété central</li></ul></div>",
+      "difficulty": "hard"
+    },
+    {
+      "id": 16,
+      "tags": ["Diabétologie", "Agonistes-GLP1", "Perte-pondérale"],
+      "question": "<div class=\"card-content\"><p>Quelle <strong>perte pondérale</strong> peut-on espérer avec le sémaglutide (Ozempic) ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Le sémaglutide hebdomadaire peut induire une <strong>perte pondérale de 12-15%</strong> à la dose de 2,4 mg (formulation Wegovy pour l'obésité).</p><p>Cette perte de poids significative résulte de l'effet de satiété central et du ralentissement de la vidange gastrique, révolutionnant la prise en charge du diabète obèse.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 17,
+      "tags": ["Diabétologie", "Agonistes-GLP1", "Effets-indésirables"],
+      "question": "<div class=\"card-content\"><p>Quels sont les <strong>effets indésirables dose-limitants</strong> des agonistes du GLP-1 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les effets gastro-intestinaux constituent les effets indésirables principaux, avec des <strong>nausées chez 20-40% des patients</strong>, accompagnées de vomissements, diarrhée et douleurs abdominales.</p><p>Ces effets nécessitent une titration progressive des doses et peuvent limiter l'observance. Ils sont généralement transitoires mais peuvent persister chez certains patients.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 18,
+      "tags": ["Diabétologie", "Agonistes-GLP1", "Administration"],
+      "question": "<div class=\"card-content\"><p>Pourquoi recommande-t-on l'<strong>arrêt des agonistes du GLP-1 une semaine avant chirurgie</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les agonistes du GLP-1 provoquent un <strong>ralentissement de la vidange gastrique</strong> qui peut persister plusieurs jours après la dernière injection.</p><p>Ce ralentissement augmente le risque d'inhalation du contenu gastrique lors de l'anesthésie générale. L'arrêt une semaine avant permet la normalisation du transit gastrique.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 19,
+      "tags": ["Diabétologie", "Insulines", "Dosage"],
+      "question": "<div class=\"card-content\"><p>Pourquoi <span class=\"drug-name\">Toujeo (glargine U-300)</span> nécessite-t-elle une <strong>augmentation de dose</strong> par rapport à Lantus (glargine U-100) ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La concentration plus élevée de Toujeo (300 UI/mL vs 100 UI/mL) modifie la surface de contact sous-cutané et ralentit l'absorption.</p><p>Cette pharmacocinétique différente nécessite une <strong>augmentation de dose de 10-18%</strong> par rapport à la glargine U-100 pour obtenir une efficacité équivalente, tout en offrant une durée d'action supérieure à 24 heures.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 20,
+      "tags": ["Diabétologie", "Insulines-basales", "Perte-pondérale"],
+      "question": "<div class=\"card-content\"><p>Quel avantage pondéral présente <span class=\"drug-name\">Levemir (detemir)</span> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Le Levemir présente l'avantage d'une <strong>moindre prise pondérale</strong> comparé aux autres insulines basales.</p><p>Cet effet s'explique par sa liaison réversible à l'albumine via une chaîne d'acide gras, modifiant sa distribution tissulaire et son action sur les récepteurs hypothalamiques impliqués dans la régulation pondérale.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 21,
+      "tags": ["Diabétologie", "Insulines", "Interactions"],
+      "question": "<div class=\"card-content\"><p>Quels <strong>facteurs</strong> peuvent modifier les besoins en insuline ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Plusieurs facteurs influencent les besoins insuliniques :</p><ul><li><strong>Infections, fièvre :</strong> augmentation des besoins</li><li><strong>Corticoïdes :</strong> majoration importante de la résistance</li><li><strong>Exercice physique :</strong> diminution des besoins</li><li><strong>Stress, chirurgie :</strong> augmentation transitoire</li><li><strong>Insuffisance rénale :</strong> diminution de l'élimination</li></ul></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 22,
+      "tags": ["Diabétologie", "Hypoglycémie", "Surveillance"],
+      "question": "<div class=\"card-content\"><p>Quels sont les <strong>signes d'hypoglycémie sévère</strong> nécessitant une intervention d'urgence ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>L'hypoglycémie sévère se manifeste par des <strong>troubles neurologiques</strong> : confusion, désorientation, troubles du comportement, convulsions, voire coma.</p><p>Ces signes traduisent la neuroglycopénie cérébrale et nécessitent une correction immédiate par glucose IV ou glucagon IM. La perte de conscience définit le caractère sévère nécessitant l'aide d'un tiers.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 23,
+      "tags": ["Diabétologie", "Hypoglycémie", "Administration"],
+      "question": "<div class=\"card-content\"><p>Quelle est la <strong>conduite à tenir</strong> devant une hypoglycémie modérée chez un patient conscient ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La règle du <strong>15-15</strong> : administrer 15 g de glucides à action rapide (3 morceaux de sucre, 150 mL de jus de fruit) puis recontrôler la glycémie après 15 minutes.</p><p>Si la glycémie reste <0,70 g/L, répéter l'administration. Une fois la glycémie normalisée, prendre une collation pour éviter la récidive.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 24,
+      "tags": ["Diabétologie", "Surveillance", "HbA1c"],
+      "question": "<div class=\"card-content\"><p>Quelle est la <strong>cible d'HbA1c</strong> généralement recommandée chez le diabétique de type 2 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La cible standard est <strong>≤ 7%</strong> pour la plupart des patients diabétiques de type 2, permettant de réduire significativement le risque de complications microvasculaires.</p><p>Cette cible peut être individualisée : <6,5% chez les patients jeunes sans comorbidités, ≤8% chez les patients âgés fragiles ou à espérance de vie limitée.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 25,
+      "tags": ["Diabétologie", "Metformine", "Administration"],
+      "question": "<div class=\"card-content\"><p>Quelle est la <strong>posologie optimale</strong> de la metformine et comment l'introduire ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La posologie optimale est de <strong>2000-2550 mg/jour</strong> en 2-3 prises avec les repas pour limiter l'intolérance digestive.</p><p>L'introduction doit être progressive : débuter à 500 mg/jour puis augmenter de 500 mg par semaine selon la tolérance. La forme à libération prolongée améliore la tolérance digestive.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 26,
+      "tags": ["Diabétologie", "DFG", "Dosage"],
+      "question": "<div class=\"card-content\"><p>Comment adapter les <strong>antidiabétiques selon la fonction rénale</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>L'adaptation dépend de l'élimination rénale de chaque molécule :</p><ul><li><strong>Metformine :</strong> arrêt si DFG <30</li><li><strong>Sulfamides :</strong> réduction de dose si DFG <60</li><li><strong>Inhibiteurs SGLT2 :</strong> efficacité réduite si DFG <45</li><li><strong>Linagliptine :</strong> pas d'ajustement nécessaire</li><li><strong>Insuline :</strong> réduction des doses (↓ élimination rénale)</li></ul></div>",
+      "difficulty": "hard"
+    },
+    {
+      "id": 27,
+      "tags": ["Diabétologie", "Grossesse", "Contre-indications"],
+      "question": "<div class=\"card-content\"><p>Quels <strong>antidiabétiques</strong> peuvent être utilisés pendant la grossesse ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Pendant la grossesse, seules <strong>l'insuline et la metformine</strong> peuvent être utilisées en toute sécurité.</p><p>L'insuline reste le traitement de référence. La metformine est autorisée mais doit souvent être relayée par l'insuline au cours de la grossesse. Tous les autres antidiabétiques oraux sont contre-indiqués par manque de données ou risque tératogène.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 28,
+      "tags": ["Diabétologie", "Inhibiteurs-DPP4", "DFG"],
+      "question": "<div class=\"card-content\"><p>Quel avantage présente la <span class=\"drug-name\">linagliptine</span> par rapport aux autres inhibiteurs de DPP-4 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La linagliptine présente l'avantage de <strong>ne pas nécessiter d'ajustement de dose en cas d'insuffisance rénale</strong>, contrairement à la sitagliptine, saxagliptine et alogliptine.</p><p>Son élimination est principalement hépatique et intestinale, permettant son utilisation à dose pleine même en cas d'insuffisance rénale sévère.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 29,
+      "tags": ["Diabétologie", "Insulines-rapides", "Administration"],
+      "question": "<div class=\"card-content\"><p>Quelle est la différence de <strong>timing d'administration</strong> entre insulines rapides et régulières ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les <strong>insulines rapides</strong> (lispro, aspart, glulisine) s'injectent 5-15 minutes avant les repas grâce à leur début d'action rapide.</p><p>Les <strong>insulines régulières</strong> (Humulin R, Novolin R) nécessitent une injection 30-60 minutes avant les repas en raison de leur délai d'action plus long lié à la formation d'hexamères.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 30,
+      "tags": ["Diabétologie", "Agonistes-GLP1", "Dosage"],
+      "question": "<div class=\"card-content\"><p>Pourquoi la <strong>titration progressive</strong> est-elle essentielle avec les agonistes du GLP-1 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La titration progressive est essentielle pour <strong>limiter les effets gastro-intestinaux</strong> (nausées, vomissements) qui surviennent chez 20-40% des patients.</p><p>L'augmentation graduelle des doses permet une adaptation progressive du système digestif aux effets du médicament, améliorant significativement la tolérance et l'observance thérapeutique.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 31,
+      "tags": ["Diabétologie", "Metformine", "Effets-indésirables"],
+      "question": "<div class=\"card-content\"><p>Quels sont les <strong>effets indésirables digestifs</strong> de la metformine et comment les gérer ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les effets digestifs incluent <strong>diarrhée, nausées, douleurs abdominales et goût métallique</strong>, survenant chez 10-25% des patients.</p><p>La gestion comprend : introduction progressive, prise avec les repas, utilisation de formes à libération prolongée. Ces effets sont généralement transitoires et s'améliorent après quelques semaines.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 32,
+      "tags": ["Diabétologie", "Inhibiteurs-SGLT2", "Surveillance"],
+      "question": "<div class=\"card-content\"><p>Quelle <strong>surveillance</strong> faut-il mettre en place sous inhibiteurs de SGLT2 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La surveillance comprend :</p><ul><li><strong>Fonction rénale :</strong> créatinine, DFG (efficacité réduite si DFG <45)</li><li><strong>Infections génitales :</strong> éducation du patient</li><li><strong>Signes d'acidocétose :</strong> même à glycémie modérée</li><li><strong>Déshydratation :</strong> surtout chez les patients âgés</li></ul></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 33,
+      "tags": ["Diabétologie", "Insulines", "Conservation"],
+      "question": "<div class=\"card-content\"><p>Quelles sont les <strong>règles de conservation</strong> des insulines ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les insulines non entamées se conservent au <strong>réfrigérateur (2-8°C)</strong> jusqu'à la date d'expiration.</p><p>Une fois entamées, elles se conservent <strong>à température ambiante (<30°C) pendant 4 semaines</strong> maximum. Il faut éviter les températures extrêmes, l'exposition au soleil et la congélation qui altèrent l'efficacité.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 34,
+      "tags": ["Diabétologie", "Insulines", "Sites-injection"],
+      "question": "<div class=\"card-content\"><p>Pourquoi est-il important de <strong>faire une rotation des sites d'injection</strong> d'insuline ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La rotation des sites prévient le développement de <strong>lipodystrophies</strong> (lipohypertrophies ou lipoatrophies) qui altèrent l'absorption de l'insuline.</p><p>Les sites recommandés sont : abdomen (absorption la plus rapide), cuisses, bras, fesses. Il faut espacer les injections d'au moins 2-3 cm et changer de zone régulièrement.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 35,
+      "tags": ["Diabétologie", "Sulfamides", "Mécanisme-action"],
+      "question": "<div class=\"card-content\"><p>Quel est le <strong>mécanisme d'action</strong> des sulfamides hypoglycémiants ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les sulfamides se lient aux <strong>récepteurs SUR1 des canaux K-ATP</strong> des cellules β pancréatiques, provoquant leur fermeture.</p><p>Cette fermeture entraîne une dépolarisation membranaire → ouverture des canaux calciques → influx de calcium → stimulation de l'exocytose des granules d'insuline. L'effet est indépendant de la glycémie.</p></div>",
+      "difficulty": "hard"
+    },
+    {
+      "id": 36,
+      "tags": ["Diabétologie", "Metformine", "Vitamine-B12"],
+      "question": "<div class=\"card-content\"><p>Quel <strong>déficit vitaminique</strong> peut survenir sous metformine au long cours ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>La metformine peut provoquer un <strong>déficit en vitamine B12</strong> par malabsorption intestinale, particulièrement après plusieurs années de traitement.</p><p>Ce déficit peut entraîner une anémie macrocytaire et des troubles neurologiques. Un dosage annuel de la vitamine B12 est recommandé chez les patients traités au long cours.</p></div>",
+      "difficulty": "medium"
+    },
+    {
+      "id": 37,
+      "tags": ["Diabétologie", "Agonistes-GLP1", "Bénéfices-cardiovasculaires"],
+      "question": "<div class=\"card-content\"><p>Pourquoi les <strong>agonistes du GLP-1</strong> sont-ils désormais préférés à l'insuline selon les recommandations ADA 2024 ?</p></div>",
+      "answer": "<div class=\"card-content\"><p>Les agonistes du GLP-1 offrent plusieurs avantages par rapport à l'insuline :</p><ul><li><strong>Perte de poids</strong> vs prise pondérale</li><li><strong>Pas de risque hypoglycémique</strong></li><li><strong>Bénéfices cardiovasculaires démontrés</strong></li><li><strong>Administration hebdomadaire</strong> possible</li><li>Préservation de la fonction des cellules β</li></ul></div>",
+      "difficulty": "medium"
+    }
+  ]
+}

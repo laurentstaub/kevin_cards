@@ -1,7 +1,7 @@
 {
   "name": "00_kevin_cards",
   "version": "1.0.0",
-  "description": "## Description Ce projet est une application web de cartes mémoire (flashcards) conçue spécifiquement pour les pharmaciens. Il s'agit de la phase 1 du développement, qui comprend un système de cartes de base avec un ensemble fixe de questions et réponses en français.",
+  "description": "## Description Ce projet est une application web de cartes mémoire (flashcards) conçue spécifiquement pour les pharmaciens. Elle comprend un système de cartes de base avec un ensemble fixe de questions et réponses en français.",
   "main": "src/js/scripts.js",
   "type": "module",
   "scripts": {

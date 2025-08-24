@@ -507,6 +507,26 @@ body::before {
   font-weight: 600;
 }
 
+/* Source citation */
+.card-source {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.source-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-style: normal;
+}
+
+.source-text {
+  font-style: italic;
+}
+
 /* Controls */
 .controls {
   display: flex;

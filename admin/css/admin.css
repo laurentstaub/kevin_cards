@@ -437,22 +437,92 @@ select:focus {
 
 .question-preview {
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.6;
   margin-bottom: 1rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-style: normal;
 }
 
 .answer-preview {
-  color: var(--success-color);
-  font-style: italic;
+  color: var(--text-secondary);
+  font-style: normal;
+  font-size: 1rem;
+  line-height: 1.6;
   margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--border-color);
-  -webkit-line-clamp: 2;
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+  overflow: visible;
+}
+
+.question-sources {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.85rem;
+}
+
+.sources-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.sources-label i {
+  color: var(--primary-color);
+  font-size: 0.9rem;
+}
+
+.sources-content {
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.sources-content sup {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.sources-content em {
+  color: var(--text-primary);
+}
+
+.no-sources {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.source-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.source-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.source-link-icon {
+  color: var(--primary-color);
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.source-link:hover + .source-link-icon,
+.source-link-icon:hover {
+  opacity: 1;
 }
 
 .question-meta {
@@ -720,8 +790,10 @@ select:focus {
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-family: inherit;
+  color: var(--text-primary);
+  background: var(--bg-primary);
   transition: border-color 0.2s ease;
 }
 

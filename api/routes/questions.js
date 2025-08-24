@@ -28,6 +28,7 @@ const createQuestionSchema = Joi.object({
 const updateQuestionSchema = Joi.object({
   questionText: Joi.string().min(10).max(5000).optional(),
   answerText: Joi.string().min(5).max(10000).optional(),
+  status: Joi.string().valid('draft', 'pending_review', 'validated', 'published', 'disabled', 'archived').optional().allow(null),
   sources: Joi.array().items(Joi.object({
     type: Joi.string().valid('textbook', 'guideline', 'journal', 'website', 'internal').required(),
     title: Joi.string().required(),
@@ -268,8 +269,11 @@ router.post('/', async (req, res) => {
 // PUT /api/questions/:id - Update question
 router.put('/:id', async (req, res) => {
   try {
+    console.log('PUT /questions/:id - Request body:', JSON.stringify(req.body, null, 2));
+    
     const { error, value } = updateQuestionSchema.validate(req.body);
     if (error) {
+      console.log('Validation error:', error.details);
       return res.status(400).json({ 
         error: 'Validation error', 
         details: error.details 

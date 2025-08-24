@@ -257,6 +257,18 @@ class AdminApp {
             <div class="question-preview answer-preview">${this.stripHtml(question.answerText)}</div>
           ` : ''}
         </div>
+        
+        ${question.sources && question.sources.length > 0 ? `
+          <div class="question-sources">
+            <div class="sources-label">
+              <i class="fas fa-book"></i>
+              Sources:
+            </div>
+            <div class="sources-content">
+              ${this.formatSources(question.sources)}
+            </div>
+          </div>
+        ` : ''}
       </div>
     `).join('');
   }
@@ -447,6 +459,7 @@ class AdminApp {
 
   resetQuestionForm() {
     document.getElementById('question-form').reset();
+    delete document.getElementById('question-form').dataset.questionId;
     this.selectedTags = [];
     this.updateSelectedTags();
     document.getElementById('sources-container').innerHTML = 
@@ -605,6 +618,7 @@ class AdminApp {
   async saveQuestion() {
     const form = document.getElementById('question-form');
     const formData = new FormData(form);
+    const questionId = form.dataset.questionId;
     
     const questionData = {
       questionText: formData.get('questionText'),
@@ -636,9 +650,17 @@ class AdminApp {
       // Update tagIds with new tags
       questionData.tagIds = this.selectedTags.map(tag => tag.id);
 
-      const response = await this.apiRequest('/questions', 'POST', questionData);
+      let response;
+      if (questionId) {
+        // Update existing question
+        response = await this.apiRequest(`/questions/${questionId}`, 'PUT', questionData);
+        this.showToast('Question modifiée avec succès', 'success');
+      } else {
+        // Create new question
+        response = await this.apiRequest('/questions', 'POST', questionData);
+        this.showToast('Question créée avec succès', 'success');
+      }
       
-      this.showToast('Question créée avec succès', 'success');
       this.closeModal('question-modal');
       this.loadQuestions();
     } catch (error) {
@@ -1000,6 +1022,13 @@ class AdminApp {
           </button>
         `);
         break;
+      case 'disabled':
+        actions.push(`
+          <button class="btn btn-xs btn-success" onclick="adminApp.reactivateQuestion(${question.id})" title="Réactiver">
+            <i class="fas fa-eye"></i>
+          </button>
+        `);
+        break;
     }
     
     return actions.join('');
@@ -1038,6 +1067,18 @@ class AdminApp {
       this.loadQuestions();
     } catch (error) {
       this.showToast('Erreur lors de la désactivation', 'error');
+    }
+  }
+
+  async reactivateQuestion(id) {
+    try {
+      await this.apiRequest(`/questions/${id}/status`, 'PATCH', {
+        status: 'published'
+      });
+      this.showToast('Question réactivée', 'success');
+      this.loadQuestions();
+    } catch (error) {
+      this.showToast('Erreur lors de la réactivation', 'error');
     }
   }
 
@@ -1082,6 +1123,46 @@ class AdminApp {
     });
   }
 
+  formatSources(sources) {
+    if (!sources || sources.length === 0) {
+      return '<span class="no-sources">Aucune source</span>';
+    }
+
+    return sources.map((source, index) => {
+      let formatted = `<sup>${index + 1}</sup> `;
+      
+      if (source.authors && source.authors.length > 0) {
+        formatted += `${source.authors.join(', ')}. `;
+      }
+      
+      // Make title clickable if there's a URL
+      if (source.url) {
+        formatted += `<em><a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${source.title}</a></em>`;
+      } else {
+        formatted += `<em>${source.title}</em>`;
+      }
+      
+      if (source.year) {
+        formatted += ` (${source.year})`;
+      }
+      
+      if (source.pages) {
+        formatted += `, p. ${source.pages}`;
+      }
+      
+      if (source.edition) {
+        formatted += `, ${source.edition}`;
+      }
+
+      // Add URL if present and not already linked to title
+      if (source.url) {
+        formatted += ` <i class="fas fa-external-link-alt source-link-icon" title="Lien externe"></i>`;
+      }
+
+      return formatted;
+    }).join('<br>');
+  }
+
   debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -1092,6 +1173,116 @@ class AdminApp {
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
+  }
+
+  // Load question for editing
+  async loadQuestionForEdit(questionId) {
+    try {
+      const question = await this.apiRequest(`/questions/${questionId}`);
+
+      // Populate the form fields
+      document.getElementById('question-text').value = question.questionText || '';
+      document.getElementById('answer-text').value = question.answerText || '';
+      document.getElementById('question-status').value = question.status || 'draft';
+
+      // Set the question ID for editing
+      document.getElementById('question-form').dataset.questionId = questionId;
+
+      // Load tags
+      this.selectedTags = question.tags || [];
+      this.renderSelectedTags();
+
+      // Load sources
+      this.loadSources(question.sources || []);
+
+    } catch (error) {
+      console.error('Error loading question for edit:', error);
+      this.showToast('Erreur lors du chargement de la question', 'error');
+    }
+  }
+
+  // Load tag for editing
+  async loadTagForEdit(tagId) {
+    try {
+      const tag = await this.apiRequest(`/tags/${tagId}`);
+
+      // Populate the form fields
+      document.getElementById('tag-name').value = tag.name || '';
+      document.getElementById('tag-category').value = tag.category || '';
+      document.getElementById('tag-color').value = tag.color || '#6c757d';
+      document.getElementById('tag-description').value = tag.description || '';
+
+      // Set the tag ID for editing
+      document.getElementById('tag-form').dataset.tagId = tagId;
+
+    } catch (error) {
+      console.error('Error loading tag for edit:', error);
+      this.showToast('Erreur lors du chargement du tag', 'error');
+    }
+  }
+
+  // Load sources into the form
+  loadSources(sources) {
+    const container = document.getElementById('sources-container');
+    // Clear existing sources except template
+    const existingSources = container.querySelectorAll('.source-item:not(.template)');
+    existingSources.forEach(item => item.remove());
+
+    // Add each source
+    sources.forEach(source => {
+      const sourceItem = this.createSourceItem();
+      
+      sourceItem.querySelector('.source-type').value = source.type || 'textbook';
+      sourceItem.querySelector('.source-title').value = source.title || '';
+      sourceItem.querySelector('.source-authors').value = source.authors ? source.authors.join(', ') : '';
+      sourceItem.querySelector('.source-year').value = source.year || '';
+      sourceItem.querySelector('.source-pages').value = source.pages || '';
+      sourceItem.querySelector('.source-edition').value = source.edition || '';
+      sourceItem.querySelector('.source-url').value = source.url || '';
+
+      container.appendChild(sourceItem);
+    });
+  }
+
+  // Create a new source item from template
+  createSourceItem() {
+    const template = document.getElementById('source-template');
+    const newSource = template.cloneNode(true);
+    
+    newSource.classList.remove('template');
+    newSource.id = '';
+    
+    // Add remove functionality
+    const removeBtn = newSource.querySelector('.btn-remove-source');
+    removeBtn.addEventListener('click', () => {
+      newSource.remove();
+    });
+    
+    return newSource;
+  }
+
+  // Render selected tags in the form
+  renderSelectedTags() {
+    const container = document.getElementById('selected-tags');
+    container.innerHTML = '';
+
+    this.selectedTags.forEach(tag => {
+      const tagElement = document.createElement('span');
+      tagElement.className = 'selected-tag';
+      tagElement.innerHTML = `
+        ${tag.name}
+        <button type="button" onclick="adminApp.removeSelectedTag(${tag.id})">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      container.appendChild(tagElement);
+    });
+  }
+
+  // Remove selected tag
+  removeSelectedTag(tagId) {
+    this.selectedTags = this.selectedTags.filter(tag => tag.id !== tagId);
+    this.renderSelectedTags();
   }
 }
 

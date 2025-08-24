@@ -203,7 +203,7 @@ class Question {
   }
 
   // Update question content
-  async update({ questionText, answerText, sources, updatedBy }) {
+  async update({ questionText, answerText, status, sources, updatedBy }) {
     try {
       // Process markdown if content changed
       let metadata = this.metadata;
@@ -233,17 +233,18 @@ class Question {
         UPDATE questions 
         SET question_text = COALESCE($1, question_text),
             answer_text = COALESCE($2, answer_text),
-            sources = COALESCE($3, sources),
-            metadata = $4,
-            created_by = $5
+            status = COALESCE($3, status),
+            sources = COALESCE($4, sources),
+            metadata = $5,
+            updated_at = CURRENT_TIMESTAMP
         WHERE id = $6
         RETURNING *
       `, [
         questionText, 
         answerText, 
+        status,
         sources ? JSON.stringify(sources) : null,
         JSON.stringify(metadata),
-        updatedBy,
         this.id
       ]);
 
@@ -291,22 +292,26 @@ class Question {
         review_history: JSON.stringify(newReviewHistory)
       };
 
-      // Set validation fields for validated/published status
-      if (newStatus === 'validated' || newStatus === 'published') {
-        updateFields.validated_by = userId;
-        updateFields.validated_at = 'CURRENT_TIMESTAMP';
-      }
-
-      const setClause = Object.keys(updateFields).map((key, index) => 
+      let setClause = Object.keys(updateFields).map((key, index) => 
         `${key} = $${index + 1}`
       ).join(', ');
+
+      let queryParams = [...Object.values(updateFields)];
+
+      // Set validation fields for validated/published status
+      if (newStatus === 'validated' || newStatus === 'published') {
+        queryParams.push(userId);
+        setClause += `, validated_by = $${queryParams.length}, validated_at = CURRENT_TIMESTAMP`;
+      }
+
+      queryParams.push(this.id);
 
       const result = await query(`
         UPDATE questions 
         SET ${setClause}
-        WHERE id = $${Object.keys(updateFields).length + 1}
+        WHERE id = $${queryParams.length}
         RETURNING *
-      `, [...Object.values(updateFields), this.id]);
+      `, queryParams);
 
       Object.assign(this, result.rows[0]);
       return this;
