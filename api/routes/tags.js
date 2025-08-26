@@ -19,10 +19,10 @@ const updateTagSchema = Joi.object({
   description: Joi.string().max(500).optional()
 });
 
-// GET /api/tags - List all tags
+// GET /api/tags - List all tags with enhanced options
 router.get('/', async (req, res) => {
   try {
-    const { category, search, activeOnly = 'true' } = req.query;
+    const { category, search, activeOnly = 'true', priorityOrder = 'false' } = req.query;
     
     if (search) {
       const tags = await Tag.search(search);
@@ -31,7 +31,8 @@ router.get('/', async (req, res) => {
 
     const tags = await Tag.findAll({ 
       category, 
-      activeOnly: activeOnly === 'true' 
+      activeOnly: activeOnly === 'true',
+      priorityOrder: priorityOrder === 'true'
     });
     
     res.json({ tags: tags.map(t => t.toJSON()) });
@@ -366,5 +367,88 @@ router.post('/bulk-create', async (req, res) => {
     });
   }
 });
+
+// GET /api/tags/priorities - Get tags organized by priority levels
+router.get('/priorities', async (req, res) => {
+  try {
+    const tagsByPriority = await Tag.getTagsByPriority();
+    res.json({ priorities: tagsByPriority });
+  } catch (error) {
+    console.error('Error fetching tags by priority:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch tags by priority',
+      message: error.message 
+    });
+  }
+});
+
+// GET /api/tags/health - Get tag health metrics
+router.get('/health', async (req, res) => {
+  try {
+    const metrics = await Tag.getTagHealthMetrics();
+    res.json({ 
+      metrics,
+      recommendations: generateTagRecommendations(metrics)
+    });
+  } catch (error) {
+    console.error('Error fetching tag health metrics:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch tag health metrics',
+      message: error.message 
+    });
+  }
+});
+
+// GET /api/tags/similar - Find similar tags for consolidation
+router.get('/similar', async (req, res) => {
+  try {
+    const { threshold = 0.6 } = req.query;
+    const similarTags = await Tag.findSimilarTags(parseFloat(threshold));
+    res.json({ 
+      similarTags,
+      consolidationSuggestions: similarTags.length
+    });
+  } catch (error) {
+    console.error('Error finding similar tags:', error);
+    res.status(500).json({ 
+      error: 'Failed to find similar tags',
+      message: error.message 
+    });
+  }
+});
+
+// Helper function to generate recommendations
+function generateTagRecommendations(metrics) {
+  const recommendations = [];
+  
+  if (metrics.orphan_tags > 0) {
+    recommendations.push({
+      type: 'cleanup',
+      priority: 'high',
+      message: `${metrics.orphan_tags} tags with no questions should be reviewed for deletion`,
+      action: 'review_orphan_tags'
+    });
+  }
+  
+  if (metrics.rare_tags > metrics.primary_tags * 3) {
+    recommendations.push({
+      type: 'consolidation',
+      priority: 'medium',
+      message: 'High number of rarely-used tags. Consider consolidating similar ones.',
+      action: 'review_similar_tags'
+    });
+  }
+  
+  if (metrics.average_usage < 5) {
+    recommendations.push({
+      type: 'efficiency',
+      priority: 'medium',
+      message: 'Low average tag usage suggests over-tagging. Focus on main categories.',
+      action: 'promote_primary_tags'
+    });
+  }
+  
+  return recommendations;
+}
 
 export default router;

@@ -103,7 +103,7 @@ body::before {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -1478,10 +1478,10 @@ body::before {
 
 .session-setup {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     min-height: 100vh;
-    padding: 2rem 1rem;
+    padding: 4rem 1rem 2rem 1rem;
     position: relative;
     width: 100%;
     box-sizing: border-box;
@@ -1813,6 +1813,187 @@ body::before {
 
 .recalled-display i {
     font-size: 0.875rem;
+}
+
+/* Priority-based Tag Sections */
+.tag-priority-section {
+    margin-bottom: 1.5rem;
+}
+
+.priority-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-elevated);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.priority-header:not(.collapsible) {
+    cursor: default;
+}
+
+.priority-header.collapsible:hover {
+    background: var(--bg-hover);
+}
+
+.priority-header i {
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+.priority-header small {
+    color: var(--text-light);
+    margin-left: auto;
+    font-size: 0.8rem;
+}
+
+.toggle-icon {
+    margin-left: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.priority-tags {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.collapsed .priority-tags {
+    max-height: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+    opacity: 0;
+}
+
+/* Tag Priority Specific Styling */
+.tag-section-primary .priority-header {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 215, 0, 0.3);
+    color: var(--warning-color);
+}
+
+.tag-section-primary .priority-header i {
+    color: #ffd700;
+}
+
+.tag-section-secondary .priority-header {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: var(--info-color);
+}
+
+.tag-section-secondary .priority-header i {
+    color: #3b82f6;
+}
+
+.tag-section-minor .priority-header {
+    background: rgba(107, 114, 128, 0.1);
+    border-color: rgba(107, 114, 128, 0.3);
+}
+
+.tag-section-rare .priority-header {
+    background: rgba(156, 163, 175, 0.1);
+    border-color: rgba(156, 163, 175, 0.2);
+    color: var(--text-light);
+}
+
+/* Enhanced Tag Checkbox Styling */
+.tag-checkbox {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.tag-checkbox:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary-color);
+}
+
+.tag-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.tag-checkbox-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    margin: 0;
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.tag-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.tag-count {
+    background: var(--bg-elevated);
+    color: var(--text-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Priority-specific tag styling */
+.tag-priority-primary .tag-count {
+    background: rgba(255, 215, 0, 0.15);
+    color: #b45309;
+}
+
+.tag-priority-secondary .tag-count {
+    background: rgba(59, 130, 246, 0.15);
+    color: #1d4ed8;
+}
+
+.tag-priority-minor .tag-count {
+    background: rgba(107, 114, 128, 0.15);
+    color: #374151;
+}
+
+.tag-priority-rare .tag-count {
+    background: rgba(156, 163, 175, 0.15);
+    color: #6b7280;
+}
+
+/* Checked state styling */
+.tag-checkbox input[type="checkbox"]:checked + .tag-checkbox-label {
+    color: var(--primary-color);
+}
+
+.tag-checkbox input[type="checkbox"]:checked + .tag-checkbox-label .tag-name {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tag-checkbox:has(input[type="checkbox"]:checked) {
+    background: var(--primary-bg-subtle);
+    border-color: var(--primary-color);
+}
+
+.tag-checkbox:has(input[type="checkbox"]:checked) .tag-count {
+    background: var(--primary-color);
+    color: white;
 }
 
 .btn-ghost {

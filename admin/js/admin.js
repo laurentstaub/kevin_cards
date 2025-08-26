@@ -68,6 +68,21 @@ class AdminApp {
       this.debounce(() => this.searchQuestions(), 300)
     );
     
+    // Tag search and filter
+    const tagSearchInput = document.getElementById('search-tags');
+    if (tagSearchInput) {
+      tagSearchInput.addEventListener('input', 
+        this.debounce(() => this.filterTags(), 300)
+      );
+    }
+    
+    const categoryFilter = document.getElementById('category-filter');
+    if (categoryFilter) {
+      categoryFilter.addEventListener('change', () => {
+        this.filterTags();
+      });
+    }
+    
     document.getElementById('status-filter').addEventListener('change', () => {
       this.filterQuestions();
     });
@@ -313,11 +328,39 @@ class AdminApp {
 
     try {
       const response = await this.apiRequest('/tags');
-      this.renderTags(response.tags || []);
+      this.allTags = response.tags || [];
+      this.renderTags(this.allTags);
     } catch (error) {
       console.error('Failed to load tags:', error);
       grid.innerHTML = '<div class="loading"><i class="fas fa-exclamation-triangle"></i>Erreur lors du chargement</div>';
     }
+  }
+  
+  filterTags() {
+    if (!this.allTags) {
+      this.loadTags();
+      return;
+    }
+    
+    const searchTerm = document.getElementById('search-tags')?.value.toLowerCase() || '';
+    const categoryFilter = document.getElementById('category-filter')?.value || '';
+    
+    let filteredTags = this.allTags;
+    
+    // Filter by search term
+    if (searchTerm) {
+      filteredTags = filteredTags.filter(tag => 
+        tag.name.toLowerCase().includes(searchTerm) ||
+        (tag.description && tag.description.toLowerCase().includes(searchTerm))
+      );
+    }
+    
+    // Filter by category
+    if (categoryFilter) {
+      filteredTags = filteredTags.filter(tag => tag.category === categoryFilter);
+    }
+    
+    this.renderTags(filteredTags);
   }
 
   renderTags(tags) {
@@ -328,33 +371,111 @@ class AdminApp {
       return;
     }
 
-    grid.innerHTML = tags.map(tag => `
-      <div class="tag-card">
-        <div class="tag-header">
-          <div class="tag-color" style="background-color: ${tag.color}"></div>
-          <span class="tag-name">${tag.name}</span>
-          ${tag.category ? `<span class="tag-category">${tag.category}</span>` : ''}
+    // Group tags by priority for better organization
+    const tagsByPriority = {
+      primary: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'primary'),
+      secondary: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'secondary'),
+      minor: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'minor'),
+      rare: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'rare'),
+      orphan: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'orphan')
+    };
+
+    let html = '';
+    
+    // Render by priority groups
+    Object.entries(tagsByPriority).forEach(([priority, priorityTags]) => {
+      if (priorityTags.length === 0) return;
+      
+      html += `<div class="tag-priority-section">
+        <h3 class="tag-priority-header priority-${priority}">
+          <i class="${this.getPriorityIcon(priority)}"></i>
+          ${this.getPriorityLabel(priority)} (${priorityTags.length})
+        </h3>
+        <div class="tag-priority-grid">`;
+      
+      html += priorityTags.map(tag => `
+        <div class="tag-card tag-priority-${tag.priority || this.getTagPriority(tag.usageCount)}">
+          <div class="tag-header">
+            <div class="tag-color" style="background-color: ${tag.color}"></div>
+            <span class="tag-name">${tag.name}</span>
+            ${tag.category ? `<span class="tag-category">${tag.category}</span>` : ''}
+            <div class="tag-priority-badge priority-${tag.priority || this.getTagPriority(tag.usageCount)}">
+              ${tag.usageCount}
+            </div>
+          </div>
+          
+          <div class="tag-stats">
+            <span class="tag-usage ${this.getUsageClass(tag.usageCount)}">
+              ${tag.usageCount} question${tag.usageCount !== 1 ? 's' : ''}
+            </span>
+            <span class="tag-date">${this.formatDate(tag.createdAt)}</span>
+          </div>
+          
+          ${tag.description ? `<p class="tag-description">${tag.description}</p>` : ''}
+          
+          <div class="tag-actions">
+            <button class="btn btn-sm btn-outline" onclick="adminApp.editTag(${tag.id})" title="Modifier">
+              <i class="fas fa-edit"></i>
+            </button>
+            ${tag.usageCount === 0 ? `
+              <button class="btn btn-sm btn-danger" onclick="adminApp.deleteTag(${tag.id})" title="Supprimer">
+                <i class="fas fa-trash"></i>
+              </button>
+            ` : `
+              <button class="btn btn-sm btn-warning" onclick="adminApp.deactivateTag(${tag.id})" title="Désactiver">
+                <i class="fas fa-eye-slash"></i>
+              </button>
+            `}
+            ${tag.usageCount > 0 ? `
+              <button class="btn btn-sm btn-info" onclick="adminApp.viewTagQuestions(${tag.id})" title="Voir les questions">
+                <i class="fas fa-list"></i>
+              </button>
+            ` : ''}
+          </div>
         </div>
-        
-        <div class="tag-stats">
-          <span>${tag.usageCount} question${tag.usageCount !== 1 ? 's' : ''}</span>
-          <span>${this.formatDate(tag.createdAt)}</span>
-        </div>
-        
-        ${tag.description ? `<p style="color: var(--text-secondary); margin-bottom: 1rem;">${tag.description}</p>` : ''}
-        
-        <div class="tag-actions">
-          <button class="btn btn-sm btn-outline" onclick="adminApp.editTag(${tag.id})">
-            <i class="fas fa-edit"></i>
-            Modifier
-          </button>
-          <button class="btn btn-sm btn-warning" onclick="adminApp.deactivateTag(${tag.id})">
-            <i class="fas fa-eye-slash"></i>
-            Désactiver
-          </button>
-        </div>
-      </div>
-    `).join('');
+      `).join('');
+      
+      html += '</div></div>';
+    });
+
+    grid.innerHTML = html;
+  }
+
+  getTagPriority(usageCount) {
+    if (usageCount >= 20) return 'primary';
+    if (usageCount >= 10) return 'secondary';
+    if (usageCount >= 5) return 'minor';
+    if (usageCount >= 1) return 'rare';
+    return 'orphan';
+  }
+
+  getPriorityIcon(priority) {
+    const icons = {
+      primary: 'fas fa-crown',
+      secondary: 'fas fa-star',
+      minor: 'fas fa-tag',
+      rare: 'fas fa-dot-circle',
+      orphan: 'fas fa-exclamation-triangle'
+    };
+    return icons[priority] || 'fas fa-tag';
+  }
+
+  getPriorityLabel(priority) {
+    const labels = {
+      primary: 'Tags Principaux',
+      secondary: 'Tags Secondaires', 
+      minor: 'Tags Mineurs',
+      rare: 'Tags Rares',
+      orphan: 'Tags Orphelins'
+    };
+    return labels[priority] || priority;
+  }
+
+  getUsageClass(usageCount) {
+    if (usageCount >= 20) return 'usage-high';
+    if (usageCount >= 10) return 'usage-medium';
+    if (usageCount >= 5) return 'usage-low';
+    return 'usage-none';
   }
 
   async loadPendingQuestions() {
@@ -716,11 +837,20 @@ class AdminApp {
     const tagData = {
       name: formData.get('name'),
       category: formData.get('category') || null,
-      color: formData.get('color'),
+      color: formData.get('color') || '#3498db',
       description: formData.get('description') || null
     };
+    
+    // Remove empty values for update to avoid overwriting with null
+    if (this.editingTagId) {
+      Object.keys(tagData).forEach(key => {
+        if (tagData[key] === null || tagData[key] === '') {
+          delete tagData[key];
+        }
+      });
+    }
 
-    if (!tagData.name.trim()) {
+    if (!tagData.name || !tagData.name.trim()) {
       this.showToast('Veuillez saisir un nom pour le tag', 'error');
       return;
     }
@@ -728,14 +858,30 @@ class AdminApp {
     this.showLoading(true);
 
     try {
-      const response = await this.apiRequest('/tags', 'POST', tagData);
+      let response;
+      if (this.editingTagId) {
+        // Update existing tag - only send changed fields
+        response = await this.apiRequest(`/tags/${this.editingTagId}`, 'PUT', tagData);
+        this.showToast('Tag modifié avec succès', 'success');
+        // Update in available tags list
+        const index = this.availableTags.findIndex(t => t.id === this.editingTagId);
+        if (index !== -1) {
+          this.availableTags[index] = response;
+        }
+      } else {
+        // Create new tag
+        response = await this.apiRequest('/tags', 'POST', tagData);
+        this.showToast('Tag créé avec succès', 'success');
+        // Update available tags
+        this.availableTags.push(response);
+      }
       
-      this.showToast('Tag créé avec succès', 'success');
       this.closeModal('tag-modal');
       this.loadTags();
+      // Reload available tags for autocomplete
+      await this.loadInitialData();
+      this.editingTagId = null;
       
-      // Update available tags
-      this.availableTags.push(response);
     } catch (error) {
       console.error('Save error:', error);
       this.showToast(error.message || 'Erreur lors de la sauvegarde', 'error');
@@ -874,7 +1020,31 @@ class AdminApp {
 
   // Tag actions
   async editTag(id) {
-    this.openTagModal(id);
+    try {
+      // Fetch tag data
+      const response = await this.apiRequest(`/tags/${id}`);
+      const tag = response.tag || response;
+      
+      // Open modal with existing data
+      const modal = document.getElementById('tag-modal');
+      document.getElementById('tag-modal-title').textContent = 'Modifier le Tag';
+      
+      // Fill form with tag data
+      document.getElementById('tag-name').value = tag.name || '';
+      document.getElementById('tag-category').value = tag.category || '';
+      const colorInput = document.querySelector('#tag-form input[name="color"]');
+      if (colorInput) colorInput.value = tag.color || '#3498db';
+      const descriptionInput = document.querySelector('#tag-form textarea[name="description"]');
+      if (descriptionInput) descriptionInput.value = tag.description || '';
+      
+      // Store the tag ID for update
+      this.editingTagId = id;
+      
+      modal.classList.add('active');
+    } catch (error) {
+      console.error('Failed to load tag:', error);
+      this.showToast('Erreur lors du chargement du tag', 'error');
+    }
   }
 
   async deactivateTag(id) {

@@ -14,10 +14,13 @@ class SessionSetup {
 
     async loadInitialData() {
         try {
-            // Load available tags
-            const tagsResponse = await fetch('/api/tags');
+            // Load available tags with priority ordering
+            const tagsResponse = await fetch('/api/tags?priorityOrder=true');
             const tagsData = await tagsResponse.json();
             this.availableTags = tagsData.tags || [];
+            
+            // Classify tags by priority for better organization
+            this.tagsByPriority = this.classifyTagsByPriority(this.availableTags);
             
             // Load question count for preview
             await this.updateQuestionCount();
@@ -29,6 +32,15 @@ class SessionSetup {
         } catch (error) {
             console.error('Failed to load initial data:', error);
         }
+    }
+
+    classifyTagsByPriority(tags) {
+        return {
+            primary: tags.filter(t => t.usageCount >= 20),
+            secondary: tags.filter(t => t.usageCount >= 10 && t.usageCount < 20),
+            minor: tags.filter(t => t.usageCount >= 5 && t.usageCount < 10),
+            rare: tags.filter(t => t.usageCount >= 1 && t.usageCount < 5)
+        };
     }
 
     initializeEventListeners() {
@@ -126,39 +138,117 @@ class SessionSetup {
             return;
         }
 
-        // Group tags by category
-        const categories = {};
-        this.availableTags.forEach(tag => {
-            const category = tag.category || 'other';
-            if (!categories[category]) {
-                categories[category] = [];
-            }
-            categories[category].push(tag);
-        });
-
-        // Generate HTML
         let html = '';
-        Object.entries(categories).forEach(([category, tags]) => {
-            const categoryName = this.getCategoryDisplayName(category);
+        
+        // First show primary tags prominently
+        if (this.tagsByPriority.primary.length > 0) {
             html += `
-                <div class="tag-category">
-                    <div class="category-header">${categoryName}</div>
-                    <div class="category-tags">
-                        ${tags.map(tag => `
-                            <div class="tag-checkbox">
+                <div class="tag-priority-section tag-section-primary">
+                    <div class="priority-header">
+                        <i class="fas fa-crown"></i>
+                        <span>Domaines principaux</span>
+                        <small>(${this.tagsByPriority.primary.length} tags)</small>
+                    </div>
+                    <div class="priority-tags">
+                        ${this.tagsByPriority.primary.map(tag => `
+                            <div class="tag-checkbox tag-priority-primary">
                                 <input type="checkbox" 
                                        id="setup-tag-${tag.id}" 
                                        value="${tag.id}"
                                        ${this.selectedTags.includes(tag.id) ? 'checked' : ''}>
                                 <label class="tag-checkbox-label" for="setup-tag-${tag.id}">
-                                    ${tag.name}
+                                    <span class="tag-name">${tag.name}</span>
+                                    <span class="tag-count">${tag.usageCount}</span>
                                 </label>
                             </div>
                         `).join('')}
                     </div>
                 </div>
             `;
-        });
+        }
+        
+        // Then secondary tags
+        if (this.tagsByPriority.secondary.length > 0) {
+            html += `
+                <div class="tag-priority-section tag-section-secondary">
+                    <div class="priority-header">
+                        <i class="fas fa-star"></i>
+                        <span>Domaines secondaires</span>
+                        <small>(${this.tagsByPriority.secondary.length} tags)</small>
+                    </div>
+                    <div class="priority-tags">
+                        ${this.tagsByPriority.secondary.map(tag => `
+                            <div class="tag-checkbox tag-priority-secondary">
+                                <input type="checkbox" 
+                                       id="setup-tag-${tag.id}" 
+                                       value="${tag.id}"
+                                       ${this.selectedTags.includes(tag.id) ? 'checked' : ''}>
+                                <label class="tag-checkbox-label" for="setup-tag-${tag.id}">
+                                    <span class="tag-name">${tag.name}</span>
+                                    <span class="tag-count">${tag.usageCount}</span>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Minor tags in a collapsible section
+        if (this.tagsByPriority.minor.length > 0) {
+            html += `
+                <div class="tag-priority-section tag-section-minor">
+                    <div class="priority-header collapsible" onclick="this.parentElement.classList.toggle('collapsed')">
+                        <i class="fas fa-tag"></i>
+                        <span>Domaines spécialisés</span>
+                        <small>(${this.tagsByPriority.minor.length} tags)</small>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="priority-tags">
+                        ${this.tagsByPriority.minor.map(tag => `
+                            <div class="tag-checkbox tag-priority-minor">
+                                <input type="checkbox" 
+                                       id="setup-tag-${tag.id}" 
+                                       value="${tag.id}"
+                                       ${this.selectedTags.includes(tag.id) ? 'checked' : ''}>
+                                <label class="tag-checkbox-label" for="setup-tag-${tag.id}">
+                                    <span class="tag-name">${tag.name}</span>
+                                    <span class="tag-count">${tag.usageCount}</span>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Rare tags in a collapsed section by default
+        if (this.tagsByPriority.rare.length > 0) {
+            html += `
+                <div class="tag-priority-section tag-section-rare collapsed">
+                    <div class="priority-header collapsible" onclick="this.parentElement.classList.toggle('collapsed')">
+                        <i class="fas fa-dot-circle"></i>
+                        <span>Domaines rares</span>
+                        <small>(${this.tagsByPriority.rare.length} tags)</small>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="priority-tags">
+                        ${this.tagsByPriority.rare.map(tag => `
+                            <div class="tag-checkbox tag-priority-rare">
+                                <input type="checkbox" 
+                                       id="setup-tag-${tag.id}" 
+                                       value="${tag.id}"
+                                       ${this.selectedTags.includes(tag.id) ? 'checked' : ''}>
+                                <label class="tag-checkbox-label" for="setup-tag-${tag.id}">
+                                    <span class="tag-name">${tag.name}</span>
+                                    <span class="tag-count">${tag.usageCount}</span>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
 
         container.innerHTML = html;
 

@@ -31,8 +31,8 @@ class Tag {
     }
   }
 
-  // Get all tags with usage counts
-  static async findAll({ category, activeOnly = true } = {}) {
+  // Get all tags with usage counts and priority classification
+  static async findAll({ category, activeOnly = true, priorityOrder = false } = {}) {
     try {
       let whereConditions = [];
       let queryParams = [];
@@ -50,6 +50,11 @@ class Tag {
       const whereClause = whereConditions.length > 0 ? 
         `WHERE ${whereConditions.join(' AND ')}` : '';
 
+      // Order by priority if requested, otherwise by category and name
+      const orderClause = priorityOrder ? 
+        'ORDER BY usage_count DESC, t.name ASC' : 
+        'ORDER BY t.category, t.name';
+
       const result = await query(`
         SELECT t.*, 
                u.name as creator_name,
@@ -59,18 +64,28 @@ class Tag {
         LEFT JOIN question_tags qt ON t.id = qt.tag_id
         ${whereClause}
         GROUP BY t.id, u.name
-        ORDER BY t.category, t.name
+        ${orderClause}
       `, queryParams);
 
       return result.rows.map(row => {
         const tag = new Tag(row);
         tag.creatorName = row.creator_name;
         tag.usageCount = parseInt(row.usage_count);
+        tag.priority = this.classifyTagPriority(tag.usageCount);
         return tag;
       });
     } catch (error) {
       throw new Error(`Failed to fetch tags: ${error.message}`);
     }
+  }
+
+  // Classify tag priority based on usage count
+  static classifyTagPriority(usageCount) {
+    if (usageCount >= 20) return 'primary';
+    if (usageCount >= 10) return 'secondary';
+    if (usageCount >= 5) return 'minor';
+    if (usageCount >= 1) return 'rare';
+    return 'orphan';
   }
 
   // Get tag by ID
@@ -314,10 +329,111 @@ class Tag {
       return result.rows.map(row => {
         const tag = new Tag(row);
         tag.usageCount = parseInt(row.usage_count);
+        tag.priority = this.classifyTagPriority(tag.usageCount);
         return tag;
       });
     } catch (error) {
       throw new Error(`Failed to get most used tags: ${error.message}`);
+    }
+  }
+
+  // Get tags by priority level
+  static async getTagsByPriority() {
+    try {
+      const result = await query(`
+        SELECT t.*, 
+               COUNT(qt.question_id) as usage_count
+        FROM tags t
+        LEFT JOIN question_tags qt ON t.id = qt.tag_id
+        WHERE t.is_active = true
+        GROUP BY t.id
+        ORDER BY usage_count DESC, t.name
+      `);
+
+      const tagsByPriority = {
+        primary: [],
+        secondary: [],
+        minor: [],
+        rare: [],
+        orphan: []
+      };
+
+      result.rows.forEach(row => {
+        const tag = new Tag(row);
+        tag.usageCount = parseInt(row.usage_count);
+        tag.priority = this.classifyTagPriority(tag.usageCount);
+        tagsByPriority[tag.priority].push(tag);
+      });
+
+      return tagsByPriority;
+    } catch (error) {
+      throw new Error(`Failed to get tags by priority: ${error.message}`);
+    }
+  }
+
+  // Get tag health metrics
+  static async getTagHealthMetrics() {
+    try {
+      const result = await query(`
+        SELECT 
+          COUNT(*) FILTER (WHERE usage_count >= 20) as primary_tags,
+          COUNT(*) FILTER (WHERE usage_count >= 10 AND usage_count < 20) as secondary_tags,
+          COUNT(*) FILTER (WHERE usage_count >= 5 AND usage_count < 10) as minor_tags,
+          COUNT(*) FILTER (WHERE usage_count >= 1 AND usage_count < 5) as rare_tags,
+          COUNT(*) FILTER (WHERE usage_count = 0) as orphan_tags,
+          AVG(usage_count) as average_usage,
+          MAX(usage_count) as max_usage,
+          COUNT(DISTINCT category) as categories_count
+        FROM (
+          SELECT t.id, t.category, COUNT(qt.question_id) as usage_count
+          FROM tags t
+          LEFT JOIN question_tags qt ON t.id = qt.tag_id
+          WHERE t.is_active = true
+          GROUP BY t.id, t.category
+        ) tag_stats
+      `);
+
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Failed to get tag health metrics: ${error.message}`);
+    }
+  }
+
+  // Find similar tags for consolidation suggestions
+  static async findSimilarTags(threshold = 0.6) {
+    try {
+      const result = await query(`
+        SELECT 
+          t1.id as tag1_id, t1.name as tag1_name, t1_usage.usage_count as tag1_usage,
+          t2.id as tag2_id, t2.name as tag2_name, t2_usage.usage_count as tag2_usage,
+          similarity(t1.name, t2.name) as similarity_score
+        FROM tags t1
+        JOIN tags t2 ON t1.id < t2.id
+        LEFT JOIN (
+          SELECT tag_id, COUNT(*) as usage_count 
+          FROM question_tags 
+          GROUP BY tag_id
+        ) t1_usage ON t1.id = t1_usage.tag_id
+        LEFT JOIN (
+          SELECT tag_id, COUNT(*) as usage_count 
+          FROM question_tags 
+          GROUP BY tag_id
+        ) t2_usage ON t2.id = t2_usage.tag_id
+        WHERE t1.is_active = true 
+          AND t2.is_active = true
+          AND similarity(t1.name, t2.name) >= $1
+          AND t1.category = t2.category
+        ORDER BY similarity_score DESC, t1_usage.usage_count DESC
+      `, [threshold]);
+
+      return result.rows.map(row => ({
+        tag1: { id: row.tag1_id, name: row.tag1_name, usageCount: parseInt(row.tag1_usage || 0) },
+        tag2: { id: row.tag2_id, name: row.tag2_name, usageCount: parseInt(row.tag2_usage || 0) },
+        similarityScore: parseFloat(row.similarity_score),
+        suggestion: row.tag1_usage >= row.tag2_usage ? 'merge_tag2_into_tag1' : 'merge_tag1_into_tag2'
+      }));
+    } catch (error) {
+      throw new Error(`Failed to find similar tags: ${error.message}`);
     }
   }
 
