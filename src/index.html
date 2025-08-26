@@ -155,6 +155,17 @@
                 <span class="session-separator">•</span>
                 <span id="sessionFilters">Toutes les questions</span>
             </div>
+            <div class="progress-bar">
+                <div class="progress-counter">
+                    <span id="currentCard">0</span>
+                    <span class="progress-separator">/</span>
+                    <span id="totalCards">0</span>
+                </div>
+                <div class="recalled-display">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="recalledCount">0</span>
+                </div>
+            </div>
         </div>
 
         <div class="flashcard-container fade-in">
@@ -170,23 +181,21 @@
         <div class="controls fade-in">
             <button class="btn btn-secondary" id="notKnownBtn"><i class="fas fa-times"></i> Non sue</button>
             <button class="btn btn-primary" id="recalledBtn"><i class="fas fa-check"></i> Je sais !</button>
-            <button class="btn btn-reset" id="resetBtn" style="display: none;"><i class="fas fa-redo"></i> Recommencer</button>
+            
+            <!-- Session completion options (hidden by default) -->
+            <div class="session-complete-actions" id="sessionCompleteActions" style="display: none;">
+                <button class="btn btn-primary" id="repeatSameBtn">
+                    <i class="fas fa-repeat"></i> Mêmes questions
+                </button>
+                <button class="btn btn-secondary" id="similarSessionBtn">
+                    <i class="fas fa-shuffle"></i> Session similaire
+                </button>
+                <button class="btn btn-ghost" id="newSessionBtn">
+                    <i class="fas fa-plus"></i> Nouvelle session
+                </button>
+            </div>
         </div>
 
-        <div class="progress-section fade-in">
-            <div class="progress-item">
-                <span>Progression</span>
-                <div class="progress-number">
-                    <span id="currentCard">0</span>
-                    <span class="progress-separator">/</span>
-                    <span id="totalCards">0</span>
-                </div>
-            </div>
-            <div class="progress-item">
-                <span>Rappelées</span>
-                <div class="recalled-badge" id="recalledCount">0</div>
-            </div>
-        </div>
     </main>
 </div>
 

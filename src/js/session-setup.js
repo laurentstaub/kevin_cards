@@ -329,6 +329,17 @@ class SessionSetup {
                 shuffledQuestions : 
                 shuffledQuestions.slice(0, this.selectedCount);
 
+            // Store session configuration and questions for repeat/similar functionality
+            if (window.currentSession) {
+                window.currentSession.config = {
+                    mode: this.selectedMode,
+                    count: this.selectedCount,
+                    difficulty: this.selectedDifficulty,
+                    tags: this.selectedTags
+                };
+                window.currentSession.questions = selectedQuestions;
+            }
+
             // Initialize the main flashcard system with selected questions
             if (window.flashcardApp) {
                 window.flashcardApp.loadCustomQuestions(selectedQuestions);
@@ -363,8 +374,18 @@ class SessionSetup {
     }
 
     showSetupScreen() {
-        document.getElementById('sessionSetup').style.display = 'block';
+        document.getElementById('sessionSetup').style.display = 'flex';
         document.getElementById('studyInterface').style.display = 'none';
+        
+        // Force a re-layout to ensure proper centering
+        setTimeout(() => {
+            const setupPanel = document.getElementById('sessionSetup');
+            if (setupPanel) {
+                setupPanel.scrollTop = 0;
+                // Trigger a reflow to ensure centering is recalculated
+                setupPanel.offsetHeight;
+            }
+        }, 50);
     }
 
     getStudyModeDisplay() {

@@ -7,6 +7,12 @@ let currentCardIndex = 0;
 let isFlipped = false;
 let recalledCount = 0;
 
+// Session state
+let currentSession = {
+    questions: [], // Exact questions used in current session
+    config: null   // Session configuration for similar sessions
+};
+
 // Progress tracking
 let progressTracker = null;
 
@@ -158,9 +164,10 @@ function updateButtonStates() {
     notKnownBtn.disabled = isAfterLastCard;
     recalledBtn.disabled = isAfterLastCard;
     
-    // Show reset button when we finish all cards
-    if (resetBtn) {
-        resetBtn.style.display = isAfterLastCard ? 'flex' : 'none';
+    // Show session completion actions when we finish all cards
+    const sessionCompleteActions = document.getElementById('sessionCompleteActions');
+    if (sessionCompleteActions) {
+        sessionCompleteActions.style.display = isAfterLastCard ? 'flex' : 'none';
     }
 }
 
@@ -223,7 +230,9 @@ async function loadQuestions() {
 // New function to load custom questions from session setup
 function loadCustomQuestions(questions) {
     allFlashcards = questions;
-    applyCurrentFilters();
+    flashcards = questions; // Use the exact questions provided by session setup
+    isFilterActive = false; // Reset filter state since session setup handles filtering
+    initFlashcards();
 }
 
 // Create a global flashcard app object for session setup to use
@@ -276,15 +285,18 @@ function extractTagCategories(questions) {
 }
 
 function getRandomFlashcards(array, count) {
-    const shuffled = [...array];
+    const shuffled = shuffleArray(array);
+    return shuffled.slice(0, count);
+}
 
+function shuffleArray(array) {
+    const shuffled = [...array];
     // Fisher-Yates shuffle algorithm
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-
-    return shuffled.slice(0, count);
+    return shuffled;
 }
 
 function resetGame() {
@@ -771,6 +783,133 @@ function hideSidebar() {
     }
 }
 
+// Session completion functions
+function repeatSameQuestions() {
+    // Use exact same questions in same order
+    currentCardIndex = 0;
+    recalledCount = 0;
+    isFlipped = false;
+    
+    // End current session if active
+    if (progressTracker && progressTracker.currentSession) {
+        progressTracker.endSession();
+    }
+    
+    // Start new progress session
+    if (progressTracker) {
+        progressTracker.startSession();
+    }
+    
+    // Reset display and start again
+    totalCardsElement.textContent = String(flashcards.length);
+    recalledCountElement.textContent = String(recalledCount);
+    showCard(currentCardIndex);
+    updateButtonStates();
+}
+
+async function startSimilarSession() {
+    // Create new session with same criteria but fetch fresh questions from database
+    if (!currentSession.config) {
+        console.error('No session configuration found');
+        alert('Impossible de créer une session similaire. Configuration manquante.');
+        return;
+    }
+
+    try {
+        // Build query parameters using stored session configuration
+        const params = new URLSearchParams();
+        
+        if (currentSession.config.mode === 'focused' && currentSession.config.tags && currentSession.config.tags.length > 0) {
+            params.set('tags', currentSession.config.tags.join(','));
+        }
+        
+        if (currentSession.config.difficulty !== 'mixed') {
+            params.set('difficulty', currentSession.config.difficulty);
+        }
+
+        // Set high limit to get all matching questions
+        params.set('limit', '1000');
+        
+        const response = await fetch(`/api/questions?${params}`);
+        const data = await response.json();
+        
+        if (!data.questions || data.questions.length === 0) {
+            throw new Error('No questions found with similar criteria');
+        }
+
+        // Process questions
+        const questions = data.questions.map(card => ({
+            id: card.id,
+            tags: card.tags ? card.tags.map(tag => typeof tag === 'string' ? tag : tag.name) : [],
+            question: card.questionHtml || card.questionText || card.question,
+            answer: card.answerHtml || card.answerText || card.answer,
+            difficulty: card.difficulty || 'medium'
+        }));
+
+        // Shuffle and select questions (same count as original session)
+        const shuffledQuestions = shuffleArray(questions);
+        const selectedCount = currentSession.config.count === 'all' ? 
+            shuffledQuestions.length : 
+            Math.min(currentSession.config.count, shuffledQuestions.length);
+        const selectedQuestions = shuffledQuestions.slice(0, selectedCount);
+
+        // Update current session with new questions but keep same config
+        currentSession.questions = selectedQuestions;
+        flashcards = selectedQuestions;
+        
+        // Reset session state
+        currentCardIndex = 0;
+        recalledCount = 0;
+        isFlipped = false;
+        
+        // End current session if active
+        if (progressTracker && progressTracker.currentSession) {
+            progressTracker.endSession();
+        }
+        
+        // Start new progress session
+        if (progressTracker) {
+            progressTracker.startSession();
+        }
+        
+        // Initialize new session
+        totalCardsElement.textContent = String(flashcards.length);
+        recalledCountElement.textContent = String(recalledCount);
+        showCard(currentCardIndex);
+        updateButtonStates();
+        
+        console.log(`Started similar session with ${selectedQuestions.length} new questions`);
+
+    } catch (error) {
+        console.error('Failed to start similar session:', error);
+        alert('Erreur lors du chargement de la session similaire. Veuillez réessayer.');
+    }
+}
+
+function startNewSession() {
+    // End current session if active
+    if (progressTracker && progressTracker.currentSession) {
+        progressTracker.endSession();
+    }
+    
+    // Reset session state
+    currentSession = {
+        questions: [],
+        config: null
+    };
+    
+    // Hide study interface and show setup screen
+    document.getElementById('studyInterface').style.display = 'none';
+    document.getElementById('sessionSetup').style.display = 'flex';
+    
+    // Reset setup screen to initial state if sessionSetup is available
+    if (window.sessionSetup) {
+        // Optionally reset to default values or keep last configuration
+        window.sessionSetup.updateQuestionCount();
+        window.sessionSetup.updatePreview();
+    }
+}
+
 function initializeApp() {
     // Initialize progress tracker
     if (window.ProgressTracker) {
@@ -911,6 +1050,23 @@ function initializeApp() {
     
     if (clearProgressBtn) {
         clearProgressBtn.addEventListener('click', handleClearProgress);
+    }
+    
+    // Session completion event listeners
+    const repeatSameBtn = document.getElementById('repeatSameBtn');
+    const similarSessionBtn = document.getElementById('similarSessionBtn');
+    const newSessionBtn = document.getElementById('newSessionBtn');
+    
+    if (repeatSameBtn) {
+        repeatSameBtn.addEventListener('click', repeatSameQuestions);
+    }
+    
+    if (similarSessionBtn) {
+        similarSessionBtn.addEventListener('click', startSimilarSession);
+    }
+    
+    if (newSessionBtn) {
+        newSessionBtn.addEventListener('click', startNewSession);
     }
     
     // Revision modal event listeners
