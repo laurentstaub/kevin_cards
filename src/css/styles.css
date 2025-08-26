@@ -41,7 +41,19 @@ body {
   --bg-elevated: var(--bg-elevated-dark);
   --text-primary: var(--text-primary-dark);
   --text-secondary: var(--text-secondary-dark);
+  --text-light: var(--text-secondary-dark);
+  --text-lighter: #64748b;
   --border-color: var(--border-dark);
+  --bg-hover: #2d3748;
+  --primary-bg: rgba(102, 126, 234, 0.1);
+  --border-radius: 8px;
+  --border-radius-small: 4px;
+  --border-radius-large: 16px;
+  --border-radius-full: 9999px;
+  --shadow-small: var(--shadow-sm);
+  --shadow-medium: var(--shadow-md);
+  --shadow-large: var(--shadow-lg);
+  --shadow-primary: 0 4px 14px 0 rgba(102, 126, 234, 0.39);
 }
 
 /* Light theme override */
@@ -51,7 +63,11 @@ body[data-theme="light"] {
   --bg-elevated: var(--bg-elevated-light);
   --text-primary: var(--text-primary-light);
   --text-secondary: var(--text-secondary-light);
+  --text-light: var(--text-secondary-light);
+  --text-lighter: #94a3b8;
   --border-color: var(--border-light);
+  --bg-hover: #f1f5f9;
+  --primary-bg: rgba(102, 126, 234, 0.1);
 }
 
 * {
@@ -1454,4 +1470,370 @@ body::before {
   .revision-card-item {
     padding: 0.75rem;
   }
+}
+
+/* ===================================
+   SESSION SETUP SCREEN STYLES
+   =================================== */
+
+.session-setup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+    padding: 2rem 1rem;
+}
+
+.setup-container {
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-large);
+    padding: 2rem;
+    box-shadow: var(--shadow-large);
+    max-width: 800px;
+    width: 100%;
+    border: 1px solid var(--border-color);
+}
+
+.setup-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.setup-header h2 {
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.setup-header p {
+    color: var(--text-light);
+    margin: 0;
+    font-size: 1rem;
+}
+
+.setup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.setup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.setup-section h3 {
+    color: var(--text-primary);
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Study Mode Selection */
+.study-modes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.study-mode {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bg-secondary);
+}
+
+.study-mode:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.study-mode.active {
+    border-color: var(--primary-color);
+    background: var(--primary-bg);
+    box-shadow: var(--shadow-primary);
+}
+
+.mode-icon {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    min-width: 1.5rem;
+}
+
+.mode-info h4 {
+    margin: 0 0 0.25rem 0;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.mode-info p {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+/* Question Count Selector */
+.question-count-selector {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.count-btn {
+    padding: 0.75rem 1.25rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 60px;
+}
+
+.count-btn:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.count-btn.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+
+/* Difficulty Selector */
+.difficulty-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem;
+}
+
+.difficulty-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.difficulty-btn:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.difficulty-btn.active {
+    border-color: var(--primary-color);
+    background: var(--primary-bg);
+    box-shadow: var(--shadow-primary);
+}
+
+.difficulty-btn i {
+    font-size: 1.25rem;
+}
+
+/* Selected Filters Display */
+.selected-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.selected-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--primary-bg);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--border-radius-full);
+    font-size: 0.875rem;
+    color: var(--primary-color);
+}
+
+.selected-filter button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.25rem;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Session Preview */
+.session-preview {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.preview-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Setup Actions */
+.setup-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    min-width: 200px;
+}
+
+/* Session Header */
+.session-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0 2rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.session-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.session-separator {
+    color: var(--text-lighter);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--primary-color);
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+/* Responsive Design for Setup */
+@media (max-width: 768px) {
+    .session-setup {
+        padding: 1rem;
+        min-height: calc(100vh - 150px);
+    }
+    
+    .setup-container {
+        padding: 1.5rem;
+    }
+    
+    .study-modes {
+        grid-template-columns: 1fr;
+    }
+    
+    .difficulty-selector {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .question-count-selector {
+        justify-content: center;
+    }
+    
+    .setup-actions {
+        flex-direction: column;
+    }
+    
+    .btn-large {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .session-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .preview-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .setup-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .difficulty-selector {
+        grid-template-columns: 1fr;
+    }
+    
+    .preview-stats {
+        grid-template-columns: 1fr;
+    }
 }

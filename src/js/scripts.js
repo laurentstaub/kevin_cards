@@ -184,7 +184,7 @@ function toggleTheme() {
 
 async function loadQuestions() {
     try {
-        const response = await fetch('/api/questions');
+        const response = await fetch('/api/questions?limit=1000');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -201,23 +201,43 @@ async function loadQuestions() {
         
         allFlashcards = data.questions.map(card => ({
             id: card.id,
-            tags: card.tags ? card.tags.map(tag => typeof tag === 'string' ? tag : tag.name) : [], // Handle both string and object tags
-            question: card.questionHtml || card.questionText || card.question, // Use HTML if available, fallback to text
-            answer: card.answerHtml || card.answerText || card.answer, // Use HTML if available, fallback to text
+            tags: card.tags ? card.tags.map(tag => typeof tag === 'string' ? tag : tag.name) : [],
+            question: card.questionHtml || card.questionText || card.question,
+            answer: card.answerHtml || card.answerText || card.answer,
             difficulty: card.difficulty || 'medium',
-            source: extractSource(card.sources) // Extract source from sources array
+            source: extractSource(card.sources)
         }));
 
-        // Apply current filters or use all cards
-        applyCurrentFilters();
+        // Don't auto-start questions, let session setup handle it
+        console.log(`Loaded ${allFlashcards.length} questions from database`);
+        
     } catch (error) {
         console.error('Error loading questions:', error);
         // Fallback to empty array if loading fails
         flashcards = [];
         allFlashcards = [];
-        initFlashcards();
+        // Don't initialize flashcards automatically
     }
 }
+
+// New function to load custom questions from session setup
+function loadCustomQuestions(questions) {
+    allFlashcards = questions;
+    applyCurrentFilters();
+}
+
+// Create a global flashcard app object for session setup to use
+window.flashcardApp = {
+    loadCustomQuestions: loadCustomQuestions,
+    getAllQuestions: () => allFlashcards,
+    resetQuestions: () => {
+        flashcards = [...allFlashcards];
+        currentCardIndex = 0;
+        recalledCount = 0;
+        isFlipped = false;
+    },
+    initFlashcards: initFlashcards
+};
 
 // Helper functions for processing database data
 function extractSource(sources) {

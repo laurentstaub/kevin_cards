@@ -143,11 +143,45 @@ class AdminApp {
       const tagsResponse = await this.apiRequest('/tags');
       this.availableTags = tagsResponse.tags || [];
       
+      // Update question ordering range
+      await this.updateQuestionOrderingRange();
+      
       // Load initial questions
       await this.loadQuestions();
     } catch (error) {
       console.error('Failed to load initial data:', error);
       this.showToast('Erreur lors du chargement des données', 'error');
+    }
+  }
+
+  async updateQuestionOrderingRange() {
+    try {
+      // Get question statistics to update the ordering range
+      const response = await this.apiRequest('/questions?page=1&limit=1&orderBy=id&orderDirection=ASC');
+      const firstPageResponse = await this.apiRequest('/questions?page=1&limit=1&orderBy=id&orderDirection=DESC');
+      
+      if (response.questions && response.questions.length > 0 && 
+          firstPageResponse.questions && firstPageResponse.questions.length > 0) {
+        const minId = response.questions[0].id;
+        const maxId = firstPageResponse.questions[0].id;
+        
+        // Update the sort order dropdown
+        const sortOrder = document.getElementById('sort-order');
+        if (sortOrder) {
+          const ascOption = sortOrder.querySelector('option[value="id,ASC"]');
+          const descOption = sortOrder.querySelector('option[value="id,DESC"]');
+          
+          if (ascOption) {
+            ascOption.textContent = `Ordre numérique (${minId}-${maxId})`;
+          }
+          if (descOption) {
+            descOption.textContent = `Ordre numérique (${maxId}-${minId})`;
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Could not update question ordering range:', error);
+      // Silently fail - this is not critical functionality
     }
   }
 

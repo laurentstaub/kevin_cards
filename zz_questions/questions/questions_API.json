@@ -1,0 +1,309 @@
+{
+  "metadata": {
+    "title": "Flashcards Spécialités → Molécules - 40 Médicaments Courants",
+    "description": "Questions simples de correspondance spécialité pharmaceutique vers nom de molécule pour les 40 médicaments les plus prescrits",
+    "version": "1.0",
+    "total_cards": 40,
+    "domain": "Correspondances spécialités-molécules",
+    "available_tags": [
+      "Correspondances",
+      "Spécialités",
+      "Molécules",
+      "Antibiotiques",
+      "Cardiovasculaire",
+      "Antalgiques",
+      "Psychotropes",
+      "Gastro-entérologie",
+      "Endocrinologie",
+      "Pneumologie",
+      "Dermatologie",
+      "Ophtalmologie",
+      "ORL",
+      "Urologie",
+      "Rhumatologie",
+      "Fondamental"
+    ]
+  },
+  "flashcards": [
+    {
+      "id": 1,
+      "tags": ["Correspondances", "Antibiotiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Augmentin®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Amoxicilline + acide clavulanique</strong></p><p>Association d'une pénicilline A avec un inhibiteur de β-lactamases.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "tags": ["Correspondances", "Antibiotiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Clamoxyl®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Amoxicilline</strong></p><p>Pénicilline A, antibiotique β-lactamine à spectre élargi.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 3,
+      "tags": ["Correspondances", "Antibiotiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Zithromax®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Azithromycine</strong></p><p>Macrolide à 15 atomes, demi-vie longue permettant 3 jours de traitement.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 4,
+      "tags": ["Correspondances", "Antibiotiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Ciflox®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Ciprofloxacine</strong></p><p>Fluoroquinolone de 3ème génération, large spectre incluant Pseudomonas.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 5,
+      "tags": ["Correspondances", "Cardiovasculaire", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Kardégic®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Acide acétylsalicylique (aspirine)</strong></p><p>Antiagrégant plaquettaire et anti-inflammatoire à faible dose.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 6,
+      "tags": ["Correspondances", "Cardiovasculaire", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Tahor®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Atorvastatine</strong></p><p>Statine, inhibiteur de l'HMG-CoA réductase.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 7,
+      "tags": ["Correspondances", "Cardiovasculaire", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Coversyl®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Périndopril</strong></p><p>Inhibiteur de l'enzyme de conversion (IEC).</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 8,
+      "tags": ["Correspondances", "Antalgiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Doliprane®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Paracétamol</strong></p><p>Antalgique et antipyrétique sans effet anti-inflammatoire.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 9,
+      "tags": ["Correspondances", "Antalgiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Advil®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Ibuprofène</strong></p><p>Anti-inflammatoire non stéroïdien (AINS) dérivé de l'acide propionique.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 10,
+      "tags": ["Correspondances", "Antalgiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Voltarène®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Diclofénac</strong></p><p>AINS dérivé de l'acide acétique, anti-inflammatoire puissant.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 11,
+      "tags": ["Correspondances", "Psychotropes", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Lexomil®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Bromazépam</strong></p><p>Benzodiazépine anxiolytique à demi-vie intermédiaire.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 12,
+      "tags": ["Correspondances", "Psychotropes", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Stilnox®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Zolpidem</strong></p><p>Hypnotique Z, agoniste sélectif des récepteurs GABA-A α1.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 13,
+      "tags": ["Correspondances", "Gastro-entérologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule d'<strong class=\"drug-name\">Inexium®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Ésoméprazole</strong></p><p>Inhibiteur de la pompe à protons (IPP), énantiomère S de l'oméprazole.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 14,
+      "tags": ["Correspondances", "Gastro-entérologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Mopral®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Oméprazole</strong></p><p>Inhibiteur de la pompe à protons (IPP), premier de sa classe.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 15,
+      "tags": ["Correspondances", "Endocrinologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Glucophage®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Metformine</strong></p><p>Antidiabétique, biguanide, traitement de première ligne du diabète de type 2.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 16,
+      "tags": ["Correspondances", "Endocrinologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Lantus®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Glargine</strong></p><p>Insuline basale, analogue lent à durée d'action de 24 heures.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 17,
+      "tags": ["Correspondances", "Cardiovasculaire", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Sectral®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Acébutolol</strong></p><p>Bêta-bloquant cardiosélectif avec activité sympathomimétique intrinsèque.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 18,
+      "tags": ["Correspondances", "Pneumologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Ventoline®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Salbutamol</strong></p><p>Bronchodilatateur β2-agoniste à action rapide et courte.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 19,
+      "tags": ["Correspondances", "Dermatologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Diprosone®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Bétaméthasone</strong></p><p>Corticoïde topique de classe III (fort), activité anti-inflammatoire puissante.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 20,
+      "tags": ["Correspondances", "Ophtalmologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Maxidex®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Dexaméthasone</strong></p><p>Corticoïde ophtalmique, anti-inflammatoire de référence en ophtalmologie.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 21,
+      "tags": ["Correspondances", "ORL", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Rhinofluimucil®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Acétylcystéine + tuaminoheptane</strong></p><p>Association mucolytique et décongestionnant nasal.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 22,
+      "tags": ["Correspondances", "Urologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule d'<strong class=\"drug-name\">Xatral®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Alfuzosine</strong></p><p>Alpha-bloquant sélectif α1, traitement de l'hypertrophie bénigne de la prostate.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 23,
+      "tags": ["Correspondances", "Rhumatologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Solupred®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Prednisolone</strong></p><p>Corticoïde systémique, forme active de la prednisone.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 24,
+      "tags": ["Correspondances", "Cardiovasculaire", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Previscan®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Fluindione</strong></p><p>Antivitamine K (AVK), anticoagulant de référence en France.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 25,
+      "tags": ["Correspondances", "Gastro-entérologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Spasfon®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Phloroglucinol</strong></p><p>Antispasmodique musculotrope direct, sans effet anticholinergique.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 26,
+      "tags": ["Correspondances", "Antalgiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Topalgic®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Tramadol</strong></p><p>Antalgique opioïde faible avec propriétés sérotoninergiques et noradrénergiques.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 27,
+      "tags": ["Correspondances", "Psychotropes", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Deroxat®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Paroxétine</strong></p><p>Antidépresseur inhibiteur sélectif de la recapture de la sérotonine (ISRS).</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 28,
+      "tags": ["Correspondances", "Cardiovasculaire", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Lasilix®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Furosémide</strong></p><p>Diurétique de l'anse, inhibiteur du co-transporteur Na-K-2Cl.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 29,
+      "tags": ["Correspondances", "Endocrinologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Levothyrox®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Lévothyroxine</strong></p><p>Hormone thyroïdienne de synthèse (T4), traitement de l'hypothyroïdie.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 30,
+      "tags": ["Correspondances", "Antibiotiques", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Rocéphine®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Ceftriaxone</strong></p><p>Céphalosporine de 3ème génération (C3G), demi-vie longue permettant 1 injection/jour.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 31,
+      "tags": ["Correspondances", "Cardiovasculaire", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule d'<strong class=\"drug-name\">Eliquis®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Apixaban</strong></p><p>Anticoagulant oral direct (AOD), inhibiteur sélectif du facteur Xa.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 32,
+      "tags": ["Correspondances", "Gastro-entérologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Motilium®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Dompéridone</strong></p><p>Antiémétique, antagoniste des récepteurs dopaminergiques D2 périphériques.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 33,
+      "tags": ["Correspondances", "Pneumologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Seretide®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Salmétérol + fluticasone</strong></p><p>Association β2-agoniste longue durée d'action et corticoïde inhalé.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 34,
+      "tags": ["Correspondances", "ORL", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule d'<strong class=\"drug-name\">Otipax®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Lidocaïne + phénazone</strong></p><p>Association anesthésique local et anti-inflammatoire pour otalgie.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 35,
+      "tags": ["Correspondances", "Cardiovasculaire", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Plavix®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Clopidogrel</strong></p><p>Antiagrégant plaquettaire, inhibiteur des récepteurs P2Y12.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 36,
+      "tags": ["Correspondances", "Psychotropes", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule d'<strong class=\"drug-name\">Effexor®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Venlafaxine</strong></p><p>Antidépresseur inhibiteur de la recapture de la sérotonine et de la noradrénaline (IRSNA).</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 37,
+      "tags": ["Correspondances", "Endocrinologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Jardiance®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Empagliflozine</strong></p><p>Antidiabétique inhibiteur de SGLT2, bénéfices cardiovasculaires démontrés.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 38,
+      "tags": ["Correspondances", "Dermatologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Locoid®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Hydrocortisone butyrate</strong></p><p>Corticoïde topique de classe II (modéré), dérivé de l'hydrocortisone.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 39,
+      "tags": ["Correspondances", "Urologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Monuril®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Fosfomycine</strong></p><p>Antibiotique en dose unique pour cystite simple, mécanisme d'action original.</p></div>",
+      "difficulty": "easy"
+    },
+    {
+      "id": 40,
+      "tags": ["Correspondances", "Rhumatologie", "Fondamental"],
+      "question": "<div class=\"card-content\"><p>Quelle est la molécule de <strong class=\"drug-name\">Célestène®</strong> ?</p></div>",
+      "answer": "<div class=\"card-content\"><p><strong>Bétaméthasone</strong></p><p>Corticoïde systémique, activité glucocorticoïde puissante et prolongée.</p></div>",
+      "difficulty": "easy"
+    }
+  ]
+}@

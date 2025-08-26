@@ -32,11 +32,135 @@
     <p>Cartes pour révision</p>
 </header>
 <div class="container">
-    <main class="main-content">
+    <!-- Study Session Setup Screen -->
+    <div class="session-setup" id="sessionSetup">
+        <div class="setup-container fade-in">
+            <div class="setup-header">
+                <h2><i class="fas fa-play-circle"></i> Nouvelle session d'étude</h2>
+                <p>Configurez votre session de révision</p>
+            </div>
+
+            <div class="setup-content">
+                <!-- Study Mode Selection -->
+                <div class="setup-section">
+                    <h3><i class="fas fa-graduation-cap"></i> Mode d'étude</h3>
+                    <div class="study-modes">
+                        <div class="study-mode active" data-mode="quick">
+                            <div class="mode-icon"><i class="fas fa-bolt"></i></div>
+                            <div class="mode-info">
+                                <h4>Étude rapide</h4>
+                                <p>10 questions aléatoires</p>
+                            </div>
+                        </div>
+                        <div class="study-mode" data-mode="focused">
+                            <div class="mode-icon"><i class="fas fa-target"></i></div>
+                            <div class="mode-info">
+                                <h4>Étude ciblée</h4>
+                                <p>Questions par domaine</p>
+                            </div>
+                        </div>
+                        <div class="study-mode" data-mode="review">
+                            <div class="mode-icon"><i class="fas fa-redo"></i></div>
+                            <div class="mode-info">
+                                <h4>Révision</h4>
+                                <p>Questions difficiles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Count -->
+                <div class="setup-section">
+                    <h3><i class="fas fa-list-ol"></i> Nombre de questions</h3>
+                    <div class="question-count-selector">
+                        <button class="count-btn active" data-count="10">10</button>
+                        <button class="count-btn" data-count="20">20</button>
+                        <button class="count-btn" data-count="50">50</button>
+                        <button class="count-btn" data-count="all">Toutes</button>
+                    </div>
+                </div>
+
+                <!-- Tag Filters (shown only in focused mode) -->
+                <div class="setup-section" id="tagFiltersSection" style="display: none;">
+                    <h3><i class="fas fa-tags"></i> Domaines d'étude</h3>
+                    <div class="tag-categories" id="setupTagCategories">
+                        <div class="loading-tags">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Chargement des domaines...
+                        </div>
+                    </div>
+                    <div class="selected-filters" id="setupSelectedFilters"></div>
+                </div>
+
+                <!-- Difficulty Level -->
+                <div class="setup-section">
+                    <h3><i class="fas fa-signal"></i> Niveau de difficulté</h3>
+                    <div class="difficulty-selector">
+                        <button class="difficulty-btn active" data-difficulty="mixed">
+                            <i class="fas fa-random"></i>
+                            Mixte
+                        </button>
+                        <button class="difficulty-btn" data-difficulty="easy">
+                            <i class="fas fa-seedling"></i>
+                            Facile
+                        </button>
+                        <button class="difficulty-btn" data-difficulty="medium">
+                            <i class="fas fa-balance-scale"></i>
+                            Moyen
+                        </button>
+                        <button class="difficulty-btn" data-difficulty="hard">
+                            <i class="fas fa-fire"></i>
+                            Difficile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Session Info -->
+                <div class="session-preview" id="sessionPreview">
+                    <div class="preview-stats">
+                        <div class="stat">
+                            <span class="stat-number" id="availableQuestions">-</span>
+                            <span class="stat-label">Questions disponibles</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" id="selectedCount">10</span>
+                            <span class="stat-label">Questions sélectionnées</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setup-actions">
+                <button class="btn btn-secondary" id="loadLastSession">
+                    <i class="fas fa-history"></i>
+                    Dernière session
+                </button>
+                <button class="btn btn-primary btn-large" id="startSession">
+                    <i class="fas fa-play"></i>
+                    Commencer l'étude
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Study Interface (hidden by default) -->
+    <main class="main-content" id="studyInterface" style="display: none;">
+        <div class="session-header">
+            <button class="btn btn-ghost btn-small" id="backToSetup">
+                <i class="fas fa-arrow-left"></i>
+                Retour
+            </button>
+            <div class="session-info">
+                <span id="sessionMode">Étude rapide</span>
+                <span class="session-separator">•</span>
+                <span id="sessionFilters">Toutes les questions</span>
+            </div>
+        </div>
+
         <div class="flashcard-container fade-in">
             <div class="flashcard" id="flashcard">
                 <div class="flashcard-front" id="question">
-                    <p>Cliquez pour commencer</p>
+                    <p>Chargement des questions...</p>
                 </div>
                 <div class="flashcard-back" id="answer">
                     <p>La réponse apparaîtra ici</p>
@@ -242,6 +366,7 @@
 </footer>
 
 <script src="js/progress.js"></script>
+<script src="js/session-setup.js"></script>
 <script type="module" src="js/scripts.js"></script>
 </body>
 </html>
