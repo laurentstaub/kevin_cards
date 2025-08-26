@@ -2,7 +2,7 @@
 class AdminApp {
   constructor() {
     this.currentView = 'questions';
-    this.apiBase = 'http://localhost:3001/api';
+    this.apiBase = '/api';
     this.currentPage = 1;
     this.itemsPerPage = 10;
     this.selectedTags = [];
@@ -421,16 +421,20 @@ class AdminApp {
   }
 
   // Modal management
-  openQuestionModal(questionId = null) {
+  async openQuestionModal(questionId = null) {
     document.getElementById('question-modal-title').textContent = 
       questionId ? 'Modifier la Question' : 'Nouvelle Question';
     
     if (questionId) {
-      this.loadQuestionForEdit(questionId);
+      // Wait for data to load before showing modal
+      await this.loadQuestionForEdit(questionId);
     } else {
       this.resetQuestionForm();
+      // Reset preview to question tab and clear content
+      this.switchPreviewTab('question');
     }
     
+    // Only show modal after data is loaded
     this.showModal('question-modal');
   }
 
@@ -1194,6 +1198,9 @@ class AdminApp {
 
       // Load sources
       this.loadSources(question.sources || []);
+      
+      // Reset to question tab and update preview with loaded content
+      this.switchPreviewTab('question');
 
     } catch (error) {
       console.error('Error loading question for edit:', error);

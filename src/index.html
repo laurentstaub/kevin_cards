@@ -109,8 +109,14 @@
             <!-- Due Cards -->
             <div class="stats-section">
                 <h3><i class="fas fa-clock"></i> Cartes à réviser</h3>
-                <div class="stat-info">
-                    <span id="dueCardsCount">0</span> cartes nécessitent une révision
+                <div class="due-cards-container">
+                    <div class="stat-info">
+                        <span id="dueCardsCount">0</span> cartes nécessitent une révision
+                    </div>
+                    <button class="btn btn-revision" id="startRevisionBtn" style="display: none;">
+                        <i class="fas fa-redo-alt"></i>
+                        Réviser les cartes difficiles
+                    </button>
                 </div>
             </div>
             
@@ -166,6 +172,67 @@
         <div class="modal-footer">
             <button class="btn btn-secondary" id="resetFilters">Réinitialiser</button>
             <button class="btn btn-primary" id="applyFilters">Commencer nouvelle série</button>
+        </div>
+    </div>
+</div>
+
+<!-- Revision Modal -->
+<div class="modal-overlay" id="revisionModal">
+    <div class="modal-content modal-revision">
+        <div class="modal-header">
+            <h2>Révision des cartes difficiles</h2>
+            <button class="modal-close" id="closeRevisionModal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <!-- Revision Options -->
+            <div class="revision-options">
+                <div class="option-group">
+                    <h3>Options de révision</h3>
+                    <div class="revision-modes">
+                        <label class="revision-mode">
+                            <input type="radio" name="revisionMode" value="all" checked>
+                            <span class="revision-mode-label">
+                                <i class="fas fa-list"></i>
+                                <strong>Révision complète</strong>
+                                <small>Toutes les cartes difficiles</small>
+                            </span>
+                        </label>
+                        <label class="revision-mode">
+                            <input type="radio" name="revisionMode" value="priority">
+                            <span class="revision-mode-label">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Priorité élevée</strong>
+                                <small>Les 10 cartes les plus difficiles</small>
+                            </span>
+                        </label>
+                        <label class="revision-mode">
+                            <input type="radio" name="revisionMode" value="custom">
+                            <span class="revision-mode-label">
+                                <i class="fas fa-check-square"></i>
+                                <strong>Sélection manuelle</strong>
+                                <small>Choisir les cartes à réviser</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards List for Custom Selection -->
+            <div class="revision-cards-list" id="revisionCardsList" style="display: none;">
+                <h4>Sélectionner les cartes à réviser :</h4>
+                <div class="cards-container" id="revisionCardsContainer">
+                    <!-- Cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelRevision">Annuler</button>
+            <button class="btn btn-primary" id="startRevision">
+                <i class="fas fa-play"></i>
+                Commencer la révision
+            </button>
         </div>
     </div>
 </div>

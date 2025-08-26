@@ -855,6 +855,25 @@ body::before {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
 }
 
+.btn-revision {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+}
+
+.btn-revision:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+.due-cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {
@@ -1246,5 +1265,193 @@ body::before {
   .tag-checkbox-label {
     font-size: 0.8rem;
     padding: 0.4rem 0.6rem;
+  }
+}
+
+/* Revision Modal Styles */
+.modal-revision {
+  max-width: 700px;
+  max-height: 85vh;
+}
+
+.revision-options {
+  margin-bottom: 2rem;
+}
+
+.option-group h3 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.revision-modes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.revision-mode {
+  cursor: pointer;
+  user-select: none;
+}
+
+.revision-mode input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.revision-mode-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-elevated);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.revision-mode input:checked + .revision-mode-label {
+  border-color: var(--primary-color);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+}
+
+.revision-mode-label:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.revision-mode-label i {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  width: 24px;
+  text-align: center;
+}
+
+.revision-mode-label strong {
+  color: var(--text-primary);
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.revision-mode-label small {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.revision-mode-label > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.revision-cards-list {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.revision-cards-list h4 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cards-container {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+}
+
+.revision-card-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease;
+}
+
+.revision-card-item:last-child {
+  border-bottom: none;
+}
+
+.revision-card-item:hover {
+  background: var(--bg-secondary);
+}
+
+.revision-card-checkbox {
+  margin-top: 0.2rem;
+}
+
+.revision-card-info {
+  flex: 1;
+}
+
+.revision-card-preview {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.revision-card-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.revision-card-accuracy {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.revision-card-accuracy.low {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.revision-card-accuracy.medium {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.revision-card-accuracy.high {
+  background: rgba(72, 187, 120, 0.1);
+  color: #48bb78;
+}
+
+@media (max-width: 768px) {
+  .revision-modes {
+    gap: 0.75rem;
+  }
+
+  .revision-mode-label {
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .revision-mode-label i {
+    font-size: 1rem;
+  }
+
+  .cards-container {
+    max-height: 250px;
+  }
+
+  .revision-card-item {
+    padding: 0.75rem;
   }
 }

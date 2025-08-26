@@ -72,11 +72,10 @@ Les agonistes du récepteur GLP-1, bien qu'injectables, sont désormais préfér
 
 ### Recommandations et guidelines
 
-1. American Diabetes Association. [Standards of Medical Care in Diabetes—2025](https://diabetesjournals.org/care/issue/48/Supplement_1). *Diabetes Care*. 2025;48(Suppl. 1).
-
-2. European Association for the Study of Diabetes. [Position Statement on GLP-1 Receptor Agonists and Cardiovascular Outcomes](https://link.springer.com/journal/125). *Diabetologia*. 2024.
-
-3. International Diabetes Federation. [IDF Diabetes Atlas, 10th edn](https://diabetesatlas.org/atlas/tenth-edition/). Brussels, Belgium: 2021.
+1. Collège National de Pharmacologie Médicale: https://pharmacomedicale.org/medicaments/par-specialites/item/antidiabetiques-les-points-essentiels
+2. American Diabetes Association. [Standards of Medical Care in Diabetes—2025](https://diabetesjournals.org/care/issue/48/Supplement_1). *Diabetes Care*. 2025;48(Suppl. 1).
+3. European Association for the Study of Diabetes. [Position Statement on GLP-1 Receptor Agonists and Cardiovascular Outcomes](https://link.springer.com/journal/125). *Diabetologia*. 2024.
+4. International Diabetes Federation. [IDF Diabetes Atlas, 10th edn](https://diabetesatlas.org/atlas/tenth-edition/). Brussels, Belgium: 2021.
 
 ### Études cliniques majeures
 

@@ -21,6 +21,12 @@ let themeToggle, toggleSwitch;
 let filterBtn, filterText, tagModal, closeModal, tagSearch, selectedTagsElement, tagCategories, resetFilters, applyFilters;
 let statsBtn, statsModal, closeStatsModal, closeStatsBtn, exportProgress, clearProgressBtn;
 let menuToggle, sidebar, sidebarClose, sidebarOverlay;
+let startRevisionBtn, revisionModal, closeRevisionModal, revisionModes, revisionCardsList, revisionCardsContainer, cancelRevision, startRevision;
+
+// Revision state
+let isRevisionMode = false;
+let revisionCards = [];
+let selectedRevisionCards = [];
 
 function initFlashcards() {
     totalCardsElement.textContent = String(flashcards.length);
@@ -132,6 +138,9 @@ function nextCard(isRecalled) {
             recalledCountElement.textContent = String(recalledCount);
         }
         
+        // Increment index to indicate we're past the last card
+        currentCardIndex++;
+        
         // End the study session
         if (progressTracker) {
             const sessionData = progressTracker.endSession();
@@ -145,13 +154,13 @@ function nextCard(isRecalled) {
 }
 
 function updateButtonStates() {
-    const isLastCard = currentCardIndex === flashcards.length - 1;
-    notKnownBtn.disabled = isLastCard;
-    recalledBtn.disabled = isLastCard;
+    const isAfterLastCard = currentCardIndex >= flashcards.length;
+    notKnownBtn.disabled = isAfterLastCard;
+    recalledBtn.disabled = isAfterLastCard;
     
-    // Show reset button when we reach the last card
+    // Show reset button when we finish all cards
     if (resetBtn) {
-        resetBtn.style.display = isLastCard ? 'flex' : 'none';
+        resetBtn.style.display = isAfterLastCard ? 'flex' : 'none';
     }
 }
 
@@ -175,7 +184,7 @@ function toggleTheme() {
 
 async function loadQuestions() {
     try {
-        const response = await fetch('http://localhost:3001/api/questions');
+        const response = await fetch('/api/questions');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -192,9 +201,9 @@ async function loadQuestions() {
         
         allFlashcards = data.questions.map(card => ({
             id: card.id,
-            tags: card.tags.map(tag => tag.name), // Extract tag names from tag objects
-            question: card.questionHtml || card.questionText, // Use HTML if available, fallback to text
-            answer: card.answerHtml || card.answerText, // Use HTML if available, fallback to text
+            tags: card.tags ? card.tags.map(tag => typeof tag === 'string' ? tag : tag.name) : [], // Handle both string and object tags
+            question: card.questionHtml || card.questionText || card.question, // Use HTML if available, fallback to text
+            answer: card.answerHtml || card.answerText || card.answer, // Use HTML if available, fallback to text
             difficulty: card.difficulty || 'medium',
             source: extractSource(card.sources) // Extract source from sources array
         }));
@@ -502,10 +511,22 @@ function updateStatsDisplay() {
         }
     }
     
-    // Update due cards count
+    // Update due cards count and revision button
     const dueCardsCountEl = document.getElementById('dueCardsCount');
+    const startRevisionBtnEl = document.getElementById('startRevisionBtn');
+    
     if (dueCardsCountEl) {
         dueCardsCountEl.textContent = summary.dueCardsCount;
+    }
+    
+    // Show/hide revision button based on due cards
+    if (startRevisionBtnEl) {
+        if (summary.dueCardsCount > 0) {
+            startRevisionBtnEl.style.display = 'flex';
+            startRevisionBtnEl.textContent = `Réviser ${summary.dueCardsCount} cartes difficiles`;
+        } else {
+            startRevisionBtnEl.style.display = 'none';
+        }
     }
     
     // Update weak areas
@@ -546,6 +567,171 @@ function handleClearProgress() {
         updateStatsDisplay();
         alert('Vos statistiques ont été réinitialisées.');
     }
+}
+
+// Revision functions
+function showRevisionModal() {
+    if (revisionModal && progressTracker) {
+        // Load difficult cards
+        loadRevisionCards();
+        revisionModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function hideRevisionModal() {
+    if (revisionModal) {
+        revisionModal.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Reset revision state
+        selectedRevisionCards = [];
+        revisionCards = [];
+    }
+}
+
+function loadRevisionCards() {
+    if (!progressTracker) return;
+    
+    // Get due cards (same logic as statistics)
+    const dueCards = progressTracker.getDueCards(50);
+    
+    // Match due cards with actual flashcards and add accuracy info
+    revisionCards = dueCards.map(dueCard => {
+        const card = allFlashcards.find(c => c.id === parseInt(dueCard.id));
+        if (card) {
+            return {
+                ...card,
+                accuracy: dueCard.accuracy || 0,
+                attempts: dueCard.attempts || 0,
+                daysOverdue: dueCard.daysOverdue || 0
+            };
+        }
+        return null;
+    }).filter(Boolean);
+    
+    // Update radio button descriptions with actual counts
+    updateRevisionModeDescriptions();
+    
+    // Check if custom mode was selected and populate card list
+    handleRevisionModeChange();
+}
+
+function updateRevisionModeDescriptions() {
+    const allModeLabel = document.querySelector('input[value="all"] + .revision-mode-label small');
+    const priorityModeLabel = document.querySelector('input[value="priority"] + .revision-mode-label small');
+    
+    if (allModeLabel) {
+        allModeLabel.textContent = `Toutes les ${revisionCards.length} cartes difficiles`;
+    }
+    
+    if (priorityModeLabel) {
+        const priorityCount = Math.min(revisionCards.length, 10);
+        priorityModeLabel.textContent = `Les ${priorityCount} cartes les plus difficiles`;
+    }
+}
+
+function handleRevisionModeChange() {
+    const selectedMode = document.querySelector('input[name="revisionMode"]:checked')?.value || 'all';
+    
+    if (selectedMode === 'custom') {
+        revisionCardsList.style.display = 'block';
+        populateRevisionCardsList();
+    } else {
+        revisionCardsList.style.display = 'none';
+    }
+}
+
+function populateRevisionCardsList() {
+    if (!revisionCardsContainer) return;
+    
+    revisionCardsContainer.innerHTML = revisionCards.map((card, index) => {
+        const preview = extractTextFromHtml(card.question);
+        const accuracyClass = card.accuracy < 30 ? 'low' : card.accuracy < 70 ? 'medium' : 'high';
+        
+        return `
+            <div class="revision-card-item">
+                <input type="checkbox" class="revision-card-checkbox" data-card-id="${card.id}" checked>
+                <div class="revision-card-info">
+                    <div class="revision-card-preview">${preview}</div>
+                    <div class="revision-card-stats">
+                        <span class="revision-card-accuracy ${accuracyClass}">
+                            ${card.accuracy.toFixed(1)}% de réussite
+                        </span>
+                        <span>${card.attempts} essais</span>
+                        <span>${card.tags.join(', ')}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Initialize all cards as selected
+    selectedRevisionCards = [...revisionCards];
+}
+
+function extractTextFromHtml(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+}
+
+function handleRevisionCardSelection(cardId, isSelected) {
+    const card = revisionCards.find(c => c.id === parseInt(cardId));
+    if (!card) return;
+    
+    if (isSelected && !selectedRevisionCards.find(c => c.id === card.id)) {
+        selectedRevisionCards.push(card);
+    } else if (!isSelected) {
+        selectedRevisionCards = selectedRevisionCards.filter(c => c.id !== card.id);
+    }
+}
+
+function startRevisionSession() {
+    const selectedMode = document.querySelector('input[name="revisionMode"]:checked')?.value || 'all';
+    let cardsToStudy = [];
+    
+    switch (selectedMode) {
+        case 'all':
+            cardsToStudy = [...revisionCards];
+            break;
+        case 'priority':
+            // Sort by accuracy (lowest first) and take top 10
+            cardsToStudy = revisionCards
+                .sort((a, b) => a.accuracy - b.accuracy)
+                .slice(0, 10);
+            break;
+        case 'custom':
+            cardsToStudy = [...selectedRevisionCards];
+            break;
+    }
+    
+    if (cardsToStudy.length === 0) {
+        alert('Aucune carte sélectionnée pour la révision.');
+        return;
+    }
+    
+    // Set up revision session
+    isRevisionMode = true;
+    flashcards = cardsToStudy;
+    currentCardIndex = 0;
+    recalledCount = 0;
+    isFlipped = false;
+    
+    // Hide revision modal and start session
+    hideRevisionModal();
+    hideStatsModal();
+    
+    // Start new progress session
+    if (progressTracker) {
+        progressTracker.startSession();
+    }
+    
+    // Initialize flashcards for revision
+    totalCardsElement.textContent = String(flashcards.length);
+    recalledCountElement.textContent = String(recalledCount);
+    showCard(currentCardIndex);
+    updateButtonStates();
 }
 
 // Sidebar functions
@@ -612,6 +798,15 @@ function initializeApp() {
     sidebar = document.getElementById('sidebar');
     sidebarClose = document.getElementById('sidebarClose');
     sidebarOverlay = document.getElementById('sidebarOverlay');
+    
+    // Get revision-related DOM elements
+    startRevisionBtn = document.getElementById('startRevisionBtn');
+    revisionModal = document.getElementById('revisionModal');
+    closeRevisionModal = document.getElementById('closeRevisionModal');
+    revisionCardsList = document.getElementById('revisionCardsList');
+    revisionCardsContainer = document.getElementById('revisionCardsContainer');
+    cancelRevision = document.getElementById('cancelRevision');
+    startRevision = document.getElementById('startRevision');
 
     // Add flip event listener for flashcard
     if (flashcardElement) {
@@ -698,6 +893,31 @@ function initializeApp() {
         clearProgressBtn.addEventListener('click', handleClearProgress);
     }
     
+    // Revision modal event listeners
+    if (startRevisionBtn) {
+        startRevisionBtn.addEventListener('click', showRevisionModal);
+    }
+    
+    if (closeRevisionModal) {
+        closeRevisionModal.addEventListener('click', hideRevisionModal);
+    }
+    
+    if (cancelRevision) {
+        cancelRevision.addEventListener('click', hideRevisionModal);
+    }
+    
+    if (startRevision) {
+        startRevision.addEventListener('click', startRevisionSession);
+    }
+    
+    if (revisionModal) {
+        revisionModal.addEventListener('click', (e) => {
+            if (e.target === revisionModal) {
+                hideRevisionModal();
+            }
+        });
+    }
+    
     // Sidebar event listeners
     if (menuToggle) {
         menuToggle.addEventListener('click', showSidebar);
@@ -711,7 +931,7 @@ function initializeApp() {
         sidebarOverlay.addEventListener('click', hideSidebar);
     }
     
-    // Event delegation for dynamic tag elements
+    // Event delegation for dynamic elements
     document.addEventListener('click', (e) => {
         // Handle tag checkbox changes
         if (e.target.matches('.tag-checkbox input')) {
@@ -724,6 +944,20 @@ function initializeApp() {
         if (e.target.matches('.remove-tag')) {
             const tag = e.target.dataset.tag;
             removeTag(tag);
+        }
+        
+        // Handle revision card checkbox changes
+        if (e.target.matches('.revision-card-checkbox')) {
+            const cardId = e.target.dataset.cardId;
+            const isSelected = e.target.checked;
+            handleRevisionCardSelection(cardId, isSelected);
+        }
+    });
+    
+    // Event delegation for revision mode changes
+    document.addEventListener('change', (e) => {
+        if (e.target.matches('input[name="revisionMode"]')) {
+            handleRevisionModeChange();
         }
     });
 
