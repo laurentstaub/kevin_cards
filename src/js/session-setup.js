@@ -66,13 +66,10 @@ class SessionSetup {
         });
 
         // Action buttons
-        document.getElementById('startSession').addEventListener('click', () => {
+        document.getElementById('startSessionTop').addEventListener('click', () => {
             this.startSession();
         });
 
-        document.getElementById('loadLastSession').addEventListener('click', () => {
-            this.loadLastSession();
-        });
 
         document.getElementById('backToSetup').addEventListener('click', () => {
             this.showSetupScreen();
@@ -324,10 +321,10 @@ class SessionSetup {
             // Get question count without limit
             params.set('limit', '1000'); // High number to get all questions
             
-            const response = await fetch(`/api/questions?${params}`);
+            const response = await fetch(`/api/questions/published?${params}`);
             const data = await response.json();
             
-            this.availableQuestions = data.totalCount || data.questions?.length || 0;
+            this.availableQuestions = data.metadata?.total_cards || data.flashcards?.length || 0;
             this.updatePreview();
             
         } catch (error) {
@@ -350,6 +347,37 @@ class SessionSetup {
                 this.availableQuestions : 
                 Math.min(this.selectedCount, this.availableQuestions);
             selectedElement.textContent = selectedCount;
+        }
+        
+        // Update sticky header count
+        this.updateStickyQuestionCount();
+    }
+    
+    updateStickyQuestionCount() {
+        const stickyCountElement = document.getElementById('stickyQuestionCount');
+        if (!stickyCountElement) return;
+        
+        const selectedCount = this.selectedCount === 'all' ? 'toutes les' : this.selectedCount;
+        const availableCount = this.availableQuestions;
+        
+        if (this.selectedTags.length === 0) {
+            // No tags selected - show selected vs total available
+            if (typeof selectedCount === 'number') {
+                stickyCountElement.textContent = `${Math.min(selectedCount, availableCount)} questions sélectionnées sur ${availableCount} disponibles`;
+            } else {
+                stickyCountElement.textContent = `${selectedCount} questions sélectionnées sur ${availableCount} disponibles`;
+            }
+        } else {
+            // Tags selected - show selected vs filtered available
+            if (availableCount === 0) {
+                stickyCountElement.textContent = 'Aucune question trouvée avec ces tags';
+            } else {
+                if (typeof selectedCount === 'number') {
+                    stickyCountElement.textContent = `${Math.min(selectedCount, availableCount)} questions sélectionnées sur ${availableCount} disponibles`;
+                } else {
+                    stickyCountElement.textContent = `${selectedCount} questions sélectionnées sur ${availableCount} disponibles`;
+                }
+            }
         }
     }
 
@@ -397,20 +425,21 @@ class SessionSetup {
             // Set high limit to get all matching questions
             params.set('limit', '1000');
             
-            const response = await fetch(`/api/questions?${params}`);
+            const response = await fetch(`/api/questions/published?${params}`);
             const data = await response.json();
             
-            if (!data.questions || data.questions.length === 0) {
+            if (!data.flashcards || data.flashcards.length === 0) {
                 throw new Error('No questions found');
             }
 
             // Process questions and start the study session
-            const questions = data.questions.map(card => ({
+            const questions = data.flashcards.map(card => ({
                 id: card.id,
                 tags: card.tags ? card.tags.map(tag => typeof tag === 'string' ? tag : tag.name) : [],
-                question: card.questionHtml || card.questionText || card.question,
-                answer: card.answerHtml || card.answerText || card.answer,
-                difficulty: card.difficulty || 'medium'
+                question: card.question, // Already rendered HTML from published endpoint
+                answer: card.answer,     // Already rendered HTML from published endpoint
+                difficulty: card.difficulty || 'medium',
+                source: this.extractSource(card.sources)
             }));
 
             // Shuffle and select questions
@@ -467,6 +496,9 @@ class SessionSetup {
         document.getElementById('sessionSetup').style.display = 'flex';
         document.getElementById('studyInterface').style.display = 'none';
         
+        // Reset session state when going back to setup
+        this.resetSessionState();
+        
         // Force a re-layout to ensure proper centering
         setTimeout(() => {
             const setupPanel = document.getElementById('sessionSetup');
@@ -476,6 +508,42 @@ class SessionSetup {
                 setupPanel.offsetHeight;
             }
         }, 50);
+    }
+    
+    resetSessionState() {
+        // Reset flashcard app state variables
+        if (window.flashcardApp && window.flashcardApp.resetQuestions) {
+            window.flashcardApp.resetQuestions();
+        }
+        
+        // Reset global session variables (if accessible)
+        if (window.currentSession) {
+            window.currentSession.questions = [];
+            window.currentSession.config = null;
+        }
+        
+        // Reset any DOM elements that might show previous session state
+        const currentCardEl = document.getElementById('currentCard');
+        const totalCardsEl = document.getElementById('totalCards');
+        const recalledCountEl = document.getElementById('recalledCount');
+        
+        if (currentCardEl) currentCardEl.textContent = '0';
+        if (totalCardsEl) totalCardsEl.textContent = '0';
+        if (recalledCountEl) recalledCountEl.textContent = '0';
+        
+        // Hide session completion actions if visible
+        const sessionCompleteActions = document.getElementById('sessionCompleteActions');
+        if (sessionCompleteActions) {
+            sessionCompleteActions.style.display = 'none';
+        }
+        
+        // Show main action buttons
+        const notKnownBtn = document.getElementById('notKnownBtn');
+        const recalledBtn = document.getElementById('recalledBtn');
+        if (notKnownBtn) notKnownBtn.style.display = 'flex';
+        if (recalledBtn) recalledBtn.style.display = 'flex';
+        if (notKnownBtn) notKnownBtn.disabled = false;
+        if (recalledBtn) recalledBtn.disabled = false;
     }
 
     getStudyModeDisplay() {
@@ -536,39 +604,21 @@ class SessionSetup {
         localStorage.setItem('lastSessionConfig', JSON.stringify(config));
     }
 
-    loadLastSession() {
-        try {
-            const configStr = localStorage.getItem('lastSessionConfig');
-            if (!configStr) {
-                alert('Aucune session précédente trouvée.');
-                return;
-            }
-
-            const config = JSON.parse(configStr);
-            
-            // Apply configuration
-            this.selectedMode = config.mode || 'quick';
-            this.selectedCount = config.count || 10;
-            this.selectedDifficulty = config.difficulty || 'mixed';
-            this.selectedTags = config.tags || [];
-
-            // Update UI
-            this.selectStudyMode(this.selectedMode);
-            this.selectQuestionCount(config.count || 10);
-            this.selectDifficulty(this.selectedDifficulty);
-
-            // If focused mode, populate and update tags
-            if (this.selectedMode === 'focused') {
-                setTimeout(() => {
-                    this.populateTagFilters();
-                }, 100);
-            }
-
-        } catch (error) {
-            console.error('Failed to load last session:', error);
-            alert('Erreur lors du chargement de la dernière session.');
+    extractSource(sources) {
+        if (!sources || sources.length === 0) {
+            return 'Pharmacologie générale';
         }
+        
+        // Return all sources as objects with text and optional URL
+        const sourceObjects = sources.map(source => ({
+            text: source.title || source.url || 'Source externe',
+            url: source.url || null
+        }));
+        
+        // If there's only one source, return as single object, otherwise return as array
+        return sourceObjects.length === 1 ? sourceObjects[0] : sourceObjects;
     }
+
 }
 
 // Initialize when DOM is loaded

@@ -49,37 +49,47 @@ function initFlashcards() {
 
 function showCard(index) {
     const card = flashcards[index];
+    
+    // Safety check
+    if (!card) {
+        console.error('No card found at index', index);
+        return;
+    }
 
     // Reset flip state for new card
     isFlipped = false;
     flashcardElement.classList.remove('flipped');
 
-    // Handle multiple sources with clickable links
+    // Handle multiple sources with clickable links - with null safety
     let sourceHtml;
-    if (Array.isArray(card.source)) {
+    if (card.source && Array.isArray(card.source)) {
         sourceHtml = card.source.map(source => 
-            source.url ? 
-                `<a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${source.text}</a>` : 
-                source.text
+            source && source.url ? 
+                `<a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${source.text || 'Source externe'}</a>` : 
+                (source && source.text) || 'Source externe'
         ).join(', ');
-    } else if (typeof card.source === 'object' && card.source !== null) {
+    } else if (card.source && typeof card.source === 'object' && card.source !== null) {
         sourceHtml = card.source.url ? 
-            `<a href="${card.source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${card.source.text}</a>` : 
-            card.source.text;
+            `<a href="${card.source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${card.source.text || 'Source externe'}</a>` : 
+            card.source.text || 'Source externe';
     } else if (card.source) {
         sourceHtml = card.source;
     } else {
         sourceHtml = 'Pharmacologie générale';
     }
 
+    // Safe tags handling
+    const tags = card.tags || [];
+    const tagsHtml = tags.map(tag => `<span class="tag">${tag || 'Tag'}</span>`).join('');
+
     const questionContent = `
         <div class="card-header">
             <div class="question-indicator">Question</div>
             <div class="tags-container">
-                ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                ${tagsHtml}
             </div>
         </div>
-        ${card.question}
+        ${card.question || 'Question non disponible'}
         <div class="card-source">
             <span class="source-label">Source:</span> <span class="source-text">${sourceHtml}</span>
         </div>`;
@@ -88,10 +98,10 @@ function showCard(index) {
         <div class="card-header">
             <div class="answer-indicator">Réponse</div>
             <div class="tags-container">
-                ${card.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                ${tagsHtml}
             </div>
         </div>
-        ${card.answer}
+        ${card.answer || 'Réponse non disponible'}
         <div class="card-source">
             <span class="source-label">Source:</span> <span class="source-text">${sourceHtml}</span>
         </div>`;
@@ -169,6 +179,15 @@ function updateButtonStates() {
     if (sessionCompleteActions) {
         sessionCompleteActions.style.display = isAfterLastCard ? 'flex' : 'none';
     }
+    
+    // Hide the main action buttons when session is complete
+    if (isAfterLastCard) {
+        notKnownBtn.style.display = 'none';
+        recalledBtn.style.display = 'none';
+    } else {
+        notKnownBtn.style.display = 'flex';
+        recalledBtn.style.display = 'flex';
+    }
 }
 
 function initTheme() {
@@ -191,29 +210,53 @@ function toggleTheme() {
 
 async function loadQuestions() {
     try {
-        const response = await fetch('/api/questions?limit=1000');
+        const response = await fetch('/api/questions/published?limit=1000');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
         questionData = {
-            metadata: {
-                title: 'Questions from Database',
-                total_cards: data.questions.length,
-                tag_categories: extractTagCategories(data.questions)
-            },
-            flashcards: data.questions
+            metadata: data.metadata,
+            flashcards: data.flashcards
         };
         
-        allFlashcards = data.questions.map(card => ({
+        allFlashcards = data.flashcards.map(card => ({
             id: card.id,
             tags: card.tags ? card.tags.map(tag => typeof tag === 'string' ? tag : tag.name) : [],
-            question: card.questionHtml || card.questionText || card.question,
-            answer: card.answerHtml || card.answerText || card.answer,
+            question: card.question, // Already rendered HTML from API
+            answer: card.answer,     // Already rendered HTML from API
             difficulty: card.difficulty || 'medium',
             source: extractSource(card.sources)
         }));
+
+
+        // One-time reset of all progress data due to ID migration
+        // Remove this block after users have refreshed their browsers
+        if (progressTracker && allFlashcards.length > 0) {
+            const storedProgress = localStorage.getItem('flashpharma_progress');
+            if (storedProgress) {
+                try {
+                    const progress = JSON.parse(storedProgress);
+                    // Check if we have old data (cards with low IDs that don't exist anymore)
+                    const cardIds = Object.keys(progress.cards || {}).map(id => parseInt(id));
+                    const hasOldData = cardIds.some(id => id < 50); // Arbitrary threshold
+                    
+                    if (hasOldData) {
+                        console.log('Detected old progress data, performing one-time reset...');
+                        progressTracker.resetAllProgress();
+                    } else {
+                        // Normal cleanup for newer data
+                        const currentCardIds = allFlashcards.map(card => card.id);
+                        progressTracker.cleanOrphanedProgress(currentCardIds);
+                    }
+                } catch (e) {
+                    // If parsing fails, just reset everything
+                    console.log('Invalid progress data, resetting...');
+                    progressTracker.resetAllProgress();
+                }
+            }
+        }
 
         // Don't auto-start questions, let session setup handle it
         console.log(`Loaded ${allFlashcards.length} questions from database`);
@@ -247,6 +290,9 @@ window.flashcardApp = {
     },
     initFlashcards: initFlashcards
 };
+
+// Make currentSession accessible globally for session setup
+window.currentSession = currentSession;
 
 // Helper functions for processing database data
 function extractSource(sources) {
@@ -423,6 +469,49 @@ function updateSelectedTagsDisplay() {
             <div class="selected-tag-list">${tagList}</div>
         `;
     }
+    
+    // Update question count display
+    updateQuestionCountDisplay();
+}
+
+function updateQuestionCountDisplay() {
+    const stickyCountElement = document.getElementById('stickyQuestionCount');
+    if (!stickyCountElement || !allFlashcards) return;
+    
+    let availableCount, selectedCount = 10; // Default selected count
+    
+    // Get the selected count from the active count button
+    const activeCountBtn = document.querySelector('.count-btn.active');
+    if (activeCountBtn) {
+        const count = activeCountBtn.dataset.count;
+        selectedCount = count === 'all' ? 'toutes les' : parseInt(count);
+    }
+    
+    if (selectedTags.length === 0) {
+        // No tags selected - show total questions vs selected
+        availableCount = allFlashcards.length;
+        if (typeof selectedCount === 'number') {
+            stickyCountElement.textContent = `${Math.min(selectedCount, availableCount)} questions sélectionnées sur ${availableCount} disponibles`;
+        } else {
+            stickyCountElement.textContent = `${selectedCount} questions sélectionnées sur ${availableCount} disponibles`;
+        }
+    } else {
+        // Calculate questions matching selected tags (OR operation)
+        const filteredCards = allFlashcards.filter(card => 
+            selectedTags.some(tag => card.tags && card.tags.includes(tag))
+        );
+        availableCount = filteredCards.length;
+        
+        if (availableCount === 0) {
+            stickyCountElement.textContent = 'Aucune question trouvée avec ces tags';
+        } else {
+            if (typeof selectedCount === 'number') {
+                stickyCountElement.textContent = `${Math.min(selectedCount, availableCount)} questions sélectionnées sur ${availableCount} disponibles`;
+            } else {
+                stickyCountElement.textContent = `${selectedCount} questions sélectionnées sur ${availableCount} disponibles`;
+            }
+        }
+    }
 }
 
 function handleTagSearch(query) {
@@ -543,37 +632,55 @@ function updateStatsDisplay() {
         }
     }
     
-    // Update due cards count and revision button
-    const dueCardsCountEl = document.getElementById('dueCardsCount');
+    // Update weak cards count and revision button
+    const weakCardsCountEl = document.getElementById('weakCardsCount');
     const startRevisionBtnEl = document.getElementById('startRevisionBtn');
+    const revisionBtnTextEl = document.getElementById('revisionBtnText');
     
-    if (dueCardsCountEl) {
-        dueCardsCountEl.textContent = summary.dueCardsCount;
+    // Get weak cards (accuracy < 50%)
+    const weakCards = progressTracker.getWeakAreas(50);
+    
+    if (weakCardsCountEl) {
+        weakCardsCountEl.textContent = weakCards.length;
     }
     
-    // Show/hide revision button based on due cards
+    // Show/hide revision button based on weak cards
     if (startRevisionBtnEl) {
-        if (summary.dueCardsCount > 0) {
+        if (weakCards.length > 0) {
             startRevisionBtnEl.style.display = 'flex';
-            startRevisionBtnEl.textContent = `Réviser ${summary.dueCardsCount} cartes difficiles`;
+            if (revisionBtnTextEl) {
+                revisionBtnTextEl.textContent = `Retravailler ${weakCards.length} carte${weakCards.length > 1 ? 's' : ''}`;
+            }
         } else {
             startRevisionBtnEl.style.display = 'none';
         }
     }
     
-    // Update weak areas
+    // Update weak areas with question previews
     const weakAreasEl = document.getElementById('weakAreas');
     if (weakAreasEl) {
-        const weakAreas = progressTracker.getWeakAreas(50, 5);
+        const weakAreas = progressTracker.getWeakAreas(50, 10); // Show top 10 weak cards
         if (weakAreas.length === 0) {
-            weakAreasEl.innerHTML = '<div class="stat-info">Aucun point faible détecté</div>';
+            weakAreasEl.innerHTML = '<div class="stat-info">Aucune carte faible détectée (toutes > 50% de réussite)</div>';
         } else {
-            weakAreasEl.innerHTML = weakAreas.map(area => `
-                <div class="weak-area-item">
-                    <span>Carte #${area.id}</span>
-                    <span class="weak-area-accuracy">${area.accuracy.toFixed(1)}% (${area.attempts} essais)</span>
-                </div>
-            `).join('');
+            weakAreasEl.innerHTML = weakAreas.map(area => {
+                const card = allFlashcards.find(c => c.id === parseInt(area.id));
+                if (!card) return ''; // Skip cards not found (shouldn't happen after reset)
+                
+                const questionPreview = extractTextFromHtml(card.question).substring(0, 80) + '...';
+                
+                return `
+                    <div class="weak-area-item">
+                        <div class="weak-area-question">${questionPreview}</div>
+                        <div class="weak-area-stats">
+                            <span class="weak-area-accuracy ${area.accuracy < 30 ? 'low' : area.accuracy < 50 ? 'medium' : 'high'}">
+                                ${area.accuracy.toFixed(0)}% de réussite
+                            </span>
+                            <span class="weak-area-attempts">${area.attempts} essai${area.attempts > 1 ? 's' : ''}</span>
+                        </div>
+                    </div>
+                `;
+            }).filter(Boolean).join('');
         }
     }
 }
@@ -595,9 +702,9 @@ function handleClearProgress() {
     if (!progressTracker) return;
     
     if (confirm('Êtes-vous sûr de vouloir réinitialiser toutes vos statistiques ? Cette action est irréversible.')) {
-        progressTracker.clearProgress();
+        progressTracker.resetAllProgress();
         updateStatsDisplay();
-        alert('Vos statistiques ont été réinitialisées.');
+        alert('Vos statistiques ont été complètement réinitialisées.');
     }
 }
 
@@ -625,22 +732,25 @@ function hideRevisionModal() {
 function loadRevisionCards() {
     if (!progressTracker) return;
     
-    // Get due cards (same logic as statistics)
-    const dueCards = progressTracker.getDueCards(50);
+    // Get weak cards (accuracy < 50%)
+    const weakCards = progressTracker.getWeakAreas(50);
     
-    // Match due cards with actual flashcards and add accuracy info
-    revisionCards = dueCards.map(dueCard => {
-        const card = allFlashcards.find(c => c.id === parseInt(dueCard.id));
+    // Match weak cards with actual flashcards
+    revisionCards = weakCards.map(weakCard => {
+        const card = allFlashcards.find(c => c.id === parseInt(weakCard.id));
         if (card) {
             return {
                 ...card,
-                accuracy: dueCard.accuracy || 0,
-                attempts: dueCard.attempts || 0,
-                daysOverdue: dueCard.daysOverdue || 0
+                accuracy: weakCard.accuracy || 0,
+                attempts: weakCard.attempts || 0,
+                mastery: weakCard.mastery || 0
             };
         }
         return null;
     }).filter(Boolean);
+    
+    // Sort by accuracy (worst first)
+    revisionCards.sort((a, b) => a.accuracy - b.accuracy);
     
     // Update radio button descriptions with actual counts
     updateRevisionModeDescriptions();
@@ -654,12 +764,12 @@ function updateRevisionModeDescriptions() {
     const priorityModeLabel = document.querySelector('input[value="priority"] + .revision-mode-label small');
     
     if (allModeLabel) {
-        allModeLabel.textContent = `Toutes les ${revisionCards.length} cartes difficiles`;
+        allModeLabel.textContent = `Toutes les ${revisionCards.length} cartes faibles`;
     }
     
     if (priorityModeLabel) {
         const priorityCount = Math.min(revisionCards.length, 10);
-        priorityModeLabel.textContent = `Les ${priorityCount} cartes les plus difficiles`;
+        priorityModeLabel.textContent = `Les ${priorityCount} cartes avec le plus faible taux`;
     }
 }
 
@@ -843,7 +953,8 @@ async function startSimilarSession() {
             tags: card.tags ? card.tags.map(tag => typeof tag === 'string' ? tag : tag.name) : [],
             question: card.questionHtml || card.questionText || card.question,
             answer: card.answerHtml || card.answerText || card.answer,
-            difficulty: card.difficulty || 'medium'
+            difficulty: card.difficulty || 'medium',
+            source: extractSource(card.sources)
         }));
 
         // Shuffle and select questions (same count as original session)

@@ -11,7 +11,7 @@ const port = process.env.PORT || 8080;
 
 // Proxy API requests to the backend server
 app.use('/api', createProxyMiddleware({
-  target: 'http://localhost:3001/api',
+  target: 'http://localhost:8084/api',
   changeOrigin: true,
   pathRewrite: {
     '^/api': ''  // Remove /api prefix as target already includes it
@@ -20,7 +20,7 @@ app.use('/api', createProxyMiddleware({
   onError: (err, req, res) => {
     console.error('Proxy error:', err);
     res.status(502).json({ 
-      error: 'API server is not available. Please ensure the API server is running on port 3001.' 
+      error: 'API server is not available. Please ensure the API server is running on port 8084.' 
     });
   }
 }));

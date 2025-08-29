@@ -232,7 +232,12 @@ class AdminApp {
     }
   }
 
-  async loadQuestions(page = 1) {
+  async loadQuestions(page = null) {
+    // If no page specified, use current page (for refreshing after edits)
+    if (page === null) {
+      page = this.currentPage || 1;
+    }
+    
     const grid = document.getElementById('questions-grid');
     grid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i>Chargement des questions...</div>';
 
@@ -254,6 +259,7 @@ class AdminApp {
       this.renderQuestions(response.questions || []);
       this.renderPagination(response.pagination, 'questions-pagination');
       
+      // Update current page state
       this.currentPage = page;
     } catch (error) {
       console.error('Failed to load questions:', error);

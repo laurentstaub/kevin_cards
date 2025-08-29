@@ -13,7 +13,8 @@
     "db:reset": "dropdb --if-exists flashpharma && createdb flashpharma && npm run db:setup",
     "migrate:preview": "node database/migrate-questions.js",
     "migrate:execute": "node database/migrate-questions.js --execute",
-    "load:questions": "node load_questions.js"
+    "load:questions": "node load_questions.js",
+    "load:db": "node load_questions_to_db.js"
   },
   "repository": {
     "type": "git",

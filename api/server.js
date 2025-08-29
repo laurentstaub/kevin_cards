@@ -12,7 +12,7 @@ import tagsRouter from './routes/tags.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8084;
 
 // Security middleware
 app.use(helmet({
@@ -38,10 +38,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Rate limiting
+// Rate limiting - more generous for development
+const isDevelopment = process.env.NODE_ENV !== 'production';
 const limiter = rateLimit({
-  windowMs: process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000, // 15 minutes
-  max: process.env.RATE_LIMIT_MAX_REQUESTS || 100, // Limit each IP to 100 requests per windowMs
+  windowMs: process.env.RATE_LIMIT_WINDOW_MS || (isDevelopment ? 5 * 60 * 1000 : 15 * 60 * 1000), // 5 min dev, 15 min prod
+  max: process.env.RATE_LIMIT_MAX_REQUESTS || (isDevelopment ? 1000 : 100), // 1000 dev, 100 prod
   message: {
     error: 'Too many requests from this IP, please try again later.',
     retryAfter: Math.ceil((process.env.RATE_LIMIT_WINDOW_MS || 900000) / 1000)
@@ -49,7 +50,19 @@ const limiter = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
-app.use('/api/', limiter);
+
+// Skip rate limiting for localhost in development
+if (isDevelopment) {
+  app.use('/api/', (req, res, next) => {
+    // Skip rate limiting for localhost
+    if (req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1') {
+      return next();
+    }
+    limiter(req, res, next);
+  });
+} else {
+  app.use('/api/', limiter);
+}
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' })); // Allow larger payloads for bulk operations

@@ -146,7 +146,6 @@ class ProgressTracker {
                 confidence: null,
                 averageConfidence: null,
                 confidenceHistory: [],
-                nextReview: null,
                 mastery: 0, // 0-100 scale
                 streak: 0,
                 maxStreak: 0
@@ -188,11 +187,11 @@ class ProgressTracker {
             cardProgress.averageConfidence = avgConfidence;
         }
 
-        // Calculate mastery level (0-100)
-        this.updateCardMastery(cardProgress);
-        
-        // Calculate next review date using spaced repetition
-        cardProgress.nextReview = this.calculateNextReview(cardProgress, isCorrect, confidence);
+        // Calculate mastery level (0-100) based on accuracy
+        const accuracy = cardProgress.attempts > 0 
+            ? (cardProgress.correct / cardProgress.attempts) * 100 
+            : 0;
+        cardProgress.mastery = Math.min(100, Math.max(0, accuracy));
 
         // Update current session if active
         if (this.currentSession) {
@@ -232,52 +231,6 @@ class ProgressTracker {
         return cardProgress;
     }
 
-    // Update card mastery level
-    updateCardMastery(cardProgress) {
-        const accuracy = cardProgress.attempts > 0 
-            ? (cardProgress.correct / cardProgress.attempts) * 100 
-            : 0;
-        
-        const confidenceWeight = cardProgress.averageConfidence 
-            ? cardProgress.averageConfidence * 20 
-            : 50;
-        
-        const streakBonus = Math.min(cardProgress.streak * 5, 20);
-        
-        // Weighted mastery calculation
-        cardProgress.mastery = Math.min(100, Math.round(
-            (accuracy * 0.5) + (confidenceWeight * 0.3) + (streakBonus * 0.2)
-        ));
-    }
-
-    // Calculate next review date using spaced repetition
-    calculateNextReview(cardProgress, isCorrect, confidence) {
-        const now = new Date();
-        let interval = 1; // Default: 1 day
-        
-        if (!isCorrect) {
-            // Failed card: review soon
-            interval = 0.25; // 6 hours
-        } else {
-            // Calculate interval based on performance
-            const factor = confidence ? (confidence / 5) : 0.6;
-            
-            if (cardProgress.streak === 1) {
-                interval = 1 * factor;
-            } else if (cardProgress.streak === 2) {
-                interval = 3 * factor;
-            } else if (cardProgress.streak === 3) {
-                interval = 7 * factor;
-            } else if (cardProgress.streak === 4) {
-                interval = 14 * factor;
-            } else {
-                interval = 30 * factor;
-            }
-        }
-        
-        now.setDate(now.getDate() + interval);
-        return now.toISOString();
-    }
 
     // Update study streak
     updateStudyStreak() {
@@ -323,27 +276,10 @@ class ProgressTracker {
         );
     }
 
-    // Get cards due for review
+    // Compatibility method - just returns weak areas for now
     getDueCards(limit = null) {
-        const now = new Date().toISOString();
-        const dueCards = [];
-        
-        for (const [cardId, progress] of Object.entries(this.progress.cards)) {
-            if (progress.nextReview && progress.nextReview <= now) {
-                dueCards.push({
-                    id: cardId,
-                    ...progress,
-                    daysOverdue: Math.floor(
-                        (new Date() - new Date(progress.nextReview)) / (1000 * 60 * 60 * 24)
-                    )
-                });
-            }
-        }
-        
-        // Sort by most overdue first
-        dueCards.sort((a, b) => b.daysOverdue - a.daysOverdue);
-        
-        return limit ? dueCards.slice(0, limit) : dueCards;
+        // For backward compatibility, return weak cards as "due" cards
+        return this.getWeakAreas(50, limit);
     }
 
     // Get performance by tag
@@ -389,7 +325,9 @@ class ProgressTracker {
                 ? (progress.correct / progress.attempts) * 100 
                 : 0;
             
-            if (accuracy < threshold && progress.attempts >= 2) {
+            // Include cards with low accuracy that have been attempted at least once
+            // This makes the display consistent with session results
+            if (accuracy < threshold && progress.attempts >= 1) {
                 weakCards.push({
                     id: cardId,
                     accuracy: accuracy,
@@ -399,10 +337,34 @@ class ProgressTracker {
             }
         }
         
-        // Sort by accuracy (lowest first)
-        weakCards.sort((a, b) => a.accuracy - b.accuracy);
+        // Sort by accuracy (lowest first), then by attempts (most attempts first for same accuracy)
+        weakCards.sort((a, b) => {
+            if (a.accuracy !== b.accuracy) return a.accuracy - b.accuracy;
+            return b.attempts - a.attempts;
+        });
         
         return limit ? weakCards.slice(0, limit) : weakCards;
+    }
+    
+    // Clean orphaned progress entries (cards that no longer exist)
+    cleanOrphanedProgress(validCardIds) {
+        if (!Array.isArray(validCardIds)) return;
+        
+        let cleaned = false;
+        const validIdSet = new Set(validCardIds.map(id => id.toString()));
+        
+        // Remove progress entries for cards that no longer exist
+        for (const cardId in this.progress.cards) {
+            if (!validIdSet.has(cardId)) {
+                delete this.progress.cards[cardId];
+                cleaned = true;
+            }
+        }
+        
+        if (cleaned) {
+            this.saveProgress();
+            console.log('Cleaned orphaned progress entries');
+        }
     }
 
     // Get progress summary
@@ -410,7 +372,7 @@ class ProgressTracker {
         return {
             stats: this.progress.stats,
             recentSessions: this.progress.sessions.slice(-5),
-            dueCardsCount: this.getDueCards().length,
+            weakCardsCount: this.getWeakAreas().length,
             weakAreasCount: this.getWeakAreas().length,
             tagPerformance: this.getTagPerformance(),
             currentStreak: this.progress.stats.studyStreak
@@ -455,6 +417,28 @@ class ProgressTracker {
         this.currentSession = null;
         localStorage.removeItem(this.sessionKey);
         this.saveProgress();
+    }
+    
+    // Reset all progress data (for migration/cleanup)
+    resetAllProgress() {
+        // Clear all localStorage entries related to flashpharma
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('flashpharma_')) {
+                keysToRemove.push(key);
+            }
+        }
+        
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+        
+        // Reinitialize with fresh data
+        this.deviceId = this.getOrCreateDeviceId();
+        this.progress = this.getDefaultProgress();
+        this.currentSession = null;
+        this.saveProgress();
+        
+        console.log('All progress data has been reset');
     }
 }
 

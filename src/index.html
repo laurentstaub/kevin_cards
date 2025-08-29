@@ -32,7 +32,18 @@
     <div class="session-setup" id="sessionSetup">
         <div class="setup-container fade-in">
             <div class="setup-header">
-                <h2><i class="fas fa-play-circle"></i>Configurez votre session</h2>
+                <div class="setup-header-content">
+                    <div class="header-left">
+                        <h2><i class="fas fa-play-circle"></i>Configurez votre session</h2>
+                        <div class="question-count-sticky" id="questionCountSticky">
+                            <span id="stickyQuestionCount">Chargement...</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-large" id="startSessionTop">
+                        <i class="fas fa-play"></i>
+                        Commencer l'étude
+                    </button>
+                </div>
             </div>
 
             <div class="setup-content">
@@ -125,16 +136,6 @@
                 </div>
             </div>
 
-            <div class="setup-actions">
-                <button class="btn btn-secondary" id="loadLastSession">
-                    <i class="fas fa-history"></i>
-                    Dernière session
-                </button>
-                <button class="btn btn-primary btn-large" id="startSession">
-                    <i class="fas fa-play"></i>
-                    Commencer l'étude
-                </button>
-            </div>
         </div>
     </div>
 
@@ -234,23 +235,26 @@
                 </div>
             </div>
             
-            <!-- Due Cards -->
+            <!-- Performance Section -->
             <div class="stats-section">
-                <h3><i class="fas fa-clock"></i> Cartes à réviser</h3>
-                <div class="due-cards-container">
+                <h3><i class="fas fa-chart-line"></i> Performance</h3>
+                <div class="performance-container">
                     <div class="stat-info">
-                        <span id="dueCardsCount">0</span> cartes nécessitent une révision
+                        <span id="weakCardsCount">0</span> cartes individuelles avec un taux de réussite < 50%
+                    </div>
+                    <div class="stat-info performance-note">
+                        <small>Note: Les cartes faibles sont calculées individuellement sur toutes les sessions, contrairement aux sessions qui montrent la performance globale d'une session.</small>
                     </div>
                     <button class="btn btn-revision" id="startRevisionBtn" style="display: none;">
                         <i class="fas fa-redo-alt"></i>
-                        Réviser les cartes difficiles
+                        <span id="revisionBtnText">Retravailler les cartes faibles</span>
                     </button>
                 </div>
             </div>
             
-            <!-- Weak Areas -->
+            <!-- Weak Cards Details -->
             <div class="stats-section">
-                <h3><i class="fas fa-exclamation-triangle"></i> Points faibles</h3>
+                <h3><i class="fas fa-exclamation-triangle"></i> Cartes à retravailler</h3>
                 <div id="weakAreas" class="weak-areas-list">
                     <!-- Will be populated by JavaScript -->
                 </div>

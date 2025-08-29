@@ -1,0 +1,204 @@
+{
+  "questions": [
+    {
+      "question": "Quelle est la DCI de la molécule active du **Xarelto®** ?",
+      "answer": "**Rivaroxaban**\n\nAnticoagulant oral direct, inhibiteur du facteur Xa.",
+      "tags": ["Fondamental", "Anticoagulants"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Lyrica®** ?",
+      "answer": "**Prégabaline**\n\nAntiépileptique et traitement des douleurs neuropathiques.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Crestor®** ?",
+      "answer": "**Rosuvastatine**\n\nStatine, hypolipémiant.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de l'**Humira®** ?",
+      "answer": "**Adalimumab**\n\nAnticorps monoclonal anti-TNF alpha.",
+      "tags": ["Fondamental", "Immunologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Subutex®** ?",
+      "answer": "**Buprénorphine**\n\nAgoniste partiel des récepteurs opioïdes, traitement substitutif.",
+      "tags": ["Fondamental", "Addictologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Risperdal®** ?",
+      "answer": "**Rispéridone**\n\nAntipsychotique atypique.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Prozac®** ?",
+      "answer": "**Fluoxétine**\n\nInhibiteur sélectif de la recapture de la sérotonine (ISRS).",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Symbicort®** ?",
+      "answer": "**Budésonide + formotérol**\n\nAssociation corticoïde inhalé et bêta-2 agoniste longue durée d'action.",
+      "tags": ["Fondamental", "Pneumologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de l'**Aprovel®** ?",
+      "answer": "**Irbésartan**\n\nAntagoniste des récepteurs de l'angiotensine II (ARA II).",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Truvada®** ?",
+      "answer": "**Emtricitabine + ténofovir disoproxil**\n\nAssociation d'antirétroviraux, traitement du VIH et PrEP.",
+      "tags": ["Fondamental", "Infectiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Laroxyl®** ?",
+      "answer": "**Amitriptyline**\n\nAntidépresseur tricyclique.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Tramadol®** ?",
+      "answer": "**Tramadol**\n\nAnalgésique opioïde faible.",
+      "tags": ["Fondamental", "Antalgiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Zyprexa®** ?",
+      "answer": "**Olanzapine**\n\nAntipsychotique atypique.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Xanax®** ?",
+      "answer": "**Alprazolam**\n\nBenzodiazépine anxiolytique.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Daonil®** ?",
+      "answer": "**Glibenclamide**\n\nSulfamide hypoglycémiant.",
+      "tags": ["Fondamental", "Diabétologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Noroxine®** ?",
+      "answer": "**Norfloxacine**\n\nFluoroquinolone, antibiotique.",
+      "tags": ["Fondamental", "Antibiotiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de l'**Atarax®** ?",
+      "answer": "**Hydroxyzine**\n\nAntihistaminique H1 sédatif, anxiolytique.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Depakine®** ?",
+      "answer": "**Valproate de sodium**\n\nAntiépileptique et thymorégulateur.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Tritace®** ?",
+      "answer": "**Ramipril**\n\nInhibiteur de l'enzyme de conversion (IEC).",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Lovenox®** ?",
+      "answer": "**Énoxaparine**\n\nHéparine de bas poids moléculaire.",
+      "tags": ["Fondamental", "Anticoagulants"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Neurontin®** ?",
+      "answer": "**Gabapentine**\n\nAntiépileptique et traitement des douleurs neuropathiques.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Dexeryl®** ?",
+      "answer": "**Glycérol + vaseline + paraffine liquide**\n\nÉmollient pour peaux sèches et atopiques.",
+      "tags": ["Fondamental", "Dermatologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Pariet®** ?",
+      "answer": "**Rabéprazole**\n\nInhibiteur de la pompe à protons (IPP).",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Diamicron®** ?",
+      "answer": "**Gliclazide**\n\nSulfamide hypoglycémiant.",
+      "tags": ["Fondamental", "Diabétologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de l'**Avodart®** ?",
+      "answer": "**Dutastéride**\n\nInhibiteur de la 5-alpha réductase, traitement de l'HBP.",
+      "tags": ["Fondamental", "Urologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Colchimax®** ?",
+      "answer": "**Colchicine + tiémonium + poudre d'opium**\n\nTraitement de la crise de goutte.",
+      "tags": ["Fondamental", "Rhumatologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Fortzaar®** ?",
+      "answer": "**Losartan + hydrochlorothiazide**\n\nAssociation ARA II et diurétique.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Tegretol®** ?",
+      "answer": "**Carbamazépine**\n\nAntiépileptique et traitement des névralgies.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Seloken®** ?",
+      "answer": "**Métoprolol**\n\nBêta-bloquant cardiosélectif.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Diffu-K®** ?",
+      "answer": "**Chlorure de potassium**\n\nSupplément potassique.",
+      "tags": ["Fondamental", "Électrolytes"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Zovirax®** ?",
+      "answer": "**Aciclovir**\n\nAntiviral, traitement de l'herpès.",
+      "tags": ["Fondamental", "Infectiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Loxen®** ?",
+      "answer": "**Nicardipine**\n\nInhibiteur calcique.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de l'**Aldactone®** ?",
+      "answer": "**Spironolactone**\n\nDiurétique épargneur de potassium, antagoniste de l'aldostérone.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Mediator®** ?",
+      "answer": "**Benfluorex**\n\nMédicament retiré du marché (toxicité cardiaque).",
+      "tags": ["Fondamental", "Historique"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Suprax®** ?",
+      "answer": "**Céfixime**\n\nCéphalosporine de 3ème génération par voie orale.",
+      "tags": ["Fondamental", "Antibiotiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Zyvoxid®** ?",
+      "answer": "**Linézolide**\n\nAntibiotique de la classe des oxazolidinones.",
+      "tags": ["Fondamental", "Antibiotiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Primpéran®** ?",
+      "answer": "**Métoclopramide**\n\nAntiémétique et prokinétique.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Nasonex®** ?",
+      "answer": "**Mométasone**\n\nCorticoïde nasal.",
+      "tags": ["Fondamental", "ORL"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Ixprim®** ?",
+      "answer": "**Tramadol + paracétamol**\n\nAssociation analgésique.",
+      "tags": ["Fondamental", "Antalgiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Zocor®** ?",
+      "answer": "**Simvastatine**\n\nStatine, hypolipémiant.",
+      "tags": ["Fondamental", "Cardiologie"]
+    }
+  ]
+}
