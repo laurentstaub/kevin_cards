@@ -12,7 +12,6 @@ class ProgressTracker {
         this.progress = this.loadProgress();
     }
 
-    // Initialize or get device ID
     getOrCreateDeviceId() {
         let deviceId = localStorage.getItem('flashpharma_device_id');
         if (!deviceId) {
@@ -22,7 +21,6 @@ class ProgressTracker {
         return deviceId;
     }
 
-    // Generate UUID v4
     generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             const r = Math.random() * 16 | 0;
@@ -31,7 +29,6 @@ class ProgressTracker {
         });
     }
 
-    // Load progress from localStorage
     loadProgress() {
         const stored = localStorage.getItem(this.storageKey);
         if (stored) {
@@ -45,7 +42,6 @@ class ProgressTracker {
         return this.getDefaultProgress();
     }
 
-    // Get default progress structure
     getDefaultProgress() {
         return {
             deviceId: this.deviceId,
@@ -72,7 +68,6 @@ class ProgressTracker {
         localStorage.setItem(this.storageKey, JSON.stringify(this.progress));
     }
 
-    // Start a new study session
     startSession() {
         this.currentSession = {
             id: this.generateUUID(),
@@ -85,11 +80,8 @@ class ProgressTracker {
             tags: [],
             duration: 0
         };
-        
-        // Save session to localStorage for recovery
+
         localStorage.setItem(this.sessionKey, JSON.stringify(this.currentSession));
-        
-        // Update study streak
         this.updateStudyStreak();
     }
 
@@ -109,7 +101,6 @@ class ProgressTracker {
             ? (this.currentSession.correctAnswers / totalAnswers) * 100 
             : 0;
 
-        // Add session to history
         this.progress.sessions.push(this.currentSession);
         
         // Keep only last 100 sessions
@@ -117,10 +108,7 @@ class ProgressTracker {
             this.progress.sessions = this.progress.sessions.slice(-100);
         }
 
-        // Update global stats
         this.updateGlobalStats();
-        
-        // Save progress
         this.saveProgress();
         
         // Clear current session
@@ -131,8 +119,7 @@ class ProgressTracker {
         return sessionData;
     }
 
-    // Record a card attempt
-    recordCardAttempt(cardId, isCorrect, confidence = null, tags = []) {
+    recordCardAttempt(cardId, isCorrect, tags = []) {
         const timestamp = new Date().toISOString();
         
         // Initialize card progress if not exists
@@ -143,9 +130,6 @@ class ProgressTracker {
                 attempts: 0,
                 correct: 0,
                 incorrect: 0,
-                confidence: null,
-                averageConfidence: null,
-                confidenceHistory: [],
                 mastery: 0, // 0-100 scale
                 streak: 0,
                 maxStreak: 0
@@ -167,26 +151,6 @@ class ProgressTracker {
             cardProgress.streak = 0;
         }
 
-        // Update confidence if provided
-        if (confidence !== null) {
-            cardProgress.confidence = confidence;
-            cardProgress.confidenceHistory.push({
-                value: confidence,
-                timestamp: timestamp
-            });
-            
-            // Keep only last 10 confidence ratings
-            if (cardProgress.confidenceHistory.length > 10) {
-                cardProgress.confidenceHistory = cardProgress.confidenceHistory.slice(-10);
-            }
-            
-            // Calculate average confidence
-            const avgConfidence = cardProgress.confidenceHistory.reduce(
-                (sum, item) => sum + item.value, 0
-            ) / cardProgress.confidenceHistory.length;
-            cardProgress.averageConfidence = avgConfidence;
-        }
-
         // Calculate mastery level (0-100) based on accuracy
         const accuracy = cardProgress.attempts > 0 
             ? (cardProgress.correct / cardProgress.attempts) * 100 
@@ -206,7 +170,6 @@ class ProgressTracker {
             this.currentSession.cardResults.push({
                 cardId: cardId,
                 correct: isCorrect,
-                confidence: confidence,
                 timestamp: timestamp,
                 tags: tags
             });
@@ -224,15 +187,12 @@ class ProgressTracker {
         if (isCorrect) {
             this.progress.stats.totalCorrect++;
         }
-        
-        // Save progress
+
         this.saveProgress();
         
         return cardProgress;
     }
 
-
-    // Update study streak
     updateStudyStreak() {
         const today = new Date().toDateString();
         const lastStudy = this.progress.stats.lastStudyDate;
@@ -245,12 +205,9 @@ class ProgressTracker {
             yesterday.setDate(yesterday.getDate() - 1);
             
             if (lastStudyDate === today) {
-                // Already studied today, no change
             } else if (lastStudyDate === yesterday.toDateString()) {
-                // Studied yesterday, increment streak
                 this.progress.stats.studyStreak++;
             } else {
-                // Streak broken, reset to 1
                 this.progress.stats.studyStreak = 1;
             }
         }
@@ -258,14 +215,9 @@ class ProgressTracker {
         this.progress.stats.lastStudyDate = new Date().toISOString();
     }
 
-    // Update global statistics
     updateGlobalStats() {
         const stats = this.progress.stats;
-        
-        // Calculate total unique cards studied
         stats.totalCards = Object.keys(this.progress.cards).length;
-        
-        // Calculate average accuracy
         stats.averageAccuracy = stats.totalAttempts > 0 
             ? (stats.totalCorrect / stats.totalAttempts) * 100 
             : 0;
@@ -367,7 +319,6 @@ class ProgressTracker {
         }
     }
 
-    // Get progress summary
     getProgressSummary() {
         return {
             stats: this.progress.stats,

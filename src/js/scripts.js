@@ -9,11 +9,10 @@ let recalledCount = 0;
 
 // Session state
 let currentSession = {
-    questions: [], // Exact questions used in current session
-    config: null   // Session configuration for similar sessions
+    questions: [],
+    config: null
 };
 
-// Progress tracking
 let progressTracker = null;
 
 // Filter state
@@ -68,7 +67,7 @@ function showCard(index) {
                 `<a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${source.text || 'Source externe'}</a>` : 
                 (source && source.text) || 'Source externe'
         ).join(', ');
-    } else if (card.source && typeof card.source === 'object' && card.source !== null) {
+    } else if (card.source && typeof card.source === 'object') {
         sourceHtml = card.source.url ? 
             `<a href="${card.source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${card.source.text || 'Source externe'}</a>` : 
             card.source.text || 'Source externe';
@@ -124,7 +123,6 @@ function nextCard(isRecalled) {
             progressTracker.recordCardAttempt(
                 currentCard.id,
                 isRecalled,
-                null, // confidence will be added later
                 currentCard.tags || []
             );
         }
@@ -144,7 +142,6 @@ function nextCard(isRecalled) {
             progressTracker.recordCardAttempt(
                 currentCard.id,
                 isRecalled,
-                null,
                 currentCard.tags || []
             );
         }
@@ -263,16 +260,13 @@ async function loadQuestions() {
         
     } catch (error) {
         console.error('Error loading questions:', error);
-        // Fallback to empty array if loading fails
         flashcards = [];
         allFlashcards = [];
-        // Don't initialize flashcards automatically
     }
 }
 
 // New function to load custom questions from session setup
 function loadCustomQuestions(questions) {
-    allFlashcards = questions;
     flashcards = questions; // Use the exact questions provided by session setup
     isFilterActive = false; // Reset filter state since session setup handles filtering
     initFlashcards();
@@ -291,10 +285,8 @@ window.flashcardApp = {
     initFlashcards: initFlashcards
 };
 
-// Make currentSession accessible globally for session setup
 window.currentSession = currentSession;
 
-// Helper functions for processing database data
 function extractSource(sources) {
     if (!sources || sources.length === 0) {
         return 'Pharmacologie générale';
@@ -346,21 +338,17 @@ function shuffleArray(array) {
 }
 
 function resetGame() {
-    // Reset state variables
     currentCardIndex = 0;
     isFlipped = false;
     recalledCount = 0;
-    
-    // End current session if active
+
     if (progressTracker && progressTracker.currentSession) {
         progressTracker.endSession();
     }
-    
-    // Load new set of questions and restart
+
     applyCurrentFilters();
 }
 
-// Tag filtering functions
 function applyCurrentFilters() {
     if (selectedTags.length === 0) {
         // No filters, use random selection from all cards

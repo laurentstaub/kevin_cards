@@ -211,19 +211,34 @@ class Question {
   // Update question content
   async update({ questionText, answerText, status, sources, updatedBy }) {
     try {
-      // Process markdown if content changed
+      const updateFields = {};
+      const queryParams = [];
+      let paramIndex = 1;
+
       let metadata = this.metadata;
-      let questionHtml = this.questionHtml;
-      let answerHtml = this.answerHtml;
       
-      if (questionText !== this.questionText || answerText !== this.answerText) {
-        const questionProcessed = processMarkdown(questionText || this.questionText, 'question');
-        const answerProcessed = processMarkdown(answerText || this.answerText, 'answer');
+      // Check if text content has changed to regenerate HTML
+      const textChanged = (questionText !== undefined && questionText !== this.questionText) ||
+                          (answerText !== undefined && answerText !== this.answerText);
+
+      if (textChanged) {
+        const questionToProcess = questionText !== undefined ? questionText : this.questionText;
+        const answerToProcess = answerText !== undefined ? answerText : this.answerText;
         
-        // Update HTML
-        questionHtml = questionProcessed.html;
-        answerHtml = answerProcessed.html;
+        const questionProcessed = processMarkdown(questionToProcess, 'question');
+        const answerProcessed = processMarkdown(answerToProcess, 'answer');
         
+        // Add text and HTML to the update fields
+        if (questionText !== undefined) {
+          updateFields.question_text = questionText;
+          updateFields.question_html = questionProcessed.html;
+        }
+        if (answerText !== undefined) {
+          updateFields.answer_text = answerText;
+          updateFields.answer_html = answerProcessed.html;
+        }
+        
+        // Regenerate and add metadata to the update fields
         const combinedEntities = {
           drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
           drug_classes: [...new Set([...questionProcessed.entities.drug_classes, ...answerProcessed.entities.drug_classes])],
@@ -231,7 +246,6 @@ class Question {
           dosages: [...new Set([...questionProcessed.entities.dosages, ...answerProcessed.entities.dosages])],
           routes: [...new Set([...questionProcessed.entities.routes, ...answerProcessed.entities.routes])]
         };
-
         metadata = {
           ...this.metadata,
           entities: combinedEntities,
@@ -240,37 +254,48 @@ class Question {
           total_word_count: questionProcessed.stats.word_count + answerProcessed.stats.word_count,
           last_processed: new Date().toISOString()
         };
+        updateFields.metadata = JSON.stringify(metadata);
       }
+
+      // Add other fields if they are provided
+      if (status !== undefined) updateFields.status = status;
+      if (sources !== undefined) updateFields.sources = JSON.stringify(sources);
+
+      // If nothing to update, return the current instance
+      if (Object.keys(updateFields).length === 0) {
+        return this;
+      }
+
+      // Dynamically build the SET clause
+      const setClause = Object.keys(updateFields).map(key => {
+        queryParams.push(updateFields[key]);
+        return `${key} = $${paramIndex++}`;
+      }).join(', ');
+      
+      queryParams.push(this.id);
 
       const result = await query(`
         UPDATE questions 
-        SET question_text = COALESCE($1, question_text),
-            answer_text = COALESCE($2, answer_text),
-            question_html = COALESCE($3, question_html),
-            answer_html = COALESCE($4, answer_html),
-            status = COALESCE($5, status),
-            sources = COALESCE($6, sources),
-            metadata = $7,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $8
+        SET ${setClause}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $${paramIndex}
         RETURNING *
-      `, [
-        questionText, 
-        answerText,
-        questionHtml,
-        answerHtml,
-        status,
-        sources ? JSON.stringify(sources) : null,
-        JSON.stringify(metadata),
-        this.id
-      ]);
+      `, queryParams);
 
       if (result.rows.length === 0) {
-        throw new Error('Question not found');
+        throw new Error('Question not found after update');
       }
 
       // Update instance properties
-      Object.assign(this, result.rows[0]);
+      const updatedData = result.rows[0];
+      this.questionText = updatedData.question_text;
+      this.answerText = updatedData.answer_text;
+      this.questionHtml = updatedData.question_html;
+      this.answerHtml = updatedData.answer_html;
+      this.status = updatedData.status;
+      this.sources = updatedData.sources;
+      this.metadata = updatedData.metadata;
+      this.updatedAt = updatedData.updated_at;
+
       return this;
     } catch (error) {
       throw new Error(`Failed to update question: ${error.message}`);
