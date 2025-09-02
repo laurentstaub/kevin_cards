@@ -1,13 +1,11 @@
 // FlashPharma Admin JavaScript
 class AdminApp {
   constructor() {
-    this.currentView = 'questions';
     this.apiBase = '/api';
     this.currentPage = 1;
     this.itemsPerPage = 10;
     this.selectedTags = [];
     this.availableTags = [];
-    this.showAnswers = true;
     this.orderBy = 'id';
     this.orderDirection = 'ASC';
     
@@ -21,147 +19,103 @@ class AdminApp {
   }
 
   setupEventListeners() {
-    // Navigation
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', (e) => {
-        const view = e.currentTarget.dataset.view;
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('[data-action], [data-view], .nav-item, .modal-overlay, .tag-suggestion');
+      if (!target) return;
+
+      if (target.classList.contains('nav-item')) {
+        const view = target.dataset.view;
         this.showView(view);
-      });
-    });
+        return;
+      }
 
-    // Question modal
-    document.getElementById('new-question-btn').addEventListener('click', () => {
-      this.openQuestionModal();
-    });
-    
-    document.getElementById('close-question-modal').addEventListener('click', () => {
-      this.closeModal('question-modal');
-    });
-    
-    document.getElementById('cancel-question').addEventListener('click', () => {
-      this.closeModal('question-modal');
-    });
-    
-    document.getElementById('save-question').addEventListener('click', () => {
-      this.saveQuestion();
-    });
+      if (target.classList.contains('modal-overlay') && e.target === target) {
+        this.closeModal(target.id);
+        return;
+      }
 
-    // Tag modal
-    document.getElementById('new-tag-btn').addEventListener('click', () => {
-      this.openTagModal();
-    });
-    
-    document.getElementById('close-tag-modal').addEventListener('click', () => {
-      this.closeModal('tag-modal');
-    });
-    
-    document.getElementById('cancel-tag').addEventListener('click', () => {
-      this.closeModal('tag-modal');
-    });
-    
-    document.getElementById('save-tag').addEventListener('click', () => {
-      this.saveTag();
-    });
+      if (target.classList.contains('tag-suggestion')) {
+        const id = target.dataset.id;
+        const name = target.dataset.name;
+        const color = target.dataset.color;
+        this.selectTagSuggestion(parseInt(id), name, color);
+        return;
+      }
 
-    // Search and filters
-    document.getElementById('search-questions').addEventListener('input', 
-      this.debounce(() => this.searchQuestions(), 300)
-    );
-    
-    // Tag search and filter
-    const tagSearchInput = document.getElementById('search-tags');
-    if (tagSearchInput) {
-      tagSearchInput.addEventListener('input', 
-        this.debounce(() => this.filterTags(), 300)
-      );
-    }
-    
-    const categoryFilter = document.getElementById('category-filter');
-    if (categoryFilter) {
-      categoryFilter.addEventListener('change', () => {
-        this.filterTags();
-      });
-    }
-    
-    document.getElementById('status-filter').addEventListener('change', () => {
-      this.filterQuestions();
-    });
+      const action = target.dataset.action;
+      const id = target.dataset.id;
 
-    // Sort order control
-    document.getElementById('sort-order').addEventListener('change', (e) => {
-      const [orderBy, orderDirection] = e.target.value.split(',');
-      this.orderBy = orderBy;
-      this.orderDirection = orderDirection;
-      this.loadQuestions(1);
-    });
-
-    // Toggle answers button
-    document.getElementById('toggle-answers-btn').addEventListener('click', () => {
-      this.toggleAnswers();
-    });
-
-    // Tag input and suggestions
-    document.getElementById('tag-input').addEventListener('input', (e) => {
-      this.handleTagInput(e.target.value);
-    });
-    
-    document.getElementById('tag-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        this.addTag(e.target.value);
+      switch (action) {
+        case 'new-question': this.openQuestionModal(); break;
+        case 'close-question-modal': this.closeModal('question-modal'); break;
+        case 'cancel-question': this.closeModal('question-modal'); break;
+        case 'save-question': this.saveQuestion(); break;
+        case 'new-tag': this.openTagModal(); break;
+        case 'close-tag-modal': this.closeModal('tag-modal'); break;
+        case 'cancel-tag': this.closeModal('tag-modal'); break;
+        case 'save-tag': this.saveTag(); break;
+        case 'edit-question': this.editQuestion(id); break;
+        case 'edit-tag': this.editTag(id); break;
+        case 'add-source': this.addSource(); break;
+        case 'load-page': this.loadQuestions(parseInt(target.dataset.page)); break;
+        case 'remove-tag': this.removeTag(parseInt(target.dataset.index)); break;
       }
     });
 
-    // Source management
-    document.getElementById('add-source').addEventListener('click', () => {
-      this.addSource();
+    // Input events (debounced)
+    const inputHandlers = {
+      'search-questions': () => this.searchQuestions(),
+      'search-tags': () => this.filterTags(),
+      'tag-input': (e) => this.handleTagInput(e.target.value)
+    };
+
+    Object.entries(inputHandlers).forEach(([id, handler]) => {
+      const element = document.getElementById(id);
+      if (element) {
+        const isTagInput = id === 'tag-input';
+        const debounceTime = id.includes('preview') ? 500 : 300;
+        const finalHandler = isTagInput ? handler : this.debounce(handler, debounceTime);
+        element.addEventListener('input', finalHandler);
+      }
     });
 
-    // Preview tabs
-    document.querySelectorAll('.preview-tab').forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        this.switchPreviewTab(e.target.dataset.preview);
-      });
+    // Change events
+    const changeHandlers = {
+      'category-filter': () => this.filterTags(),
+      'status-filter': () => this.filterQuestions(),
+      'sort-order': (e) => {
+        const [orderBy, orderDirection] = e.target.value.split(',');
+        this.orderBy = orderBy;
+        this.orderDirection = orderDirection;
+        this.loadQuestions(1);
+      }
+    };
+
+    Object.entries(changeHandlers).forEach(([id, handler]) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.addEventListener('change', handler);
+      }
     });
 
-    // Live preview
-    document.getElementById('question-text').addEventListener('input', 
-      this.debounce(() => this.updatePreview('question'), 500)
-    );
-    
-    document.getElementById('answer-text').addEventListener('input', 
-      this.debounce(() => this.updatePreview('answer'), 500)
-    );
-
-    // Color presets
-    document.querySelectorAll('.color-preset').forEach(preset => {
-      preset.addEventListener('click', (e) => {
-        const color = e.target.dataset.color;
-        document.getElementById('tag-color').value = color;
-        this.updateColorPresets(color);
-      });
-    });
-
-    // Modal overlay clicks
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-          this.closeModal(overlay.id);
+    // Special keydown handler for tag input
+    const tagInput = document.getElementById('tag-input');
+    if (tagInput) {
+      tagInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.addTag(e.target.value);
         }
       });
-    });
+    }
   }
 
   async loadInitialData() {
     try {
-      // Load tags for autocomplete
       const tagsResponse = await this.apiRequest('/tags');
       this.availableTags = tagsResponse.tags || [];
-      
-      // Update question ordering range
+
       await this.updateQuestionOrderingRange();
-      
-      // Load initial questions
       await this.loadQuestions();
     } catch (error) {
       console.error('Failed to load initial data:', error);
@@ -171,7 +125,6 @@ class AdminApp {
 
   async updateQuestionOrderingRange() {
     try {
-      // Get question statistics to update the ordering range
       const response = await this.apiRequest('/questions?page=1&limit=1&orderBy=id&orderDirection=ASC');
       const firstPageResponse = await this.apiRequest('/questions?page=1&limit=1&orderBy=id&orderDirection=DESC');
       
@@ -180,7 +133,6 @@ class AdminApp {
         const minId = response.questions[0].id;
         const maxId = firstPageResponse.questions[0].id;
         
-        // Update the sort order dropdown
         const sortOrder = document.getElementById('sort-order');
         if (sortOrder) {
           const ascOption = sortOrder.querySelector('option[value="id,ASC"]');
@@ -196,26 +148,20 @@ class AdminApp {
       }
     } catch (error) {
       console.warn('Could not update question ordering range:', error);
-      // Silently fail - this is not critical functionality
     }
   }
 
   showView(viewName) {
-    // Update navigation
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.remove('active');
     });
     document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
 
-    // Update views
     document.querySelectorAll('.view').forEach(view => {
       view.classList.remove('active');
     });
     document.getElementById(`${viewName}-view`).classList.add('active');
 
-    this.currentView = viewName;
-
-    // Load view-specific data
     switch (viewName) {
       case 'questions':
         this.loadQuestions();
@@ -223,17 +169,10 @@ class AdminApp {
       case 'tags':
         this.loadTags();
         break;
-      case 'review':
-        this.loadPendingQuestions();
-        break;
-      case 'stats':
-        this.loadStats();
-        break;
     }
   }
 
   async loadQuestions(page = null) {
-    // If no page specified, use current page (for refreshing after edits)
     if (page === null) {
       page = this.currentPage || 1;
     }
@@ -250,16 +189,14 @@ class AdminApp {
       });
 
       const search = document.getElementById('search-questions')?.value;
-      const status = document.getElementById('status-filter')?.value;
+      const activeFilter = document.getElementById('status-filter')?.value;
 
       if (search) params.append('search', search);
-      if (status) params.append('status', status);
+      if (activeFilter) params.append('active', activeFilter);
 
       const response = await this.apiRequest(`/questions?${params}`);
       this.renderQuestions(response.questions || []);
       this.renderPagination(response.pagination, 'questions-pagination');
-      
-      // Update current page state
       this.currentPage = page;
     } catch (error) {
       console.error('Failed to load questions:', error);
@@ -269,63 +206,60 @@ class AdminApp {
 
   renderQuestions(questions) {
     const grid = document.getElementById('questions-grid');
+    const template = document.getElementById('card-template');
     
+    grid.innerHTML = '';
+
     if (questions.length === 0) {
       grid.innerHTML = '<div class="loading"><i class="fas fa-info-circle"></i>Aucune question trouvée</div>';
       return;
     }
 
-    grid.innerHTML = questions.map(question => `
-      <div class="question-card">
-        <div class="question-header">
-          <div class="question-header-left">
-            <span class="question-id">Question #${question.id}</span>
-            <span class="question-status status-${question.status}">
-              ${this.getStatusLabel(question.status)}
-            </span>
-          </div>
-          <div class="question-header-right">
-            <span class="question-date">${this.formatDate(question.createdAt)}</span>
-            <div class="question-actions-compact">
-              <button class="btn btn-xs btn-outline" onclick="adminApp.editQuestion(${question.id})" title="Modifier">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="btn btn-xs btn-primary" onclick="adminApp.previewQuestion(${question.id})" title="Aperçu">
-                <i class="fas fa-eye"></i>
-              </button>
-              ${this.getCompactStatusActions(question)}
-            </div>
-          </div>
-        </div>
-        
-        <div class="question-tags">
-          ${(question.tags || []).map(tag => `
-            <span class="tag">
-              ${tag.name}
-            </span>
-          `).join('')}
-        </div>
-        
-        <div class="question-content">
-          <div class="question-preview">${this.stripHtml(question.questionText)}</div>
-          ${this.showAnswers ? `
-            <div class="question-preview answer-preview">${this.stripHtml(question.answerText)}</div>
-          ` : ''}
-        </div>
-        
-        ${question.sources && question.sources.length > 0 ? `
-          <div class="question-sources">
-            <div class="sources-label">
-              <i class="fas fa-book"></i>
-              Sources:
-            </div>
-            <div class="sources-content">
-              ${this.formatSources(question.sources)}
-            </div>
-          </div>
-        ` : ''}
-      </div>
-    `).join('');
+    questions.forEach(question => {
+      const card = template.content.cloneNode(true);
+      const cardElement = card.querySelector('.question-card');
+
+      cardElement.dataset.questionId = question.id;
+      card.querySelector('.question-id').textContent = `Question #${question.id}`;
+      
+      const status = card.querySelector('.question-status');
+      status.textContent = question.isActive ? 'Actif' : 'Inactif';
+      status.className = `question-status status-${question.isActive ? 'active' : 'inactive'}`;
+      
+      card.querySelector('.question-date').textContent = this.formatDate(question.createdAt);
+      card.querySelector('.question-preview').innerHTML = this.stripHtml(question.questionText);
+
+      // Tags
+      const tagsContainer = card.querySelector('.question-tags');
+      (question.tags || []).forEach(tag => {
+        const tagElement = document.createElement('span');
+        tagElement.className = 'tag';
+        tagElement.textContent = tag.name;
+        tagsContainer.appendChild(tagElement);
+      });
+
+      const answerElement = document.createElement('div');
+      answerElement.className = 'question-preview answer-preview';
+      answerElement.innerHTML = this.stripHtml(question.answerText);
+      card.querySelector('.question-content').appendChild(answerElement);
+
+      if (question.sources && question.sources.length > 0) {
+        const sourcesElement = document.createElement('div');
+        sourcesElement.className = 'question-sources';
+        sourcesElement.innerHTML = `
+          <div class="sources-label"><i class="fas fa-book"></i> Sources:</div>
+          <div class="sources-content">${this.formatSources(question.sources)}</div>
+        `;
+        cardElement.appendChild(sourcesElement);
+      }
+      
+      const toggleButton = this.createToggleButton(question);
+      card.querySelector('.question-actions-compact').appendChild(toggleButton);
+      card.querySelector('[data-action="edit-question"]').dataset.id = question.id;
+      toggleButton.addEventListener('click', () => this.toggleQuestion(question.id));
+
+      grid.appendChild(card);
+    });
   }
 
   async loadTags() {
@@ -353,7 +287,6 @@ class AdminApp {
     
     let filteredTags = this.allTags;
     
-    // Filter by search term
     if (searchTerm) {
       filteredTags = filteredTags.filter(tag => 
         tag.name.toLowerCase().includes(searchTerm) ||
@@ -361,7 +294,6 @@ class AdminApp {
       );
     }
     
-    // Filter by category
     if (categoryFilter) {
       filteredTags = filteredTags.filter(tag => tag.category === categoryFilter);
     }
@@ -371,214 +303,61 @@ class AdminApp {
 
   renderTags(tags) {
     const grid = document.getElementById('tags-grid');
+    const cardTemplate = document.getElementById('tag-card-template');
+    
+    grid.innerHTML = '';
     
     if (tags.length === 0) {
       grid.innerHTML = '<div class="loading"><i class="fas fa-info-circle"></i>Aucun tag trouvé</div>';
       return;
     }
 
-    // Group tags by priority for better organization
-    const tagsByPriority = {
-      primary: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'primary'),
-      secondary: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'secondary'),
-      minor: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'minor'),
-      rare: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'rare'),
-      orphan: tags.filter(t => (t.priority || this.getTagPriority(t.usageCount)) === 'orphan')
-    };
+    const sortedTags = [...tags].sort((a, b) => b.usageCount - a.usageCount);
 
-    let html = '';
-    
-    // Render by priority groups
-    Object.entries(tagsByPriority).forEach(([priority, priorityTags]) => {
-      if (priorityTags.length === 0) return;
+    sortedTags.forEach(tag => {
+      const card = cardTemplate.content.cloneNode(true);
+      const cardElement = card.querySelector('.tag-card');
       
-      html += `<div class="tag-priority-section">
-        <h3 class="tag-priority-header priority-${priority}">
-          <i class="${this.getPriorityIcon(priority)}"></i>
-          ${this.getPriorityLabel(priority)} (${priorityTags.length})
-        </h3>
-        <div class="tag-priority-grid">`;
+      const colorDiv = card.querySelector('.tag-color');
+      colorDiv.style.backgroundColor = tag.color;
       
-      html += priorityTags.map(tag => `
-        <div class="tag-card tag-priority-${tag.priority || this.getTagPriority(tag.usageCount)}">
-          <div class="tag-header">
-            <div class="tag-color" style="background-color: ${tag.color}"></div>
-            <span class="tag-name">${tag.name}</span>
-            ${tag.category ? `<span class="tag-category">${tag.category}</span>` : ''}
-            <div class="tag-priority-badge priority-${tag.priority || this.getTagPriority(tag.usageCount)}">
-              ${tag.usageCount}
-            </div>
-          </div>
-          
-          <div class="tag-stats">
-            <span class="tag-usage ${this.getUsageClass(tag.usageCount)}">
-              ${tag.usageCount} question${tag.usageCount !== 1 ? 's' : ''}
-            </span>
-            <span class="tag-date">${this.formatDate(tag.createdAt)}</span>
-          </div>
-          
-          ${tag.description ? `<p class="tag-description">${tag.description}</p>` : ''}
-          
-          <div class="tag-actions">
-            <button class="btn btn-sm btn-outline" onclick="adminApp.editTag(${tag.id})" title="Modifier">
-              <i class="fas fa-edit"></i>
-            </button>
-            ${tag.usageCount === 0 ? `
-              <button class="btn btn-sm btn-danger" onclick="adminApp.deleteTag(${tag.id})" title="Supprimer">
-                <i class="fas fa-trash"></i>
-              </button>
-            ` : `
-              <button class="btn btn-sm btn-warning" onclick="adminApp.deactivateTag(${tag.id})" title="Désactiver">
-                <i class="fas fa-eye-slash"></i>
-              </button>
-            `}
-            ${tag.usageCount > 0 ? `
-              <button class="btn btn-sm btn-info" onclick="adminApp.viewTagQuestions(${tag.id})" title="Voir les questions">
-                <i class="fas fa-list"></i>
-              </button>
-            ` : ''}
-          </div>
-        </div>
-      `).join('');
+      card.querySelector('.tag-name').textContent = tag.name;
       
-      html += '</div></div>';
-    });
-
-    grid.innerHTML = html;
-  }
-
-  getTagPriority(usageCount) {
-    if (usageCount >= 20) return 'primary';
-    if (usageCount >= 10) return 'secondary';
-    if (usageCount >= 5) return 'minor';
-    if (usageCount >= 1) return 'rare';
-    return 'orphan';
-  }
-
-  getPriorityIcon(priority) {
-    const icons = {
-      primary: 'fas fa-crown',
-      secondary: 'fas fa-star',
-      minor: 'fas fa-tag',
-      rare: 'fas fa-dot-circle',
-      orphan: 'fas fa-exclamation-triangle'
-    };
-    return icons[priority] || 'fas fa-tag';
-  }
-
-  getPriorityLabel(priority) {
-    const labels = {
-      primary: 'Tags Principaux',
-      secondary: 'Tags Secondaires', 
-      minor: 'Tags Mineurs',
-      rare: 'Tags Rares',
-      orphan: 'Tags Orphelins'
-    };
-    return labels[priority] || priority;
-  }
-
-  getUsageClass(usageCount) {
-    if (usageCount >= 20) return 'usage-high';
-    if (usageCount >= 10) return 'usage-medium';
-    if (usageCount >= 5) return 'usage-low';
-    return 'usage-none';
-  }
-
-  async loadPendingQuestions() {
-    const queue = document.getElementById('review-queue');
-    queue.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i>Chargement de la file de révision...</div>';
-
-    try {
-      const response = await this.apiRequest('/questions/pending');
-      document.getElementById('pending-count').textContent = response.count || 0;
-      
-      if (response.questions?.length === 0) {
-        queue.innerHTML = '<div class="loading"><i class="fas fa-check-circle"></i>Aucune question en attente de révision</div>';
-        return;
+      const categorySpan = card.querySelector('.tag-category');
+      if (tag.category) {
+        categorySpan.textContent = tag.category;
+      } else {
+        categorySpan.remove();
       }
-
-      queue.innerHTML = (response.questions || []).map(question => `
-        <div class="question-card">
-          <div class="question-header">
-            <span class="question-id">Question #${question.id}</span>
-            <span class="question-status status-pending_review">En attente</span>
-          </div>
-          
-          <div class="question-content">
-            <h3>Question:</h3>
-            <div class="question-preview">${this.stripHtml(question.questionText)}</div>
-            
-            <h3 style="margin-top: 1rem;">Réponse:</h3>
-            <div class="question-preview">${this.stripHtml(question.answerText)}</div>
-          </div>
-          
-          <div class="question-meta">
-            <div class="question-tags">
-              ${(question.tags || []).map(tag => `
-                <span class="tag">
-                  ${tag.name}
-                </span>
-              `).join('')}
-            </div>
-            
-            <div class="question-info">
-              <span>Par ${question.authorName || 'Inconnu'}</span>
-              <span>• ${this.formatDate(question.createdAt)}</span>
-            </div>
-          </div>
-          
-          <div class="question-actions">
-            <button class="btn btn-sm btn-success" onclick="adminApp.approveQuestion(${question.id})">
-              <i class="fas fa-check"></i>
-              Approuver
-            </button>
-            <button class="btn btn-sm btn-warning" onclick="adminApp.requestChanges(${question.id})">
-              <i class="fas fa-edit"></i>
-              Demander modifications
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="adminApp.rejectQuestion(${question.id})">
-              <i class="fas fa-times"></i>
-              Rejeter
-            </button>
-          </div>
-        </div>
-      `).join('');
-    } catch (error) {
-      console.error('Failed to load pending questions:', error);
-      queue.innerHTML = '<div class="loading"><i class="fas fa-exclamation-triangle"></i>Erreur lors du chargement</div>';
-    }
-  }
-
-  async loadStats() {
-    const dashboard = document.getElementById('stats-dashboard');
-    dashboard.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i>Chargement des statistiques...</div>';
-
-    try {
-      // This would be implemented with actual stats endpoints
-      dashboard.innerHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-          <div class="stat-card" style="background: var(--bg-primary); padding: 2rem; border-radius: var(--border-radius); text-align: center;">
-            <h3 style="color: var(--primary-color); font-size: 2rem; margin-bottom: 0.5rem;">125</h3>
-            <p>Questions totales</p>
-          </div>
-          <div class="stat-card" style="background: var(--bg-primary); padding: 2rem; border-radius: var(--border-radius); text-align: center;">
-            <h3 style="color: var(--success-color); font-size: 2rem; margin-bottom: 0.5rem;">89</h3>
-            <p>Questions publiées</p>
-          </div>
-          <div class="stat-card" style="background: var(--bg-primary); padding: 2rem; border-radius: var(--border-radius); text-align: center;">
-            <h3 style="color: var(--warning-color); font-size: 2rem; margin-bottom: 0.5rem;">12</h3>
-            <p>En attente de révision</p>
-          </div>
-          <div class="stat-card" style="background: var(--bg-primary); padding: 2rem; border-radius: var(--border-radius); text-align: center;">
-            <h3 style="color: var(--info-color); font-size: 2rem; margin-bottom: 0.5rem;">24</h3>
-            <p>Tags actifs</p>
-          </div>
-        </div>
-      `;
-    } catch (error) {
-      console.error('Failed to load stats:', error);
-      dashboard.innerHTML = '<div class="loading"><i class="fas fa-exclamation-triangle"></i>Erreur lors du chargement</div>';
-    }
+      
+      const usageBadge = card.querySelector('.tag-usage-badge');
+      card.querySelector('.usage-count').textContent = tag.usageCount;
+      card.querySelector('.usage-text').textContent = `${tag.usageCount} question${tag.usageCount !== 1 ? 's' : ''}`;      
+      card.querySelector('.tag-date').textContent = this.formatDate(tag.createdAt);
+      
+      const descriptionP = card.querySelector('.tag-description');
+      if (tag.description) {
+        descriptionP.textContent = tag.description;
+      } else {
+        descriptionP.remove();
+      }
+      
+      // Set up action buttons
+      const actionsDiv = card.querySelector('.tag-actions');
+      card.querySelector('[data-action="edit-tag"]').dataset.id = tag.id;
+      
+      if (tag.usageCount === 0) {
+        actionsDiv.appendChild(this.createButton('btn btn-sm btn-danger', 'Supprimer', 'fa-trash', () => this.deleteTag(tag.id)));
+      } else {
+        actionsDiv.appendChild(this.createButton('btn btn-sm btn-warning', 'Désactiver', 'fa-eye-slash', () => this.deactivateTag(tag.id)));
+      }
+      
+      if (tag.usageCount > 0) {
+        actionsDiv.appendChild(this.createButton('btn btn-sm btn-info', 'Voir les questions', 'fa-list', () => this.viewTagQuestions(tag.id)));
+      }
+      
+      grid.appendChild(card);
+    });
   }
 
   // Modal management
@@ -587,15 +366,11 @@ class AdminApp {
       questionId ? 'Modifier la Question' : 'Nouvelle Question';
     
     if (questionId) {
-      // Wait for data to load before showing modal
       await this.loadQuestionForEdit(questionId);
     } else {
       this.resetQuestionForm();
-      // Reset preview to question tab and clear content
-      this.switchPreviewTab('question');
     }
-    
-    // Only show modal after data is loaded
+
     this.showModal('question-modal');
   }
 
@@ -629,16 +404,12 @@ class AdminApp {
     this.updateSelectedTags();
     document.getElementById('sources-container').innerHTML = 
       document.getElementById('source-template').outerHTML;
-    this.updatePreview('question');
   }
 
   resetTagForm() {
     document.getElementById('tag-form').reset();
-    document.getElementById('tag-color').value = '#6c757d';
-    this.updateColorPresets('#6c757d');
   }
 
-  // Tag management
   handleTagInput(value) {
     if (!value.trim()) {
       document.getElementById('tag-suggestions').classList.remove('active');
@@ -654,7 +425,7 @@ class AdminApp {
     
     if (matches.length > 0) {
       suggestions.innerHTML = matches.map(tag => `
-        <div class="tag-suggestion" onclick="adminApp.selectTagSuggestion(${tag.id}, '${tag.name}', '${tag.color}')">
+        <div class="tag-suggestion" data-id="${tag.id}" data-name="${tag.name}" data-color="${tag.color}">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <div style="width: 12px; height: 12px; background: ${tag.color}; border-radius: 50%;"></div>
             ${tag.name}
@@ -678,7 +449,6 @@ class AdminApp {
   addTag(name) {
     if (!name.trim()) return;
     
-    // Check if tag already exists
     const existing = this.availableTags.find(tag => 
       tag.name.toLowerCase() === name.toLowerCase()
     );
@@ -686,7 +456,6 @@ class AdminApp {
     if (existing && !this.selectedTags.some(selected => selected.id === existing.id)) {
       this.selectedTags.push(existing);
     } else if (!existing) {
-      // Create new tag suggestion
       this.selectedTags.push({ 
         id: null, 
         name: name.trim(), 
@@ -707,16 +476,31 @@ class AdminApp {
 
   updateSelectedTags() {
     const container = document.getElementById('selected-tags');
-    container.innerHTML = this.selectedTags.map((tag, index) => `
-      <span class="selected-tag" style="background-color: ${tag.color};">
-        ${tag.name}
-        ${tag.isNew ? ' (nouveau)' : ''}
-        <button type="button" class="remove-tag" onclick="adminApp.removeTag(${index})">×</button>
-      </span>
-    `).join('');
+    const template = document.getElementById('selected-tag-template');
+    
+    container.innerHTML = '';
+    
+    this.selectedTags.forEach((tag, index) => {
+      const tagElement = template.content.cloneNode(true);
+      const tagSpan = tagElement.querySelector('.selected-tag');
+      
+      tagSpan.style.backgroundColor = tag.color;
+      tagElement.querySelector('.tag-name').textContent = tag.name;
+      
+      const newIndicator = tagElement.querySelector('.tag-new-indicator');
+      if (tag.isNew) {
+        newIndicator.textContent = ' (nouveau)';
+      } else {
+        newIndicator.remove();
+      }
+      
+      const removeButton = tagElement.querySelector('[data-action="remove-tag"]');
+      removeButton.dataset.index = index;
+      
+      container.appendChild(tagElement);
+    });
   }
 
-  // Source management
   addSource() {
     const container = document.getElementById('sources-container');
     const template = document.getElementById('source-template');
@@ -725,7 +509,6 @@ class AdminApp {
     newSource.classList.remove('template');
     newSource.id = '';
     
-    // Add remove functionality
     const removeBtn = newSource.querySelector('.btn-remove-source');
     removeBtn.addEventListener('click', () => {
       newSource.remove();
@@ -734,61 +517,13 @@ class AdminApp {
     container.appendChild(newSource);
   }
 
-  // Preview functionality
-  switchPreviewTab(type) {
-    document.querySelectorAll('.preview-tab').forEach(tab => {
-      tab.classList.remove('active');
-    });
-    document.querySelector(`[data-preview="${type}"]`).classList.add('active');
-    this.updatePreview(type);
-  }
-
-  async updatePreview(type) {
-    const content = document.getElementById(`${type}-text`).value;
-    const previewContent = document.getElementById('preview-content');
-    
-    if (!content.trim()) {
-      previewContent.innerHTML = `
-        <div class="preview-placeholder">
-          <i class="fas fa-eye"></i>
-          Tapez du contenu pour voir l'aperçu
-        </div>
-      `;
-      return;
-    }
-
-    try {
-      const response = await this.apiRequest('/questions/preview', 'POST', {
-        [`${type}Text`]: content
-      });
-      
-      previewContent.innerHTML = response[`${type}Html`] || 'Erreur de rendu';
-    } catch (error) {
-      console.error('Preview error:', error);
-      previewContent.innerHTML = '<p style="color: var(--danger-color);">Erreur lors de la génération de l\'aperçu</p>';
-    }
-  }
-
-  // Color picker
-  updateColorPresets(selectedColor) {
-    document.querySelectorAll('.color-preset').forEach(preset => {
-      preset.classList.remove('active');
-      if (preset.dataset.color === selectedColor) {
-        preset.classList.add('active');
-      }
-    });
-  }
-
-  // Save operations
   async saveQuestion() {
     const form = document.getElementById('question-form');
     const formData = new FormData(form);
-    const questionId = form.dataset.questionId;
     
     const questionData = {
       questionText: formData.get('questionText'),
       answerText: formData.get('answerText'),
-      status: formData.get('status'),
       tagIds: this.selectedTags.filter(tag => tag.id).map(tag => tag.id),
       sources: this.collectSources()
     };
@@ -802,7 +537,6 @@ class AdminApp {
     this.showLoading(true);
 
     try {
-      // Create new tags if needed
       for (const tag of this.selectedTags.filter(t => t.isNew)) {
         const newTag = await this.apiRequest('/tags', 'POST', {
           name: tag.name,
@@ -812,19 +546,7 @@ class AdminApp {
         tag.isNew = false;
       }
 
-      // Update tagIds with new tags
       questionData.tagIds = this.selectedTags.map(tag => tag.id);
-
-      let response;
-      if (questionId) {
-        // Update existing question
-        response = await this.apiRequest(`/questions/${questionId}`, 'PUT', questionData);
-        this.showToast('Question modifiée avec succès', 'success');
-      } else {
-        // Create new question
-        response = await this.apiRequest('/questions', 'POST', questionData);
-        this.showToast('Question créée avec succès', 'success');
-      }
       
       this.closeModal('question-modal');
       this.loadQuestions();
@@ -875,16 +597,13 @@ class AdminApp {
           this.availableTags[index] = response;
         }
       } else {
-        // Create new tag
         response = await this.apiRequest('/tags', 'POST', tagData);
         this.showToast('Tag créé avec succès', 'success');
-        // Update available tags
         this.availableTags.push(response);
       }
       
       this.closeModal('tag-modal');
-      this.loadTags();
-      // Reload available tags for autocomplete
+      this.loadTags(); // Reload available tags for autocomplete
       await this.loadInitialData();
       this.editingTagId = null;
       
@@ -931,103 +650,12 @@ class AdminApp {
     return sources;
   }
 
-  // Question actions
   async editQuestion(id) {
     this.openQuestionModal(id);
   }
 
-  async previewQuestion(id) {
-    try {
-      const response = await this.apiRequest(`/questions/${id}/preview`);
-      
-      // Create a preview modal or window
-      const previewWindow = window.open('', '_blank', 'width=800,height=600');
-      previewWindow.document.write(`
-        <html>
-          <head>
-            <title>Aperçu - Question #${id}</title>
-            <style>
-              body { font-family: Inter, sans-serif; margin: 2rem; line-height: 1.6; }
-              .question { margin-bottom: 2rem; padding: 1rem; border-left: 4px solid #3498db; }
-              .answer { margin-bottom: 2rem; padding: 1rem; border-left: 4px solid #27ae60; }
-              .drug-name { color: #e74c3c; font-weight: bold; }
-              .drug-class { color: #9b59b6; font-style: italic; }
-              .alert { padding: 1rem; margin: 1rem 0; border-radius: 4px; }
-              .alert-warning { background: #fff3cd; color: #856404; }
-              .alert-danger { background: #f8d7da; color: #721c24; }
-              .alert-info { background: #d1ecf1; color: #0c5460; }
-            </style>
-          </head>
-          <body>
-            <h1>Aperçu - Question #${id}</h1>
-            <div class="question">
-              <h2>Question:</h2>
-              ${response.questionHtml}
-            </div>
-            <div class="answer">
-              <h2>Réponse:</h2>
-              ${response.answerHtml}
-            </div>
-          </body>
-        </html>
-      `);
-    } catch (error) {
-      this.showToast('Erreur lors de la génération de l\'aperçu', 'error');
-    }
-  }
-
-  async approveQuestion(id) {
-    try {
-      await this.apiRequest(`/questions/${id}/status`, 'PATCH', {
-        status: 'validated',
-        comment: 'Question approuvée'
-      });
-      
-      this.showToast('Question approuvée', 'success');
-      this.loadPendingQuestions();
-    } catch (error) {
-      this.showToast('Erreur lors de l\'approbation', 'error');
-    }
-  }
-
-  async requestChanges(id) {
-    const comment = prompt('Commentaire pour les modifications demandées:');
-    if (!comment) return;
-    
-    try {
-      await this.apiRequest(`/questions/${id}/status`, 'PATCH', {
-        status: 'draft',
-        comment
-      });
-      
-      this.showToast('Modifications demandées', 'success');
-      this.loadPendingQuestions();
-    } catch (error) {
-      this.showToast('Erreur lors de la demande de modifications', 'error');
-    }
-  }
-
-  async rejectQuestion(id) {
-    const comment = prompt('Raison du rejet:');
-    if (!comment) return;
-    
-    try {
-      await this.apiRequest(`/questions/${id}/status`, 'PATCH', {
-        status: 'archived',
-        comment
-      });
-      
-      this.showToast('Question rejetée', 'success');
-      this.loadPendingQuestions();
-    } catch (error) {
-      this.showToast('Erreur lors du rejet', 'error');
-    }
-  }
-
-  // Tag actions
   async editTag(id) {
     try {
-      // Fetch tag data
       const response = await this.apiRequest(`/tags/${id}`);
       const tag = response.tag || response;
       
@@ -1035,7 +663,6 @@ class AdminApp {
       const modal = document.getElementById('tag-modal');
       document.getElementById('tag-modal-title').textContent = 'Modifier le Tag';
       
-      // Fill form with tag data
       document.getElementById('tag-name').value = tag.name || '';
       document.getElementById('tag-category').value = tag.category || '';
       const colorInput = document.querySelector('#tag-form input[name="color"]');
@@ -1043,7 +670,6 @@ class AdminApp {
       const descriptionInput = document.querySelector('#tag-form textarea[name="description"]');
       if (descriptionInput) descriptionInput.value = tag.description || '';
       
-      // Store the tag ID for update
       this.editingTagId = id;
       
       modal.classList.add('active');
@@ -1065,7 +691,6 @@ class AdminApp {
     }
   }
 
-  // Utility functions
   async apiRequest(endpoint, method = 'GET', data = null) {
     const url = `${this.apiBase}${endpoint}`;
     const options = {
@@ -1115,184 +740,89 @@ class AdminApp {
 
   renderPagination(pagination, containerId) {
     const container = document.getElementById(containerId);
+    const buttonTemplate = document.getElementById('pagination-button-template');
+    const ellipsisTemplate = document.getElementById('pagination-ellipsis-template');
+    
     if (!pagination || pagination.totalPages <= 1) {
       container.innerHTML = '';
       return;
     }
 
     const { currentPage, totalPages } = pagination;
-    const buttons = [];
+    container.innerHTML = '';
 
-    // Previous button
-    buttons.push(`
-      <button ${currentPage <= 1 ? 'disabled' : ''} onclick="adminApp.loadQuestions(${currentPage - 1})">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-    `);
+    const prevBtn = buttonTemplate.content.cloneNode(true);
+    const prevButton = prevBtn.querySelector('.pagination-btn');
+    prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    prevButton.disabled = currentPage <= 1;
+    prevButton.dataset.page = currentPage - 1;
+    container.appendChild(prevBtn);
 
-    // Page numbers
     const startPage = Math.max(1, currentPage - 2);
     const endPage = Math.min(totalPages, currentPage + 2);
 
     if (startPage > 1) {
-      buttons.push(`<button onclick="adminApp.loadQuestions(1)">1</button>`);
+      const firstBtn = buttonTemplate.content.cloneNode(true);
+      const firstButton = firstBtn.querySelector('.pagination-btn');
+      firstButton.querySelector('.page-content').textContent = '1';
+      firstButton.dataset.page = '1';
+      container.appendChild(firstBtn);
+
       if (startPage > 2) {
-        buttons.push(`<span>...</span>`);
+        container.appendChild(ellipsisTemplate.content.cloneNode(true));
       }
     }
 
     for (let page = startPage; page <= endPage; page++) {
-      buttons.push(`
-        <button ${page === currentPage ? 'class="active"' : ''} onclick="adminApp.loadQuestions(${page})">
-          ${page}
-        </button>
-      `);
+      const pageBtn = buttonTemplate.content.cloneNode(true);
+      const pageButton = pageBtn.querySelector('.pagination-btn');
+      pageButton.querySelector('.page-content').textContent = page.toString();
+      pageButton.dataset.page = page.toString();
+      if (page === currentPage) {
+        pageButton.classList.add('active');
+      }
+      container.appendChild(pageBtn);
     }
 
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
-        buttons.push(`<span>...</span>`);
+        container.appendChild(ellipsisTemplate.content.cloneNode(true));
       }
-      buttons.push(`<button onclick="adminApp.loadQuestions(${totalPages})">${totalPages}</button>`);
+      
+      const lastBtn = buttonTemplate.content.cloneNode(true);
+      const lastButton = lastBtn.querySelector('.pagination-btn');
+      lastButton.querySelector('.page-content').textContent = totalPages.toString();
+      lastButton.dataset.page = totalPages.toString();
+      container.appendChild(lastBtn);
     }
 
     // Next button
-    buttons.push(`
-      <button ${currentPage >= totalPages ? 'disabled' : ''} onclick="adminApp.loadQuestions(${currentPage + 1})">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-    `);
-
-    container.innerHTML = buttons.join('');
+    const nextBtn = buttonTemplate.content.cloneNode(true);
+    const nextButton = nextBtn.querySelector('.pagination-btn');
+    nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    nextButton.disabled = currentPage >= totalPages;
+    nextButton.dataset.page = currentPage + 1;
+    container.appendChild(nextBtn);
   }
 
-  getStatusLabel(status) {
-    const labels = {
-      draft: 'Brouillon',
-      pending_review: 'En attente',
-      validated: 'Validé',
-      published: 'Publié',
-      disabled: 'Désactivé',
-      archived: 'Archivé'
-    };
-    return labels[status] || status;
+  createToggleButton(question) {
+    const isActive = question.isActive;
+    return this.createButton(
+      `btn btn-xs ${isActive ? 'btn-success' : 'btn-secondary'}`,
+      isActive ? 'Désactiver' : 'Activer',
+      isActive ? 'fa-toggle-on' : 'fa-toggle-off',
+      () => {} // onClick will be added separately in renderQuestions
+    );
   }
 
-  getStatusActions(question) {
-    const actions = [];
-    
-    switch (question.status) {
-      case 'draft':
-        actions.push(`
-          <button class="btn btn-sm btn-warning" onclick="adminApp.submitForReview(${question.id})">
-            <i class="fas fa-paper-plane"></i>
-            Soumettre
-          </button>
-        `);
-        break;
-      case 'validated':
-        actions.push(`
-          <button class="btn btn-sm btn-success" onclick="adminApp.publishQuestion(${question.id})">
-            <i class="fas fa-check"></i>
-            Publier
-          </button>
-        `);
-        break;
-      case 'published':
-        actions.push(`
-          <button class="btn btn-sm btn-secondary" onclick="adminApp.disableQuestion(${question.id})">
-            <i class="fas fa-eye-slash"></i>
-            Désactiver
-          </button>
-        `);
-        break;
-    }
-    
-    return actions.join('');
-  }
-
-  getCompactStatusActions(question) {
-    const actions = [];
-    
-    switch (question.status) {
-      case 'draft':
-        actions.push(`
-          <button class="btn btn-xs btn-warning" onclick="adminApp.submitForReview(${question.id})" title="Soumettre pour révision">
-            <i class="fas fa-paper-plane"></i>
-          </button>
-        `);
-        break;
-      case 'validated':
-        actions.push(`
-          <button class="btn btn-xs btn-success" onclick="adminApp.publishQuestion(${question.id})" title="Publier">
-            <i class="fas fa-check"></i>
-          </button>
-        `);
-        break;
-      case 'published':
-        actions.push(`
-          <button class="btn btn-xs btn-secondary" onclick="adminApp.disableQuestion(${question.id})" title="Désactiver">
-            <i class="fas fa-eye-slash"></i>
-          </button>
-        `);
-        break;
-      case 'disabled':
-        actions.push(`
-          <button class="btn btn-xs btn-success" onclick="adminApp.reactivateQuestion(${question.id})" title="Réactiver">
-            <i class="fas fa-eye"></i>
-          </button>
-        `);
-        break;
-    }
-    
-    return actions.join('');
-  }
-
-  async submitForReview(id) {
+  async toggleQuestion(id) {
     try {
-      await this.apiRequest(`/questions/${id}/status`, 'PATCH', {
-        status: 'pending_review'
-      });
-      this.showToast('Question soumise pour révision', 'success');
+      const response = await this.apiRequest(`/questions/${id}/toggle`, 'PATCH');
+      const message = response.isActive ? 'Question activée' : 'Question désactivée';
+      this.showToast(message, 'success');
       this.loadQuestions();
     } catch (error) {
-      this.showToast('Erreur lors de la soumission', 'error');
-    }
-  }
-
-  async publishQuestion(id) {
-    try {
-      await this.apiRequest(`/questions/${id}/status`, 'PATCH', {
-        status: 'published'
-      });
-      this.showToast('Question publiée', 'success');
-      this.loadQuestions();
-    } catch (error) {
-      this.showToast('Erreur lors de la publication', 'error');
-    }
-  }
-
-  async disableQuestion(id) {
-    try {
-      await this.apiRequest(`/questions/${id}/status`, 'PATCH', {
-        status: 'disabled'
-      });
-      this.showToast('Question désactivée', 'success');
-      this.loadQuestions();
-    } catch (error) {
-      this.showToast('Erreur lors de la désactivation', 'error');
-    }
-  }
-
-  async reactivateQuestion(id) {
-    try {
-      await this.apiRequest(`/questions/${id}/status`, 'PATCH', {
-        status: 'published'
-      });
-      this.showToast('Question réactivée', 'success');
-      this.loadQuestions();
-    } catch (error) {
-      this.showToast('Erreur lors de la réactivation', 'error');
+      this.showToast('Erreur lors du changement de statut', 'error');
     }
   }
 
@@ -1302,24 +832,6 @@ class AdminApp {
 
   filterQuestions() {
     this.loadQuestions(1);
-  }
-
-  toggleAnswers() {
-    this.showAnswers = !this.showAnswers;
-    const btn = document.getElementById('toggle-answers-btn');
-    
-    if (this.showAnswers) {
-      btn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer réponses';
-      btn.classList.remove('btn-secondary');
-      btn.classList.add('btn-primary');
-    } else {
-      btn.innerHTML = '<i class="fas fa-eye"></i> Afficher réponses';
-      btn.classList.remove('btn-primary');
-      btn.classList.add('btn-secondary');
-    }
-    
-    // Re-render the current questions with the new toggle state
-    this.loadQuestions(this.currentPage);
   }
 
   stripHtml(text) {
@@ -1368,13 +880,21 @@ class AdminApp {
         formatted += `, ${source.edition}`;
       }
 
-      // Add URL if present and not already linked to title
       if (source.url) {
         formatted += ` <i class="fas fa-external-link-alt source-link-icon" title="Lien externe"></i>`;
       }
 
       return formatted;
     }).join('<br>');
+  }
+
+  createButton(className, title, icon, onClick) {
+    const btn = document.createElement('button');
+    btn.className = className;
+    btn.title = title;
+    btn.innerHTML = `<i class="fas ${icon}"></i>`;
+    btn.addEventListener('click', onClick);
+    return btn;
   }
 
   debounce(func, wait) {
@@ -1389,28 +909,17 @@ class AdminApp {
     };
   }
 
-  // Load question for editing
   async loadQuestionForEdit(questionId) {
     try {
       const question = await this.apiRequest(`/questions/${questionId}`);
 
-      // Populate the form fields
       document.getElementById('question-text').value = question.questionText || '';
       document.getElementById('answer-text').value = question.answerText || '';
-      document.getElementById('question-status').value = question.status || 'draft';
-
-      // Set the question ID for editing
       document.getElementById('question-form').dataset.questionId = questionId;
 
-      // Load tags
       this.selectedTags = question.tags || [];
       this.renderSelectedTags();
-
-      // Load sources
       this.loadSources(question.sources || []);
-      
-      // Reset to question tab and update preview with loaded content
-      this.switchPreviewTab('question');
 
     } catch (error) {
       console.error('Error loading question for edit:', error);
@@ -1418,18 +927,14 @@ class AdminApp {
     }
   }
 
-  // Load tag for editing
   async loadTagForEdit(tagId) {
     try {
       const tag = await this.apiRequest(`/tags/${tagId}`);
 
-      // Populate the form fields
       document.getElementById('tag-name').value = tag.name || '';
       document.getElementById('tag-category').value = tag.category || '';
       document.getElementById('tag-color').value = tag.color || '#6c757d';
       document.getElementById('tag-description').value = tag.description || '';
-
-      // Set the tag ID for editing
       document.getElementById('tag-form').dataset.tagId = tagId;
 
     } catch (error) {
@@ -1438,17 +943,13 @@ class AdminApp {
     }
   }
 
-  // Load sources into the form
   loadSources(sources) {
     const container = document.getElementById('sources-container');
-    // Clear existing sources except template
     const existingSources = container.querySelectorAll('.source-item:not(.template)');
     existingSources.forEach(item => item.remove());
 
-    // Add each source
     sources.forEach(source => {
       const sourceItem = this.createSourceItem();
-      
       sourceItem.querySelector('.source-type').value = source.type || 'textbook';
       sourceItem.querySelector('.source-title').value = source.title || '';
       sourceItem.querySelector('.source-authors').value = source.authors ? source.authors.join(', ') : '';
@@ -1461,7 +962,6 @@ class AdminApp {
     });
   }
 
-  // Create a new source item from template
   createSourceItem() {
     const template = document.getElementById('source-template');
     const newSource = template.cloneNode(true);
@@ -1469,7 +969,6 @@ class AdminApp {
     newSource.classList.remove('template');
     newSource.id = '';
     
-    // Add remove functionality
     const removeBtn = newSource.querySelector('.btn-remove-source');
     removeBtn.addEventListener('click', () => {
       newSource.remove();
@@ -1478,7 +977,6 @@ class AdminApp {
     return newSource;
   }
 
-  // Render selected tags in the form
   renderSelectedTags() {
     const container = document.getElementById('selected-tags');
     container.innerHTML = '';
@@ -1496,12 +994,12 @@ class AdminApp {
     });
   }
 
-  // Remove selected tag
   removeSelectedTag(tagId) {
     this.selectedTags = this.selectedTags.filter(tag => tag.id !== tagId);
     this.renderSelectedTags();
   }
 }
 
-// Initialize the admin app
 const adminApp = new AdminApp();
+
+window.adminApp = adminApp;

@@ -25,26 +25,20 @@ app.use('/api', createProxyMiddleware({
   }
 }));
 
-// Serve static files from the src directory
-app.use(express.static(path.join(__dirname, 'src')));
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve static files from the zz_questions directory
-app.use('/zz_questions', express.static(path.join(__dirname, 'zz_questions')));
-
-// Serve admin panel static files
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
-// Serve admin panel index
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin', 'index.html'));
 });
 
-// Serve the main app index.html file for all other routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
-  console.log(`Serving files from ${path.join(__dirname, 'src')}`);
+  console.log(`Serving files from ${path.join(__dirname, 'public')}`);
 });

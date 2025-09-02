@@ -28,7 +28,6 @@ const createQuestionSchema = Joi.object({
 const updateQuestionSchema = Joi.object({
   questionText: Joi.string().min(10).max(5000).optional(),
   answerText: Joi.string().min(5).max(10000).optional(),
-  status: Joi.string().valid('draft', 'pending_review', 'validated', 'published', 'disabled', 'archived').optional().allow(null),
   sources: Joi.array().items(Joi.object({
     type: Joi.string().valid('textbook', 'guideline', 'journal', 'website', 'internal').required(),
     title: Joi.string().required(),
@@ -45,19 +44,22 @@ const updateQuestionSchema = Joi.object({
   tagIds: Joi.array().items(Joi.number().integer().positive()).optional()
 });
 
-const statusUpdateSchema = Joi.object({
-  status: Joi.string().valid('draft', 'pending_review', 'validated', 'published', 'disabled', 'archived').required(),
-  comment: Joi.string().max(1000).default('')
+// Simple validation for toggle operations
+const toggleSchema = Joi.object({
+  adminNote: Joi.string().max(500).optional().default('')
+});
+
+const deleteSchema = Joi.object({
+  reason: Joi.string().max(500).optional().default('')
 });
 
 // GET /api/questions - List questions with filters and pagination
 router.get('/', async (req, res) => {
   try {
     const { 
-      status, 
+      active,     // 'true'/'false' for active filter (or undefined for all)
       tags, 
       search, 
-      author,
       page = 1, 
       limit = 20,
       orderBy = 'updated_at',
@@ -72,11 +74,13 @@ router.get('/', async (req, res) => {
 
     const offset = (page - 1) * limit;
     
+    // Convert string parameter to boolean
+    const activeFilter = active === 'true' ? true : active === 'false' ? false : undefined;
+    
     const questions = await Question.findMany({
-      status,
+      active: activeFilter,
       tagIds: tagIds.length > 0 ? tagIds : null,
       search,
-      createdBy: author,
       limit: parseInt(limit),
       offset,
       orderBy,
@@ -85,10 +89,9 @@ router.get('/', async (req, res) => {
 
     // Get total count for pagination
     const totalCount = await Question.count({
-      status,
+      active: activeFilter,
       tagIds: tagIds.length > 0 ? tagIds : null,
-      search,
-      createdBy: author
+      search
     });
 
     res.json({
@@ -109,30 +112,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/questions/pending - Questions pending review (for reviewers)
-router.get('/pending', async (req, res) => {
-  try {
-    const questions = await Question.findMany({
-      status: 'pending_review',
-      limit: 50,
-      offset: 0
-    });
-
-    res.json({
-      questions: questions.map(q => q.toJSON()),
-      count: questions.length
-    });
-  } catch (error) {
-    console.error('Error fetching pending questions:', error);
-    res.status(500).json({ 
-      error: 'Failed to fetch pending questions',
-      message: error.message 
-    });
-  }
-});
-
-// GET /api/questions/published - Published questions for flashcard app
-router.get('/published', async (req, res) => {
+// GET /api/questions/active - Active questions for flashcard app
+router.get('/active', async (req, res) => {
   try {
     const { tags, limit = 100 } = req.query;
     
@@ -142,7 +123,7 @@ router.get('/published', async (req, res) => {
     }
 
     const questions = await Question.findMany({
-      status: 'published',
+      active: true,
       tagIds: tagIds.length > 0 ? tagIds : null,
       limit: parseInt(limit),
       offset: 0
@@ -170,12 +151,17 @@ router.get('/published', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error fetching published questions:', error);
+    console.error('Error fetching active questions:', error);
     res.status(500).json({ 
-      error: 'Failed to fetch published questions',
+      error: 'Failed to fetch active questions',
       message: error.message 
     });
   }
+});
+
+// Maintain backward compatibility - redirect /published to /active
+router.get('/published', (req, res) => {
+  res.redirect(307, req.originalUrl.replace('/published', '/active'));
 });
 
 // GET /api/questions/:id - Get single question
@@ -295,7 +281,7 @@ router.put('/:id', async (req, res) => {
 
     // Update tags if provided
     if (value.tagIds) {
-      await question.updateTags(value.tagIds, updatedBy);
+      await question.updateTags(value.tagIds);
     }
 
     // Return updated question with tags
@@ -310,53 +296,20 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// PATCH /api/questions/:id/status - Update question status
-router.patch('/:id/status', async (req, res) => {
+// PATCH /api/questions/:id/toggle - Toggle active/inactive status
+router.patch('/:id/toggle', async (req, res) => {
   try {
-    const { error, value } = statusUpdateSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ 
-        error: 'Validation error', 
-        details: error.details 
-      });
-    }
-
     const question = await Question.findById(req.params.id);
     if (!question) {
       return res.status(404).json({ error: 'Question not found' });
     }
 
-    // TODO: Check user permissions for status transitions
-    const userId = 1; // Temporary hardcode
-
-    await question.updateStatus(value.status, userId, value.comment);
+    await question.toggleActive();
     res.json(question.toJSON());
   } catch (error) {
-    console.error('Error updating question status:', error);
-    res.status(400).json({ 
-      error: 'Failed to update question status',
-      message: error.message 
-    });
-  }
-});
-
-// DELETE /api/questions/:id - Delete (archive) question
-router.delete('/:id', async (req, res) => {
-  try {
-    const question = await Question.findById(req.params.id);
-    if (!question) {
-      return res.status(404).json({ error: 'Question not found' });
-    }
-
-    // TODO: Check user permissions
-    const userId = 1; // Temporary hardcode
-
-    await question.delete(userId);
-    res.json({ message: 'Question archived successfully' });
-  } catch (error) {
-    console.error('Error deleting question:', error);
+    console.error('Error toggling question status:', error);
     res.status(500).json({ 
-      error: 'Failed to delete question',
+      error: 'Failed to toggle question status',
       message: error.message 
     });
   }
@@ -401,6 +354,60 @@ router.post('/bulk-import', async (req, res) => {
     console.error('Error importing questions:', error);
     res.status(500).json({ 
       error: 'Failed to import questions',
+      message: error.message 
+    });
+  }
+});
+
+// POST /api/questions/regenerate-html - Force regenerate HTML for all questions
+router.post('/regenerate-html', async (req, res) => {
+  try {
+    const { questionIds } = req.body;
+    
+    let questions;
+    if (questionIds && Array.isArray(questionIds)) {
+      // Regenerate specific questions
+      questions = await Promise.all(
+        questionIds.map(id => Question.findById(id))
+      );
+      questions = questions.filter(q => q !== null);
+    } else {
+      // Regenerate all questions
+      questions = await Question.findMany({ 
+        active: undefined, // Get all questions regardless of status
+        limit: 1000,
+        offset: 0
+      });
+    }
+
+    let successCount = 0;
+    let errorCount = 0;
+    const errors = [];
+
+    for (const question of questions) {
+      try {
+        await question.regenerateHtml();
+        successCount++;
+      } catch (error) {
+        errorCount++;
+        errors.push({
+          id: question.id,
+          error: error.message
+        });
+      }
+    }
+
+    res.json({
+      message: `HTML regeneration completed`,
+      total: questions.length,
+      success: successCount,
+      errors: errorCount,
+      errorDetails: errors
+    });
+  } catch (error) {
+    console.error('Error regenerating HTML:', error);
+    res.status(500).json({ 
+      error: 'Failed to regenerate HTML',
       message: error.message 
     });
   }

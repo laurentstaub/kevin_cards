@@ -69,6 +69,8 @@ class Question {
     try {
       const result = await query(`
         SELECT q.*, 
+               u.name as author_name,
+               v.name as validator_name,
                COALESCE(
                  JSON_AGG(
                    JSON_BUILD_OBJECT(
@@ -81,10 +83,12 @@ class Question {
                  '[]'::json
                ) as tags
         FROM questions q
+        LEFT JOIN users u ON q.created_by = u.id
+        LEFT JOIN users v ON q.validated_by = v.id
         LEFT JOIN question_tags qt ON q.id = qt.question_id
         LEFT JOIN tags t ON qt.tag_id = t.id
         WHERE q.id = $1
-        GROUP BY q.id
+        GROUP BY q.id, u.name, v.name
       `, [id]);
 
       if (result.rows.length === 0) {
@@ -94,6 +98,8 @@ class Question {
       const questionData = result.rows[0];
       const question = new Question(questionData);
       question.tags = questionData.tags;
+      question.authorName = questionData.author_name;
+      question.validatorName = questionData.validator_name;
 
       return question;
     } catch (error) {
@@ -102,29 +108,25 @@ class Question {
   }
 
   // Get questions with filters and pagination
-  static async findMany({ 
-    active, 
-    tagIds, 
-    search, 
-    limit = 20, 
-    offset = 0, 
-    orderBy = 'updated_at', 
-    orderDirection = 'DESC' 
-  }) {
+  static async findMany({ status, tagIds, search, createdBy, limit = 20, offset = 0, orderBy = 'updated_at', orderDirection = 'DESC' }) {
     try {
       let whereConditions = [];
       let queryParams = [];
       let paramIndex = 1;
 
-      // Filter by active status
-      if (active !== undefined) {
-        whereConditions.push(`q.is_active = $${paramIndex++}`);
-        queryParams.push(active);
+      // Build WHERE clause
+      if (status) {
+        whereConditions.push(`q.status = $${paramIndex++}`);
+        queryParams.push(status);
       }
 
+      if (createdBy) {
+        whereConditions.push(`q.created_by = $${paramIndex++}`);
+        queryParams.push(createdBy);
+      }
 
-      // Full-text search
       if (search) {
+        // Combine full-text search with trigram matching for better partial word support
         const searchParam1 = paramIndex++;
         const searchParam2 = paramIndex++;
         const searchParam3 = paramIndex++;
@@ -136,7 +138,6 @@ class Question {
         queryParams.push(search, `%${search}%`, `%${search}%`);
       }
 
-      // Filter by tags
       if (tagIds && tagIds.length > 0) {
         whereConditions.push(`q.id IN (
           SELECT DISTINCT qt.question_id 
@@ -150,7 +151,7 @@ class Question {
         `WHERE ${whereConditions.join(' AND ')}` : '';
 
       // Validate orderBy column to prevent SQL injection
-      const allowedOrderColumns = ['id', 'created_at', 'updated_at'];
+      const allowedOrderColumns = ['id', 'created_at', 'updated_at', 'status'];
       const safeOrderBy = allowedOrderColumns.includes(orderBy) ? orderBy : 'updated_at';
       const safeOrderDirection = ['ASC', 'DESC'].includes(orderDirection.toUpperCase()) ? orderDirection.toUpperCase() : 'DESC';
 
@@ -158,15 +159,17 @@ class Question {
       queryParams.push(limit, offset);
       const limitOffset = `LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
 
-      // Build the rank column for search
+      // Build the rank column - use parameterized query for search term
       let rankColumn = '1 as rank';
       if (search) {
-        queryParams.push(search);
+        queryParams.push(search); // Add search param for ts_rank
         rankColumn = `ts_rank(q.search_vector, plainto_tsquery('french', $${paramIndex++})) as rank`;
       }
 
       const result = await query(`
         SELECT q.*, 
+               u.name as author_name,
+               v.name as validator_name,
                COALESCE(
                  JSON_AGG(
                    JSON_BUILD_OBJECT(
@@ -180,10 +183,12 @@ class Question {
                ) as tags,
                ${rankColumn}
         FROM questions q
+        LEFT JOIN users u ON q.created_by = u.id
+        LEFT JOIN users v ON q.validated_by = v.id
         LEFT JOIN question_tags qt ON q.id = qt.question_id
         LEFT JOIN tags t ON qt.tag_id = t.id
         ${whereClause}
-        GROUP BY q.id
+        GROUP BY q.id, u.name, v.name
         ORDER BY ${search ? 'rank DESC,' : ''} q.${safeOrderBy} ${safeOrderDirection}
         ${limitOffset}
       `, queryParams);
@@ -191,6 +196,8 @@ class Question {
       return result.rows.map(row => {
         const question = new Question(row);
         question.tags = row.tags;
+        question.authorName = row.author_name;
+        question.validatorName = row.validator_name;
         if (search) question.rank = row.rank;
         return question;
       });
@@ -199,61 +206,8 @@ class Question {
     }
   }
 
-  // Count questions with filters (for pagination)
-  static async count({ active, tagIds, search }) {
-    try {
-      let whereConditions = [];
-      let queryParams = [];
-      let paramIndex = 1;
-
-      // Filter by active status
-      if (active !== undefined) {
-        whereConditions.push(`q.is_active = $${paramIndex++}`);
-        queryParams.push(active);
-      }
-
-
-      // Full-text search
-      if (search) {
-        const searchParam1 = paramIndex++;
-        const searchParam2 = paramIndex++;
-        const searchParam3 = paramIndex++;
-        whereConditions.push(`(
-          q.search_vector @@ plainto_tsquery('french', $${searchParam1}) OR
-          q.question_text ILIKE $${searchParam2} OR
-          q.answer_text ILIKE $${searchParam3}
-        )`);
-        queryParams.push(search, `%${search}%`, `%${search}%`);
-      }
-
-      // Filter by tags
-      if (tagIds && tagIds.length > 0) {
-        whereConditions.push(`q.id IN (
-          SELECT DISTINCT qt.question_id 
-          FROM question_tags qt 
-          WHERE qt.tag_id = ANY($${paramIndex++})
-        )`);
-        queryParams.push(tagIds);
-      }
-
-      const whereClause = whereConditions.length > 0 ? 
-        `WHERE ${whereConditions.join(' AND ')}` : '';
-
-      const result = await query(`
-        SELECT COUNT(DISTINCT q.id) as count
-        FROM questions q
-        LEFT JOIN question_tags qt ON q.id = qt.question_id
-        ${whereClause}
-      `, queryParams);
-
-      return parseInt(result.rows[0].count);
-    } catch (error) {
-      throw new Error(`Failed to count questions: ${error.message}`);
-    }
-  }
-
   // Update question content
-  async update({ questionText, answerText, sources }) {
+  async update({ questionText, answerText, status, sources, updatedBy }) {
     try {
       const updateFields = {};
       const queryParams = [];
@@ -282,7 +236,7 @@ class Question {
           updateFields.answer_html = answerProcessed.html;
         }
         
-        // Regenerate metadata
+        // Regenerate and add metadata to the update fields
         const combinedEntities = {
           drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
           drug_classes: [...new Set([...questionProcessed.entities.drug_classes, ...answerProcessed.entities.drug_classes])],
@@ -301,7 +255,8 @@ class Question {
         updateFields.metadata = JSON.stringify(metadata);
       }
 
-      // Add sources if provided
+      // Add other fields if they are provided
+      if (status !== undefined) updateFields.status = status;
       if (sources !== undefined) updateFields.sources = JSON.stringify(sources);
 
       // If nothing to update, return the current instance
@@ -330,7 +285,14 @@ class Question {
 
       // Update instance properties
       const updatedData = result.rows[0];
-      Object.assign(this, new Question(updatedData));
+      this.questionText = updatedData.question_text;
+      this.answerText = updatedData.answer_text;
+      this.questionHtml = updatedData.question_html;
+      this.answerHtml = updatedData.answer_html;
+      this.status = updatedData.status;
+      this.sources = updatedData.sources;
+      this.metadata = updatedData.metadata;
+      this.updatedAt = updatedData.updated_at;
 
       return this;
     } catch (error) {
@@ -338,84 +300,68 @@ class Question {
     }
   }
 
-  // Toggle active status (simple!)
-  async toggleActive(adminNote = '') {
+  // Update question status (draft -> pending_review -> validated -> published)
+  async updateStatus(newStatus, userId, comment = '') {
     try {
+      const validTransitions = {
+        'draft': ['pending_review', 'archived'],
+        'pending_review': ['validated', 'draft', 'archived'],
+        'validated': ['published', 'pending_review', 'archived'],
+        'published': ['disabled', 'archived'],
+        'disabled': ['published', 'archived'],
+        'archived': ['draft']
+      };
+
+      if (!validTransitions[this.status]?.includes(newStatus)) {
+        throw new Error(`Invalid status transition from ${this.status} to ${newStatus}`);
+      }
+
+      // Add to review history
+      const reviewEntry = {
+        user_id: userId,
+        from_status: this.status,
+        to_status: newStatus,
+        comment: comment,
+        timestamp: new Date().toISOString()
+      };
+
+      const newReviewHistory = [...this.reviewHistory, reviewEntry];
+
+      const updateFields = {
+        status: newStatus,
+        review_history: JSON.stringify(newReviewHistory)
+      };
+
+      let setClause = Object.keys(updateFields).map((key, index) => 
+        `${key} = $${index + 1}`
+      ).join(', ');
+
+      let queryParams = [...Object.values(updateFields)];
+
+      // Set validation fields for validated/published status
+      if (newStatus === 'validated' || newStatus === 'published') {
+        queryParams.push(userId);
+        setClause += `, validated_by = $${queryParams.length}, validated_at = CURRENT_TIMESTAMP`;
+      }
+
+      queryParams.push(this.id);
+
       const result = await query(`
         UPDATE questions 
-        SET is_active = NOT is_active,
-            admin_notes = COALESCE(admin_notes, '') ||
-                         CASE 
-                           WHEN admin_notes IS NOT NULL AND admin_notes != '' 
-                           THEN ' | ' 
-                           ELSE '' 
-                         END ||
-                         $2,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
+        SET ${setClause}
+        WHERE id = $${queryParams.length}
         RETURNING *
-      `, [this.id, adminNote || `Toggled ${this.isActive ? 'inactive' : 'active'} on ${new Date().toLocaleDateString()}`]);
+      `, queryParams);
 
-      Object.assign(this, new Question(result.rows[0]));
+      Object.assign(this, result.rows[0]);
       return this;
     } catch (error) {
-      throw new Error(`Failed to toggle question active status: ${error.message}`);
-    }
-  }
-
-  // Soft delete question
-  async softDelete(reason = '') {
-    try {
-      const result = await query(`
-        UPDATE questions 
-        SET deleted_at = CURRENT_TIMESTAMP,
-            is_active = FALSE,
-            admin_notes = COALESCE(admin_notes, '') ||
-                         CASE 
-                           WHEN admin_notes IS NOT NULL AND admin_notes != '' 
-                           THEN ' | ' 
-                           ELSE '' 
-                         END ||
-                         $2,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
-        RETURNING *
-      `, [this.id, `Deleted: ${reason || 'No reason provided'}`]);
-
-      Object.assign(this, new Question(result.rows[0]));
-      return this;
-    } catch (error) {
-      throw new Error(`Failed to delete question: ${error.message}`);
-    }
-  }
-
-  // Restore deleted question
-  async restore() {
-    try {
-      const result = await query(`
-        UPDATE questions 
-        SET deleted_at = NULL,
-            admin_notes = COALESCE(admin_notes, '') ||
-                         CASE 
-                           WHEN admin_notes IS NOT NULL AND admin_notes != '' 
-                           THEN ' | ' 
-                           ELSE '' 
-                         END ||
-                         $2,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
-        RETURNING *
-      `, [this.id, `Restored on ${new Date().toLocaleDateString()}`]);
-
-      Object.assign(this, new Question(result.rows[0]));
-      return this;
-    } catch (error) {
-      throw new Error(`Failed to restore question: ${error.message}`);
+      throw new Error(`Failed to update question status: ${error.message}`);
     }
   }
 
   // Update question tags
-  async updateTags(tagIds) {
+  async updateTags(tagIds, userId) {
     try {
       // Remove existing tags
       await query('DELETE FROM question_tags WHERE question_id = $1', [this.id]);
@@ -423,13 +369,13 @@ class Question {
       // Add new tags
       if (tagIds.length > 0) {
         const values = tagIds.map((tagId, index) => 
-          `($1, $${index + 2})`
+          `($1, $${index + 2}, $${tagIds.length + 2})`
         ).join(', ');
 
         await query(`
-          INSERT INTO question_tags (question_id, tag_id)
+          INSERT INTO question_tags (question_id, tag_id, assigned_by)
           VALUES ${values}
-        `, [this.id, ...tagIds]);
+        `, [this.id, ...tagIds, userId]);
       }
 
       return this;
@@ -438,7 +384,90 @@ class Question {
     }
   }
 
-  // Get rendered HTML for display - always fresh from markdown
+  // Delete question (soft delete by archiving)
+  async delete(userId) {
+    try {
+      await this.updateStatus('archived', userId, 'Question deleted');
+      return this;
+    } catch (error) {
+      throw new Error(`Failed to delete question: ${error.message}`);
+    }
+  }
+
+  // Get question history/versions
+  async getVersions() {
+    try {
+      const result = await query(`
+        SELECT qv.*, u.name as author_name
+        FROM question_versions qv
+        LEFT JOIN users u ON qv.created_by = u.id
+        WHERE qv.question_id = $1
+        ORDER BY qv.version_number DESC
+      `, [this.id]);
+
+      return result.rows;
+    } catch (error) {
+      throw new Error(`Failed to get question versions: ${error.message}`);
+    }
+  }
+
+  // Count questions with filters (for pagination)
+  static async count({ status, tagIds, search, createdBy }) {
+    try {
+      let whereConditions = [];
+      let queryParams = [];
+      let paramIndex = 1;
+
+      // Build WHERE clause (same as findMany)
+      if (status) {
+        whereConditions.push(`q.status = $${paramIndex++}`);
+        queryParams.push(status);
+      }
+
+      if (createdBy) {
+        whereConditions.push(`q.created_by = $${paramIndex++}`);
+        queryParams.push(createdBy);
+      }
+
+      if (search) {
+        // Combine full-text search with trigram matching for better partial word support
+        const searchParam1 = paramIndex++;
+        const searchParam2 = paramIndex++;
+        const searchParam3 = paramIndex++;
+        whereConditions.push(`(
+          q.search_vector @@ plainto_tsquery('french', $${searchParam1}) OR
+          q.question_text ILIKE $${searchParam2} OR
+          q.answer_text ILIKE $${searchParam3}
+        )`);
+        queryParams.push(search, `%${search}%`, `%${search}%`);
+      }
+
+      if (tagIds && tagIds.length > 0) {
+        whereConditions.push(`q.id IN (
+          SELECT DISTINCT qt.question_id 
+          FROM question_tags qt 
+          WHERE qt.tag_id = ANY($${paramIndex++})
+        )`);
+        queryParams.push(tagIds);
+      }
+
+      const whereClause = whereConditions.length > 0 ? 
+        `WHERE ${whereConditions.join(' AND ')}` : '';
+
+      const result = await query(`
+        SELECT COUNT(DISTINCT q.id) as count
+        FROM questions q
+        LEFT JOIN question_tags qt ON q.id = qt.question_id
+        ${whereClause}
+      `, queryParams);
+
+      return parseInt(result.rows[0].count);
+    } catch (error) {
+      throw new Error(`Failed to count questions: ${error.message}`);
+    }
+  }
+
+  // Get rendered HTML for display
   getRenderedContent() {
     const questionProcessed = processMarkdown(this.questionText);
     const answerProcessed = processMarkdown(this.answerText);
@@ -450,45 +479,6 @@ class Question {
     };
   }
 
-  // Force regenerate HTML from current markdown (for data integrity)
-  async regenerateHtml() {
-    try {
-      const questionProcessed = processMarkdown(this.questionText, 'question');
-      const answerProcessed = processMarkdown(this.answerText, 'answer');
-      
-      // Regenerate metadata too
-      const combinedEntities = {
-        drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
-        drug_classes: [...new Set([...questionProcessed.entities.drug_classes, ...answerProcessed.entities.drug_classes])],
-        conditions: [...new Set([...questionProcessed.entities.conditions, ...answerProcessed.entities.conditions])],
-        dosages: [...new Set([...questionProcessed.entities.dosages, ...answerProcessed.entities.dosages])],
-        routes: [...new Set([...questionProcessed.entities.routes, ...answerProcessed.entities.routes])]
-      };
-
-      const metadata = {
-        ...this.metadata,
-        entities: combinedEntities,
-        question_stats: questionProcessed.stats,
-        answer_stats: answerProcessed.stats,
-        total_word_count: questionProcessed.stats.word_count + answerProcessed.stats.word_count,
-        last_processed: new Date().toISOString()
-      };
-
-      const result = await query(`
-        UPDATE questions 
-        SET question_html = $1, answer_html = $2, metadata = $3, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $4
-        RETURNING *
-      `, [questionProcessed.html, answerProcessed.html, JSON.stringify(metadata), this.id]);
-
-      // Update instance
-      Object.assign(this, new Question(result.rows[0]));
-      return this;
-    } catch (error) {
-      throw new Error(`Failed to regenerate HTML: ${error.message}`);
-    }
-  }
-
   // Convert to JSON for API responses
   toJSON() {
     return {
@@ -497,14 +487,18 @@ class Question {
       answerText: this.answerText,
       questionHtml: this.questionHtml,
       answerHtml: this.answerHtml,
-      isActive: this.isActive,
-      adminNotes: this.adminNotes,
-      deletedAt: this.deletedAt,
+      status: this.status,
       sources: this.sources,
       metadata: this.metadata,
+      reviewHistory: this.reviewHistory,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      tags: this.tags || []
+      createdBy: this.createdBy,
+      validatedBy: this.validatedBy,
+      validatedAt: this.validatedAt,
+      tags: this.tags || [],
+      authorName: this.authorName,
+      validatorName: this.validatorName
     };
   }
 }

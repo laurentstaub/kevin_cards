@@ -130,7 +130,6 @@ class ProgressTracker {
                 attempts: 0,
                 correct: 0,
                 incorrect: 0,
-                mastery: 0, // 0-100 scale
                 streak: 0,
                 maxStreak: 0
             };
@@ -151,11 +150,9 @@ class ProgressTracker {
             cardProgress.streak = 0;
         }
 
-        // Calculate mastery level (0-100) based on accuracy
         const accuracy = cardProgress.attempts > 0 
             ? (cardProgress.correct / cardProgress.attempts) * 100 
             : 0;
-        cardProgress.mastery = Math.min(100, Math.max(0, accuracy));
 
         // Update current session if active
         if (this.currentSession) {
@@ -228,12 +225,6 @@ class ProgressTracker {
         );
     }
 
-    // Compatibility method - just returns weak areas for now
-    getDueCards(limit = null) {
-        // For backward compatibility, return weak cards as "due" cards
-        return this.getWeakAreas(50, limit);
-    }
-
     // Get performance by tag
     getTagPerformance() {
         const tagStats = {};
@@ -283,8 +274,7 @@ class ProgressTracker {
                 weakCards.push({
                     id: cardId,
                     accuracy: accuracy,
-                    attempts: progress.attempts,
-                    mastery: progress.mastery
+                    attempts: progress.attempts
                 });
             }
         }
@@ -324,7 +314,6 @@ class ProgressTracker {
             stats: this.progress.stats,
             recentSessions: this.progress.sessions.slice(-5),
             weakCardsCount: this.getWeakAreas().length,
-            weakAreasCount: this.getWeakAreas().length,
             tagPerformance: this.getTagPerformance(),
             currentStreak: this.progress.stats.studyStreak
         };
