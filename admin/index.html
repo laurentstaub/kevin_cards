@@ -83,12 +83,6 @@
                         <i class="fas fa-search"></i>
                         <input type="text" id="search-tags" placeholder="Rechercher des tags...">
                     </div>
-                    <select id="category-filter">
-                        <option value="">Toutes les catégories</option>
-                        <option value="drug_class">Classe médicamenteuse</option>
-                        <option value="therapeutic_area">Domaine thérapeutique</option>
-                        <option value="topic">Sujet</option>
-                    </select>
                     <button class="btn btn-primary" data-action="new-tag">
                         <i class="fas fa-plus"></i>
                         Nouveau Tag
@@ -215,30 +209,9 @@
                            placeholder="Ex: Antibiotiques">
                 </div>
 
-                <div class="form-group">
-                    <label for="tag-category">Catégorie</label>
-                    <select id="tag-category" name="category">
-                        <option value="">Aucune catégorie</option>
-                        <option value="drug_class">Classe médicamenteuse</option>
-                        <option value="therapeutic_area">Domaine thérapeutique</option>
-                        <option value="topic">Sujet</option>
-                    </select>
-                </div>
 
-                <div class="form-group">
-                    <label for="tag-color">Couleur</label>
-                    <div class="color-picker">
-                        <input type="color" id="tag-color" name="color" value="#6c757d">
-                        <div class="color-presets">
-                            <button type="button" class="color-preset" data-color="#e74c3c" style="background: #e74c3c"></button>
-                            <button type="button" class="color-preset" data-color="#3498db" style="background: #3498db"></button>
-                            <button type="button" class="color-preset" data-color="#2ecc71" style="background: #2ecc71"></button>
-                            <button type="button" class="color-preset" data-color="#f39c12" style="background: #f39c12"></button>
-                            <button type="button" class="color-preset" data-color="#9b59b6" style="background: #9b59b6"></button>
-                            <button type="button" class="color-preset" data-color="#1abc9c" style="background: #1abc9c"></button>
-                        </div>
-                    </div>
-                </div>
+
+
 
                 <div class="form-group">
                     <label for="tag-description">Description</label>
@@ -302,9 +275,7 @@
   <template id="tag-card-template">
     <div class="tag-card">
       <div class="tag-header">
-        <div class="tag-color"></div>
         <span class="tag-name"></span>
-        <span class="tag-category"></span>
         <div class="tag-usage-badge">
           <span class="usage-count"></span>
         </div>

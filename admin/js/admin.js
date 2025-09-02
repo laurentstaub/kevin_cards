@@ -81,7 +81,6 @@ class AdminApp {
 
     // Change events
     const changeHandlers = {
-      'category-filter': () => this.filterTags(),
       'status-filter': () => this.filterQuestions(),
       'sort-order': (e) => {
         const [orderBy, orderDirection] = e.target.value.split(',');
@@ -283,7 +282,6 @@ class AdminApp {
     }
     
     const searchTerm = document.getElementById('search-tags')?.value.toLowerCase() || '';
-    const categoryFilter = document.getElementById('category-filter')?.value || '';
     
     let filteredTags = this.allTags;
     
@@ -292,10 +290,6 @@ class AdminApp {
         tag.name.toLowerCase().includes(searchTerm) ||
         (tag.description && tag.description.toLowerCase().includes(searchTerm))
       );
-    }
-    
-    if (categoryFilter) {
-      filteredTags = filteredTags.filter(tag => tag.category === categoryFilter);
     }
     
     this.renderTags(filteredTags);
@@ -318,17 +312,7 @@ class AdminApp {
       const card = cardTemplate.content.cloneNode(true);
       const cardElement = card.querySelector('.tag-card');
       
-      const colorDiv = card.querySelector('.tag-color');
-      colorDiv.style.backgroundColor = tag.color;
-      
       card.querySelector('.tag-name').textContent = tag.name;
-      
-      const categorySpan = card.querySelector('.tag-category');
-      if (tag.category) {
-        categorySpan.textContent = tag.category;
-      } else {
-        categorySpan.remove();
-      }
       
       const usageBadge = card.querySelector('.tag-usage-badge');
       card.querySelector('.usage-count').textContent = tag.usageCount;
@@ -345,16 +329,6 @@ class AdminApp {
       // Set up action buttons
       const actionsDiv = card.querySelector('.tag-actions');
       card.querySelector('[data-action="edit-tag"]').dataset.id = tag.id;
-      
-      if (tag.usageCount === 0) {
-        actionsDiv.appendChild(this.createButton('btn btn-sm btn-danger', 'Supprimer', 'fa-trash', () => this.deleteTag(tag.id)));
-      } else {
-        actionsDiv.appendChild(this.createButton('btn btn-sm btn-warning', 'Désactiver', 'fa-eye-slash', () => this.deactivateTag(tag.id)));
-      }
-      
-      if (tag.usageCount > 0) {
-        actionsDiv.appendChild(this.createButton('btn btn-sm btn-info', 'Voir les questions', 'fa-list', () => this.viewTagQuestions(tag.id)));
-      }
       
       grid.appendChild(card);
     });
@@ -564,8 +538,6 @@ class AdminApp {
     
     const tagData = {
       name: formData.get('name'),
-      category: formData.get('category') || null,
-      color: formData.get('color') || '#3498db',
       description: formData.get('description') || null
     };
     
@@ -664,9 +636,6 @@ class AdminApp {
       document.getElementById('tag-modal-title').textContent = 'Modifier le Tag';
       
       document.getElementById('tag-name').value = tag.name || '';
-      document.getElementById('tag-category').value = tag.category || '';
-      const colorInput = document.querySelector('#tag-form input[name="color"]');
-      if (colorInput) colorInput.value = tag.color || '#3498db';
       const descriptionInput = document.querySelector('#tag-form textarea[name="description"]');
       if (descriptionInput) descriptionInput.value = tag.description || '';
       
@@ -679,17 +648,7 @@ class AdminApp {
     }
   }
 
-  async deactivateTag(id) {
-    if (!confirm('Êtes-vous sûr de vouloir désactiver ce tag?')) return;
-    
-    try {
-      await this.apiRequest(`/tags/${id}/deactivate`, 'PATCH');
-      this.showToast('Tag désactivé', 'success');
-      this.loadTags();
-    } catch (error) {
-      this.showToast('Erreur lors de la désactivation', 'error');
-    }
-  }
+
 
   async apiRequest(endpoint, method = 'GET', data = null) {
     const url = `${this.apiBase}${endpoint}`;
@@ -861,7 +820,6 @@ class AdminApp {
         formatted += `${source.authors.join(', ')}. `;
       }
       
-      // Make title clickable if there's a URL
       if (source.url) {
         formatted += `<em><a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">${source.title}</a></em>`;
       } else {
