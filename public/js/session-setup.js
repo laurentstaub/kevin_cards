@@ -1,83 +1,82 @@
 // Session Setup Management
-class SessionSetup {
-    constructor() {
-        this.selectedMode = 'quick';
-        this.selectedCount = 10;
-        this.selectedDifficulty = 'mixed';
-        this.selectedTags = [];
-        this.availableTags = [];
-        this.availableQuestions = 0;
-        
-        this.initializeEventListeners();
-        this.loadInitialData();
-    }
+const SessionSetup = (function() {
 
-    async loadInitialData() {
+    // --- Private State ---
+    let selectedMode = 'quick';
+    let selectedCount = 10;
+    let selectedDifficulty = 'mixed';
+    let selectedTags = [];
+    let availableTags = [];
+    let availableQuestions = 0;
+    let tagsByPriority = {};
+
+    // --- Private Methods ---
+
+    const loadInitialData = async function() {
         try {
             // Load available tags with priority ordering
             const tagsResponse = await fetch('/api/tags?priorityOrder=true');
             const tagsData = await tagsResponse.json();
-            this.availableTags = tagsData.tags || [];
+            availableTags = tagsData.tags || [];
             
             // Classify tags by priority for better organization
-            this.tagsByPriority = this.classifyTagsByPriority(this.availableTags);
+            tagsByPriority = classifyTagsByPriority(availableTags);
             
             // Load question count for preview
-            await this.updateQuestionCount();
+            await updateQuestionCount();
             
             // Populate tag filters if in focused mode
-            if (this.selectedMode === 'focused') {
-                this.populateTagFilters();
+            if (selectedMode === 'focused') {
+                populateTagFilters();
             }
         } catch (error) {
             console.error('Failed to load initial data:', error);
         }
-    }
+    };
 
-    classifyTagsByPriority(tags) {
+    const classifyTagsByPriority = function(tags) {
         return {
             primary: tags.filter(t => t.usageCount >= 20),
             secondary: tags.filter(t => t.usageCount >= 10 && t.usageCount < 20),
             minor: tags.filter(t => t.usageCount >= 5 && t.usageCount < 10),
             rare: tags.filter(t => t.usageCount >= 1 && t.usageCount < 5)
         };
-    }
+    };
 
-    initializeEventListeners() {
+    const initializeEventListeners = function() {
         // Study mode selection
         document.querySelectorAll('.study-mode').forEach(mode => {
             mode.addEventListener('click', () => {
-                this.selectStudyMode(mode.dataset.mode);
+                selectStudyMode(mode.dataset.mode);
             });
         });
 
         // Question count selection
         document.querySelectorAll('.count-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                this.selectQuestionCount(btn.dataset.count);
+                selectQuestionCount(btn.dataset.count);
             });
         });
 
         // Difficulty selection
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                this.selectDifficulty(btn.dataset.difficulty);
+                selectDifficulty(btn.dataset.difficulty);
             });
         });
 
         // Action buttons
         document.getElementById('startSessionTop').addEventListener('click', () => {
-            this.startSession();
+            startSession();
         });
-
 
         document.getElementById('backToSetup').addEventListener('click', () => {
-            this.showSetupScreen();
+            showSetupScreen();
         });
-    }
+    };
 
-    selectStudyMode(mode) {
-        this.selectedMode = mode;
+    const selectStudyMode = function(mode) {
+        selectedMode = mode;
         
         // Update UI
         document.querySelectorAll('.study-mode').forEach(elem => {
@@ -89,17 +88,17 @@ class SessionSetup {
         const tagFiltersSection = document.getElementById('tagFiltersSection');
         if (mode === 'focused') {
             tagFiltersSection.style.display = 'block';
-            this.populateTagFilters();
+            populateTagFilters();
         } else {
             tagFiltersSection.style.display = 'none';
-            this.selectedTags = [];
+            selectedTags = [];
         }
 
-        this.updateQuestionCount();
-    }
+        updateQuestionCount();
+    };
 
-    selectQuestionCount(count) {
-        this.selectedCount = count === 'all' ? 'all' : parseInt(count);
+    const selectQuestionCount = function(count) {
+        selectedCount = count === 'all' ? 'all' : parseInt(count);
         
         // Update UI
         document.querySelectorAll('.count-btn').forEach(btn => {
@@ -107,11 +106,11 @@ class SessionSetup {
         });
         document.querySelector(`.count-btn[data-count="${count}"]`).classList.add('active');
 
-        this.updatePreview();
-    }
+        updatePreview();
+    };
 
-    selectDifficulty(difficulty) {
-        this.selectedDifficulty = difficulty;
+    const selectDifficulty = function(difficulty) {
+        selectedDifficulty = difficulty;
         
         // Update UI
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
@@ -119,13 +118,13 @@ class SessionSetup {
         });
         document.querySelector(`.difficulty-btn[data-difficulty="${difficulty}"]`).classList.add('active');
 
-        this.updateQuestionCount();
-    }
+        updateQuestionCount();
+    };
 
-    async populateTagFilters() {
+    const populateTagFilters = async function() {
         const container = document.getElementById('setupTagCategories');
         
-        if (this.availableTags.length === 0) {
+        if (availableTags.length === 0) {
             container.innerHTML = `
                 <div class="loading-tags">
                     <i class="fas fa-spinner fa-spin"></i>
@@ -138,21 +137,21 @@ class SessionSetup {
         let html = '';
         
         // First show primary tags prominently
-        if (this.tagsByPriority.primary.length > 0) {
+        if (tagsByPriority.primary.length > 0) {
             html += `
                 <div class="tag-priority-section tag-section-primary">
                     <div class="priority-header">
                         <i class="fas fa-crown"></i>
                         <span>Domaines principaux</span>
-                        <small>(${this.tagsByPriority.primary.length} tags)</small>
+                        <small>(${tagsByPriority.primary.length} tags)</small>
                     </div>
                     <div class="priority-tags">
-                        ${this.tagsByPriority.primary.map(tag => `
+                        ${tagsByPriority.primary.map(tag => `
                             <div class="tag-checkbox tag-priority-primary">
                                 <input type="checkbox" 
                                        id="setup-tag-${tag.id}" 
                                        value="${tag.id}"
-                                       ${this.selectedTags.includes(tag.id) ? 'checked' : ''}>
+                                       ${selectedTags.includes(tag.id) ? 'checked' : ''}>
                                 <label class="tag-checkbox-label" for="setup-tag-${tag.id}">
                                     <span class="tag-name">${tag.name}</span>
                                     <span class="tag-count">${tag.usageCount}</span>
@@ -165,21 +164,20 @@ class SessionSetup {
         }
         
         // Then secondary tags
-        if (this.tagsByPriority.secondary.length > 0) {
+        if (tagsByPriority.secondary.length > 0) {
             html += `
                 <div class="tag-priority-section tag-section-secondary">
                     <div class="priority-header">
-                        <i class="fas fa-star"></i>
                         <span>Domaines secondaires</span>
-                        <small>(${this.tagsByPriority.secondary.length} tags)</small>
+                        <small>(${tagsByPriority.secondary.length} tags)</small>
                     </div>
                     <div class="priority-tags">
-                        ${this.tagsByPriority.secondary.map(tag => `
+                        ${tagsByPriority.secondary.map(tag => `
                             <div class="tag-checkbox tag-priority-secondary">
                                 <input type="checkbox" 
                                        id="setup-tag-${tag.id}" 
                                        value="${tag.id}"
-                                       ${this.selectedTags.includes(tag.id) ? 'checked' : ''}>
+                                       ${selectedTags.includes(tag.id) ? 'checked' : ''}>
                                 <label class="tag-checkbox-label" for="setup-tag-${tag.id}">
                                     <span class="tag-name">${tag.name}</span>
                                     <span class="tag-count">${tag.usageCount}</span>
@@ -192,22 +190,21 @@ class SessionSetup {
         }
         
         // Minor tags in a collapsible section
-        if (this.tagsByPriority.minor.length > 0) {
+        if (tagsByPriority.minor.length > 0) {
             html += `
                 <div class="tag-priority-section tag-section-minor">
                     <div class="priority-header collapsible" onclick="this.parentElement.classList.toggle('collapsed')">
-                        <i class="fas fa-tag"></i>
                         <span>Domaines spécialisés</span>
-                        <small>(${this.tagsByPriority.minor.length} tags)</small>
+                        <small>(${tagsByPriority.minor.length} tags)</small>
                         <i class="fas fa-chevron-down toggle-icon"></i>
                     </div>
                     <div class="priority-tags">
-                        ${this.tagsByPriority.minor.map(tag => `
+                        ${tagsByPriority.minor.map(tag => `
                             <div class="tag-checkbox tag-priority-minor">
                                 <input type="checkbox" 
                                        id="setup-tag-${tag.id}" 
                                        value="${tag.id}"
-                                       ${this.selectedTags.includes(tag.id) ? 'checked' : ''}>
+                                       ${selectedTags.includes(tag.id) ? 'checked' : ''}>
                                 <label class="tag-checkbox-label" for="setup-tag-${tag.id}">
                                     <span class="tag-name">${tag.name}</span>
                                     <span class="tag-count">${tag.usageCount}</span>
@@ -220,22 +217,21 @@ class SessionSetup {
         }
 
         // Rare tags in a collapsed section by default
-        if (this.tagsByPriority.rare.length > 0) {
+        if (tagsByPriority.rare.length > 0) {
             html += `
                 <div class="tag-priority-section tag-section-rare collapsed">
                     <div class="priority-header collapsible" onclick="this.parentElement.classList.toggle('collapsed')">
-                        <i class="fas fa-dot-circle"></i>
                         <span>Domaines rares</span>
-                        <small>(${this.tagsByPriority.rare.length} tags)</small>
+                        <small>(${tagsByPriority.rare.length} tags)</small>
                         <i class="fas fa-chevron-down toggle-icon"></i>
                     </div>
                     <div class="priority-tags">
-                        ${this.tagsByPriority.rare.map(tag => `
+                        ${tagsByPriority.rare.map(tag => `
                             <div class="tag-checkbox tag-priority-rare">
                                 <input type="checkbox" 
                                        id="setup-tag-${tag.id}" 
                                        value="${tag.id}"
-                                       ${this.selectedTags.includes(tag.id) ? 'checked' : ''}>
+                                       ${selectedTags.includes(tag.id) ? 'checked' : ''}>
                                 <label class="tag-checkbox-label" for="setup-tag-${tag.id}">
                                     <span class="tag-name">${tag.name}</span>
                                     <span class="tag-count">${tag.usageCount}</span>
@@ -254,46 +250,46 @@ class SessionSetup {
             checkbox.addEventListener('change', (e) => {
                 const tagId = parseInt(e.target.value);
                 if (e.target.checked) {
-                    if (!this.selectedTags.includes(tagId)) {
-                        this.selectedTags.push(tagId);
+                    if (!selectedTags.includes(tagId)) {
+                        selectedTags.push(tagId);
                     }
                 } else {
-                    this.selectedTags = this.selectedTags.filter(id => id !== tagId);
+                    selectedTags = selectedTags.filter(id => id !== tagId);
                 }
-                this.updateSelectedFilters();
-                this.updateQuestionCount();
+                updateSelectedFilters();
+                updateQuestionCount();
             });
         });
 
-        this.updateSelectedFilters();
-    }
+        updateSelectedFilters();
+    };
 
-    updateSelectedFilters() {
+    const updateSelectedFilters = function() {
         const container = document.getElementById('setupSelectedFilters');
         
-        if (this.selectedTags.length === 0) {
+        if (selectedTags.length === 0) {
             container.innerHTML = '';
             return;
         }
 
-        const selectedTagObjects = this.availableTags.filter(tag => 
-            this.selectedTags.includes(tag.id)
+        const selectedTagObjects = availableTags.filter(tag => 
+            selectedTags.includes(tag.id)
         );
 
         const html = selectedTagObjects.map(tag => `
             <div class="selected-filter">
                 ${tag.name}
-                <button onclick="sessionSetup.removeTag(${tag.id})" aria-label="Remove ${tag.name}">
+                <button onclick="SessionSetup.removeTag(${tag.id})" aria-label="Remove ${tag.name}">
                     ×
                 </button>
             </div>
         `).join('');
 
         container.innerHTML = html;
-    }
+    };
 
-    removeTag(tagId) {
-        this.selectedTags = this.selectedTags.filter(id => id !== tagId);
+    const removeTag = function(tagId) {
+        selectedTags = selectedTags.filter(id => id !== tagId);
         
         // Update checkbox
         const checkbox = document.getElementById(`setup-tag-${tagId}`);
@@ -301,21 +297,21 @@ class SessionSetup {
             checkbox.checked = false;
         }
         
-        this.updateSelectedFilters();
-        this.updateQuestionCount();
-    }
+        updateSelectedFilters();
+        updateQuestionCount();
+    };
 
-    async updateQuestionCount() {
+    const updateQuestionCount = async function() {
         try {
             // Build query parameters
             const params = new URLSearchParams();
             
-            if (this.selectedMode === 'focused' && this.selectedTags.length > 0) {
-                params.set('tags', this.selectedTags.join(','));
+            if (selectedMode === 'focused' && selectedTags.length > 0) {
+                params.set('tags', selectedTags.join(','));
             }
             
-            if (this.selectedDifficulty !== 'mixed') {
-                params.set('difficulty', this.selectedDifficulty);
+            if (selectedDifficulty !== 'mixed') {
+                params.set('difficulty', selectedDifficulty);
             }
 
             // Get question count without limit
@@ -324,102 +320,102 @@ class SessionSetup {
             const response = await fetch(`/api/questions/published?${params}`);
             const data = await response.json();
             
-            this.availableQuestions = data.metadata?.total_cards || data.flashcards?.length || 0;
-            this.updatePreview();
+            availableQuestions = data.metadata?.total_cards || data.flashcards?.length || 0;
+            updatePreview();
             
         } catch (error) {
             console.error('Failed to update question count:', error);
-            this.availableQuestions = 0;
-            this.updatePreview();
+            availableQuestions = 0;
+            updatePreview();
         }
-    }
+    };
 
-    updatePreview() {
+    const updatePreview = function() {
         const availableElement = document.getElementById('availableQuestions');
         const selectedElement = document.getElementById('selectedCount');
         
         if (availableElement) {
-            availableElement.textContent = this.availableQuestions;
+            availableElement.textContent = availableQuestions;
         }
         
         if (selectedElement) {
-            const selectedCount = this.selectedCount === 'all' ? 
-                this.availableQuestions : 
-                Math.min(this.selectedCount, this.availableQuestions);
-            selectedElement.textContent = selectedCount;
+            const selectedCountValue = selectedCount === 'all' ? 
+                availableQuestions : 
+                Math.min(selectedCount, availableQuestions);
+            selectedElement.textContent = selectedCountValue;
         }
         
         // Update sticky header count
-        this.updateStickyQuestionCount();
-    }
+        updateStickyQuestionCount();
+    };
     
-    updateStickyQuestionCount() {
+    const updateStickyQuestionCount = function() {
         const stickyCountElement = document.getElementById('stickyQuestionCount');
         if (!stickyCountElement) return;
         
-        const selectedCount = this.selectedCount === 'all' ? 'toutes les' : this.selectedCount;
-        const availableCount = this.availableQuestions;
+        const selectedCountValue = selectedCount === 'all' ? 'toutes les' : selectedCount;
+        const availableCount = availableQuestions;
         
-        if (this.selectedTags.length === 0) {
+        if (selectedTags.length === 0) {
             // No tags selected - show selected vs total available
-            if (typeof selectedCount === 'number') {
-                stickyCountElement.textContent = `${Math.min(selectedCount, availableCount)} questions sélectionnées sur ${availableCount} disponibles`;
+            if (typeof selectedCountValue === 'number') {
+                stickyCountElement.textContent = `${Math.min(selectedCountValue, availableCount)} questions sélectionnées sur ${availableCount} disponibles`;
             } else {
-                stickyCountElement.textContent = `${selectedCount} questions sélectionnées sur ${availableCount} disponibles`;
+                stickyCountElement.textContent = `${selectedCountValue} questions sélectionnées sur ${availableCount} disponibles`;
             }
         } else {
             // Tags selected - show selected vs filtered available
             if (availableCount === 0) {
                 stickyCountElement.textContent = 'Aucune question trouvée avec ces tags';
             } else {
-                if (typeof selectedCount === 'number') {
-                    stickyCountElement.textContent = `${Math.min(selectedCount, availableCount)} questions sélectionnées sur ${availableCount} disponibles`;
+                if (typeof selectedCountValue === 'number') {
+                    stickyCountElement.textContent = `${Math.min(selectedCountValue, availableCount)} questions sélectionnées sur ${availableCount} disponibles`;
                 } else {
-                    stickyCountElement.textContent = `${selectedCount} questions sélectionnées sur ${availableCount} disponibles`;
+                    stickyCountElement.textContent = `${selectedCountValue} questions sélectionnées sur ${availableCount} disponibles`;
                 }
             }
         }
-    }
+    };
 
-    async startSession() {
+    const startSession = async function() {
         // Validate selection
-        if (this.availableQuestions === 0) {
+        if (availableQuestions === 0) {
             alert('Aucune question disponible avec ces critères.');
             return;
         }
 
-        if (this.selectedMode === 'focused' && this.selectedTags.length === 0) {
+        if (selectedMode === 'focused' && selectedTags.length === 0) {
             alert('Veuillez sélectionner au moins un domaine pour l\'étude ciblée.');
             return;
         }
 
         try {
             // Save session configuration
-            this.saveSessionConfiguration();
+            saveSessionConfiguration();
 
             // Hide setup screen, show study interface
-            this.showStudyInterface();
+            showStudyInterface();
 
             // Load questions for the session
-            await this.loadSessionQuestions();
+            await loadSessionQuestions();
 
         } catch (error) {
             console.error('Failed to start session:', error);
             alert('Erreur lors du démarrage de la session. Veuillez réessayer.');
         }
-    }
+    };
 
-    async loadSessionQuestions() {
+    const loadSessionQuestions = async function() {
         try {
             // Build query parameters based on selected criteria
             const params = new URLSearchParams();
             
-            if (this.selectedMode === 'focused' && this.selectedTags.length > 0) {
-                params.set('tags', this.selectedTags.join(','));
+            if (selectedMode === 'focused' && selectedTags.length > 0) {
+                params.set('tags', selectedTags.join(','));
             }
             
-            if (this.selectedDifficulty !== 'mixed') {
-                params.set('difficulty', this.selectedDifficulty);
+            if (selectedDifficulty !== 'mixed') {
+                params.set('difficulty', selectedDifficulty);
             }
 
             // Set high limit to get all matching questions
@@ -439,22 +435,22 @@ class SessionSetup {
                 question: card.question, // Already rendered HTML from published endpoint
                 answer: card.answer,     // Already rendered HTML from published endpoint
                 difficulty: card.difficulty || 'medium',
-                source: this.extractSource(card.sources)
+                source: extractSource(card.sources)
             }));
 
             // Shuffle and select questions
-            const shuffledQuestions = this.shuffleArray(questions);
-            const selectedQuestions = this.selectedCount === 'all' ? 
+            const shuffledQuestions = shuffleArray(questions);
+            const selectedQuestions = selectedCount === 'all' ? 
                 shuffledQuestions : 
-                shuffledQuestions.slice(0, this.selectedCount);
+                shuffledQuestions.slice(0, selectedCount);
 
             // Store session configuration and questions for repeat/similar functionality
             if (window.currentSession) {
                 window.currentSession.config = {
-                    mode: this.selectedMode,
-                    count: this.selectedCount,
-                    difficulty: this.selectedDifficulty,
-                    tags: this.selectedTags
+                    mode: selectedMode,
+                    count: selectedCount,
+                    difficulty: selectedDifficulty,
+                    tags: selectedTags
                 };
                 window.currentSession.questions = selectedQuestions;
             }
@@ -467,37 +463,50 @@ class SessionSetup {
         } catch (error) {
             console.error('Failed to load session questions:', error);
             alert('Erreur lors du chargement des questions. Retour à la configuration.');
-            this.showSetupScreen();
+            showSetupScreen();
         }
-    }
+    };
 
-    shuffleArray(array) {
+    const shuffleArray = function(array) {
         const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
         return shuffled;
-    }
+    };
 
-    showStudyInterface() {
+    const showStudyInterface = function() {
         document.getElementById('sessionSetup').style.display = 'none';
         document.getElementById('studyInterface').style.display = 'block';
         
         // Update session header info
-        const modeDisplay = this.getStudyModeDisplay();
-        const filtersDisplay = this.getFiltersDisplay();
+        const modeDisplay = getStudyModeDisplay();
+        const filtersDisplay = getFiltersDisplay();
         
         document.getElementById('sessionMode').textContent = modeDisplay;
         document.getElementById('sessionFilters').textContent = filtersDisplay;
-    }
+        
+        // Show loading state in flashcard
+        const questionElement = document.getElementById('question');
+        if (questionElement) {
+            questionElement.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <p>Chargement des questions...</p>
+                </div>
+            `;
+        }
+    };
 
-    showSetupScreen() {
+    const showSetupScreen = function() {
         document.getElementById('sessionSetup').style.display = 'flex';
         document.getElementById('studyInterface').style.display = 'none';
         
         // Reset session state when going back to setup
-        this.resetSessionState();
+        resetSessionState();
         
         // Force a re-layout to ensure proper centering
         setTimeout(() => {
@@ -508,9 +517,9 @@ class SessionSetup {
                 setupPanel.offsetHeight;
             }
         }, 50);
-    }
+    };
     
-    resetSessionState() {
+    const resetSessionState = function() {
         // Reset flashcard app state variables
         if (window.flashcardApp && window.flashcardApp.resetQuestions) {
             window.flashcardApp.resetQuestions();
@@ -544,23 +553,23 @@ class SessionSetup {
         if (recalledBtn) recalledBtn.style.display = 'flex';
         if (notKnownBtn) notKnownBtn.disabled = false;
         if (recalledBtn) recalledBtn.disabled = false;
-    }
+    };
 
-    getStudyModeDisplay() {
+    const getStudyModeDisplay = function() {
         const modes = {
             'quick': 'Étude rapide',
             'focused': 'Étude ciblée',
             'review': 'Révision'
         };
-        return modes[this.selectedMode] || 'Étude rapide';
-    }
+        return modes[selectedMode] || 'Étude rapide';
+    };
 
-    getFiltersDisplay() {
+    const getFiltersDisplay = function() {
         const parts = [];
         
-        if (this.selectedMode === 'focused' && this.selectedTags.length > 0) {
-            const tagNames = this.availableTags
-                .filter(tag => this.selectedTags.includes(tag.id))
+        if (selectedMode === 'focused' && selectedTags.length > 0) {
+            const tagNames = availableTags
+                .filter(tag => selectedTags.includes(tag.id))
                 .map(tag => tag.name);
             parts.push(tagNames.slice(0, 2).join(', '));
             if (tagNames.length > 2) {
@@ -570,19 +579,19 @@ class SessionSetup {
             parts.push('Toutes les questions');
         }
         
-        if (this.selectedDifficulty !== 'mixed') {
+        if (selectedDifficulty !== 'mixed') {
             const difficulties = {
                 'easy': 'Facile',
                 'medium': 'Moyen',
                 'hard': 'Difficile'
             };
-            parts.push(difficulties[this.selectedDifficulty]);
+            parts.push(difficulties[selectedDifficulty]);
         }
         
         return parts.join(' • ');
-    }
+    };
 
-    getCategoryDisplayName(category) {
+    const getCategoryDisplayName = function(category) {
         const categoryNames = {
             'therapeutic_area': 'Domaines thérapeutiques',
             'drug_class': 'Classes médicamenteuses',
@@ -591,20 +600,20 @@ class SessionSetup {
             'other': 'Autres'
         };
         return categoryNames[category] || category;
-    }
+    };
 
-    saveSessionConfiguration() {
+    const saveSessionConfiguration = function() {
         const config = {
-            mode: this.selectedMode,
-            count: this.selectedCount,
-            difficulty: this.selectedDifficulty,
-            tags: this.selectedTags,
+            mode: selectedMode,
+            count: selectedCount,
+            difficulty: selectedDifficulty,
+            tags: selectedTags,
             timestamp: Date.now()
         };
         localStorage.setItem('lastSessionConfig', JSON.stringify(config));
-    }
+    };
 
-    extractSource(sources) {
+    const extractSource = function(sources) {
         if (!sources || sources.length === 0) {
             return 'Pharmacologie générale';
         }
@@ -617,15 +626,32 @@ class SessionSetup {
         
         // If there's only one source, return as single object, otherwise return as array
         return sourceObjects.length === 1 ? sourceObjects[0] : sourceObjects;
-    }
+    };
 
-}
+    // --- Initialization ---
+    const init = function() {
+        initializeEventListeners();
+        loadInitialData();
+    };
+
+    // --- Public API ---
+    return {
+        removeTag,
+        showSetupScreen,
+        startSession,
+        init
+    };
+
+})();
 
 // Initialize when DOM is loaded
 let sessionSetup;
 document.addEventListener('DOMContentLoaded', () => {
-    sessionSetup = new SessionSetup();
+    sessionSetup = SessionSetup;
+    sessionSetup.init();
 });
 
 // Export for global access
-window.sessionSetup = sessionSetup;
+if (typeof window !== 'undefined') {
+    window.sessionSetup = SessionSetup;
+}

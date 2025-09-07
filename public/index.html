@@ -34,7 +34,7 @@
             <div class="setup-header">
                 <div class="setup-header-content">
                     <div class="header-left">
-                        <h2><i class="fas fa-play-circle"></i>Configurez votre session</h2>
+                        <h2>Configurez votre session</h2>
                         <div class="question-count-sticky" id="questionCountSticky">
                             <span id="stickyQuestionCount">Chargement...</span>
                         </div>
@@ -373,8 +373,20 @@
     <p>2025 - FlashPharma - Flashcards pour Pharmaciens... et tous ceux que la pharmacie intéresse</p>
 </footer>
 
+<!-- Core modules (load first) -->
+<script src="js/modules/ui-helpers.js"></script>
+<script src="js/modules/api-client.js"></script>
+    
+<!-- Feature modules -->
+<script src="js/modules/flashcard-module.js"></script>
+<script src="js/modules/filter-module.js"></script>
+<script src="js/modules/stats-module.js"></script>
+    
+<!-- Existing modules -->
 <script src="js/progress.js"></script>
 <script src="js/session-setup.js"></script>
-<script type="module" src="js/scripts.js"></script>
+    
+<!-- Main orchestrator (load last) -->
+<script src="js/scripts.js"></script>
 </body>
 </html>

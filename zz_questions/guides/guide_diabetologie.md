@@ -23,17 +23,19 @@ Le diabète affecte [537 millions d'adultes dans le monde (10,5% de la populatio
 
 ## Rappels physiologiques essentiels
 
-L'homéostasie glucidique repose sur l'équilibre entre production hépatique de glucose (néoglucogenèse et glycogénolyse) et utilisation périphérique, orchestrée principalement par l'insuline sécrétée par les cellules β pancréatiques. L'insuline : 
+L'homéostasie glucidique repose sur l'équilibre entre production hépatique de glucose (néoglucogenèse et glycogénolyse) et utilisation périphérique, orchestrée principalement par l'insuline sécrétée par les cellules β pancréatiques. L'**insuline** : 
 
-* facilite la captation cellulaire du glucose via les transporteurs GLUT4 dans le muscle et le tissu adipeux
+* **facilite la captation cellulaire du glucose via les transporteurs GLUT4** dans le muscle et le tissu adipeux
 
-* inhibe la production hépatique de glucose et stimule la synthèse de glycogène
+* **inhibe la production hépatique de glucose** et stimule la synthèse de glycogène
 
-Le système incrétine, notamment le GLP-1 intestinal, module la sécrétion insulinique de manière glucose-dépendante tout en ralentissant la vidange gastrique et procurant un effet de satiété. Dans le diabète de type 2, la résistance à l'insuline précède l'épuisement progressif des cellules β, créant un déficit relatif puis absolu nécessitant une intervention thérapeutique graduée.
+Le système incrétine, notamment le **GLP-1 intestinal, module la sécrétion insulinique** de manière glucose-dépendante tout en ralentissant la vidange gastrique et procurant un effet de satiété. Dans le diabète de type 2, la résistance à l'insuline précède l'épuisement progressif des cellules β, créant un déficit relatif puis absolu nécessitant une intervention thérapeutique graduée.
 
 ## Stratégies thérapeutiques par classes médicamenteuses
 
-Les insulines visent à restaurer l'insulinémie physiologique par substitution, avec des formulations ultra-rapides pour couvrir les repas et des analogues lents pour la sécrétion basale continue. Les antidiabétiques oraux ciblent différents mécanismes physiopathologiques : 
+Les **insulines** visent à restaurer l'insulinémie physiologique par substitution, avec des formulations ultra-rapides pour couvrir les repas et des analogues lents pour la sécrétion basale continue. 
+
+Les antidiabétiques oraux ciblent différents mécanismes physiopathologiques : 
 
 * la **metformine** réduit la production hépatique de glucose via l'activation de l'AMPK
 * les **inhibiteurs de SGLT2** induisent une glycosurie avec bénéfices cardiovasculaires et rénaux démontrés
@@ -44,25 +46,25 @@ Les médicaments antidiabétiques ont évolué vers une approche personnalisée 
 
 ## Les insulines modernes transforment la gestion du diabète
 
-L'arsenal thérapeutique insulinique s'est considérablement enrichi avec des formulations optimisées pour mieux mimer la physiologie. Les **insulines ultra-rapides** comme Fiasp (insuline aspart avec niacinamide) et Lyumjev (insuline lispro-aabc) révolutionnent la flexibilité thérapeutique avec une apparition dans le sang en quelques minutes et un pic d'action dès 15-20 minutes. Cette rapidité permet une administration 2 minutes avant les repas, contre 15-20 minutes pour les insulines rapides classiques.
+L'arsenal thérapeutique insulinique s'est considérablement enrichi avec des formulations optimisées pour mieux mimer la physiologie. Les **insulines ultra-rapides** comme Fiasp (insuline aspart avec niacinamide) et Lyumjev (insuline lispro-aabc) révolutionnent la flexibilité thérapeutique avec une apparition dans le sang en quelques minutes et un *pic d'action dès 15-20 minutes*. Cette rapidité permet une administration 2 minutes avant les repas, contre 15-20 minutes pour les insulines rapides classiques.
 
-Les insulines rapides traditionnelles - Humalog (lispro), NovoLog (aspart) et Apidra (glulisine) - maintiennent leur place avec un début d'action en 5-15 minutes, un pic entre 30-90 minutes et une durée d'action de 3 à 5 heures. Les modifications d'acides aminés réduisant la formation d'hexamères expliquent leur absorption accélérée par rapport aux insulines régulières (Humulin R, Novolin R) qui nécessitent 30-60 minutes pour agir.
+Les **insulines rapides traditionnelles - Humalog (lispro), NovoLog (aspart) et Apidra (glulisine)** - maintiennent leur place avec un *début d'action en 5-15 minutes, un pic entre 30-90 minutes* et une durée d'action de 3 à 5 heures. Les modifications d'acides aminés réduisant la formation d'hexamères expliquent leur absorption accélérée par rapport aux insulines régulières (Humulin R, Novolin R) qui nécessitent 30-60 minutes pour agir.
 
-Pour la couverture basale, les analogues lents ont largement supplanté la NPH. **Tresiba (degludec)** se distingue par sa demi-vie exceptionnelle de 25 heures permettant une flexibilité horaire d'administration unique. Toujeo (glargine U-300) offre une durée supérieure à 24 heures avec un risque d'hypoglycémie nocturne réduit, nécessitant toutefois une augmentation de dose de 10-18% par rapport à la glargine U-100 (Lantus). Levemir (detemir), grâce à sa liaison à l'albumine via une chaîne d'acide gras, présente l'avantage d'une moindre prise pondérale.
+Pour la couverture basale, les analogues lents ont largement supplanté la NPH. **Tresiba (degludec)** se distingue par *sa demi-vie exceptionnelle de 25 heures* permettant une flexibilité horaire d'administration unique. **Toujeo (glargine U-300)** offre une *durée supérieure à 24 heures* avec un risque d'hypoglycémie nocturne réduit, nécessitant toutefois une augmentation de dose de 10-18% par rapport à la **glargine U-100 (Lantus)**. **Levemir (detemir)**, grâce à sa liaison à l'albumine via une chaîne d'acide gras, présente l'avantage d'une moindre prise pondérale.
 
 ## Les antidiabétiques oraux privilégient désormais les bénéfices cardiovasculaires
 
-La metformine reste le traitement de première ligne avec un mécanisme d'action principal via l'activation de l'AMPK hépatique réduisant la néoglucogenèse. Les posologies s'échelonnent de 500 mg à 2550 mg par jour pour la forme immédiate et jusqu'à 2000 mg pour la forme retard. [**Le risque d'acidose lactique reste extrêmement faible** (2,4-15 cas pour 100 000 patients-années)](https://doi.org/10.1136/bmj.m4573) mais contre-indique son usage si le DFG est inférieur à 30 mL/min/1,73m².
+La **metformine reste le traitement de première ligne** avec un mécanisme d'action principal via l'activation de l'AMPK hépatique réduisant la néoglucogenèse. Les posologies s'échelonnent de *500 mg à 3000 mg par jour* pour la forme immédiate et jusqu'à 2000 mg pour la forme retard, à adapter en fonction de la fonction rénale. [**Le risque d'acidose lactique reste extrêmement faible** (2,4-15 cas pour 100 000 patients-années)](https://doi.org/10.1136/bmj.m4573) mais contre-indique son usage si le DFG est inférieur à 30 mL/min/1,73m².
 
-Les inhibiteurs de SGLT2 - empagliflozine (Jardiance), dapagliflozine (Farxiga), canagliflozine (Invokana) - ont démontré des bénéfices cardiovasculaires majeurs. [L'étude EMPA-REG a montré une **réduction de 38% de la mortalité cardiovasculaire** avec l'empagliflozine](https://doi.org/10.1056/NEJMoa1504720). Ces molécules agissent en bloquant la réabsorption tubulaire proximale du glucose, induisant une glycosurie et une diurèse osmotique. Les infections mycosiques génitales (risque multiplié par 3-6) et l'acidocétose diabétique rare mais grave constituent les principaux effets secondaires à surveiller.
+Les **inhibiteurs de SGLT2 - empagliflozine (Jardiance), dapagliflozine (Farxiga), canagliflozine (Invokana)** - ont démontré des bénéfices cardiovasculaires majeurs. [L'étude EMPA-REG a montré une **réduction de 38% de la mortalité cardiovasculaire** avec l'empagliflozine](https://doi.org/10.1056/NEJMoa1504720). Ces molécules agissent en *bloquant la réabsorption tubulaire proximale du glucose*, induisant une glycosurie et une diurèse osmotique. Les infections mycosiques génitales (risque multiplié par 3-6) et l'acidocétose diabétique rare mais grave constituent les principaux effets secondaires à surveiller.
 
-Les inhibiteurs de DPP-4 (sitagliptine, saxagliptine, linagliptine, alogliptine) offrent une efficacité modeste avec une réduction d'HbA1c de 0,5-0,8% en monothérapie. Leur neutralité pondérale et le faible risque hypoglycémique les positionnent en deuxième ligne, malgré un coût élevé. La linagliptine présente l'avantage de ne pas nécessiter d'ajustement rénal.
+Les **inhibiteurs de DPP-4 (sitagliptine, saxagliptine, linagliptine, alogliptine)** offrent une efficacité modeste avec une réduction d'HbA1c de 0,5-0,8% en monothérapie. Leur neutralité pondérale et le faible risque hypoglycémique les positionnent *en deuxième ligne, malgré un coût élevé*. La linagliptine présente l'avantage de ne pas nécessiter d'ajustement rénal.
 
-Les sulfamides hypoglycémiants (glimépiride, glipizide, glibenclamide) conservent une place limitée en raison du **risque hypoglycémique et de la prise pondérale** (3-5 kg en moyenne). [Le glibenclamide doit être évité chez le sujet âgé selon les critères de Beers](https://agsjournals.onlinelibrary.wiley.com/toc/15325415/2023/71/7).
+Les **sulfamides hypoglycémiants (glimépiride, glipizide, glibenclamide)** conservent une place limitée en raison du **risque hypoglycémique et de la prise pondérale** (3-5 kg en moyenne). [Le glibenclamide doit être évité chez le sujet âgé selon les critères de Beers](https://agsjournals.onlinelibrary.wiley.com/toc/15325415/2023/71/7).
 
 ## Les agonistes du GLP-1 révolutionnent la prise en charge avec une perte pondérale significative
 
-Les agonistes du récepteur GLP-1, bien qu'injectables, sont désormais préférés à l'insuline selon les [recommandations ADA 2024](https://diabetesjournals.org/care/issue/48/Supplement_1). [Le sémaglutide hebdomadaire (Ozempic) peut induire une **perte pondérale de 12-15%** à la dose de 2,4 mg (Wegovy pour l'obésité)](https://doi.org/10.1016/S2213-8587(19)30249-9). Le liraglutide quotidien (Victoza), le dulaglutide hebdomadaire (Trulicity) et l'exénatide retard (Bydureon) complètent l'arsenal. Les effets gastro-intestinaux dose-limitants (nausées chez 20-40% des patients) nécessitent une titration progressive. L'arrêt une semaine avant une chirurgie est recommandé en raison du ralentissement de la vidange gastrique.
+Les **agonistes du récepteur GLP-1**, bien qu'injectables, sont désormais préférés à l'insuline selon les [recommandations ADA 2024](https://diabetesjournals.org/care/issue/48/Supplement_1). [Le **sémaglutide hebdomadaire (Ozempic)** peut induire une **perte pondérale de 12-15%** à la *dose de 2,4 mg (Wegovy pour l'obésité)*](https://doi.org/10.1016/S2213-8587(19)30249-9). Le **liraglutide quotidien (Victoza)**, le **dulaglutide hebdomadaire (Trulicity)** et **l'exénatide retard (Bydureon)** complètent l'arsenal. Les effets gastro-intestinaux dose-limitants (nausées chez 20-40% des patients) nécessitent une titration progressive. L'arrêt une semaine avant une chirurgie est recommandé en raison du ralentissement de la vidange gastrique.
 
 ---
 

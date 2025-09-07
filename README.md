@@ -110,3 +110,25 @@ The application requires two separate terminal sessions to run both the frontend
 - `npm run db:setup`: Sets up the database schema.
 - `npm run db:reset`: Drops the existing database, creates a new one, and runs the setup script.
 - `npm run load:db`: Runs a script to load questions into the database (see `load_questions_to_db.js`).
+
+# Documentation de l'API Questions
+
+## Points de terminaison (Endpoints)
+
+### `POST /api/questions/regenerate-html`
+
+Régénère le contenu HTML de toutes les questions existantes ou d'une sélection de questions à partir de leur source Markdown.
+
+**Objectif :** Cette route est principalement un outil de migration et de maintenance. Elle est conçue pour être utilisée après un changement dans le système de rendu Markdown ou pour remplir les champs HTML pour des données anciennement stockées sans ces champs.
+
+**Description :**
+Ce point de terminaison parcourt les questions dans la base de données et exécute la fonction `regenerateHtml` pour chacune d'elles. Cette fonction prend `questionText` et `answerText` (qui sont au format Markdown) et génère leur équivalent HTML, puis met à jour l'enregistrement de la question dans la base de données avec ce nouveau contenu.
+
+**Corps de la requête (Optionnel) :**
+
+Vous pouvez envoyer un corps JSON pour spécifier quelles questions régénérer.
+
+*   `questionIds` (Array[Number], optionnel) : Une liste d'IDs de questions spécifiques à régénérer. Si ce champ est omis ou est un tableau vide, **toutes les questions** de la base de données seront régénérées.
+
+**Exemple de corps de requête (pour des questions spécifiques) :**
+

@@ -563,12 +563,123 @@ select:focus {
   flex-wrap: wrap;
 }
 
-/* Tags Grid */
-.tags-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-  padding: 2rem;
+/* Tags List */
+.tags-list {
+  padding: 1rem;
+}
+
+.tag-list-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.tag-list-item:hover {
+  background: var(--bg-secondary);
+}
+
+.tag-list-item:last-child {
+  border-bottom: none;
+}
+
+.tag-name-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.tag-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.tag-name-input {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border: 2px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  width: 100%;
+  max-width: 300px;
+}
+
+.tag-name-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.tag-usage-section {
+  display: flex;
+  align-items: center;
+  min-width: 60px;
+  justify-content: center;
+}
+
+.usage-count {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0.25rem 0.75rem;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.tag-actions-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 100px;
+  justify-content: flex-end;
+}
+
+.btn-edit-tag,
+.btn-save-tag,
+.btn-cancel-tag {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.btn-edit-tag:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--primary-color);
+}
+
+.btn-save-tag {
+  border-color: var(--success-color);
+  color: var(--success-color);
+}
+
+.btn-save-tag:hover {
+  background: var(--success-color);
+  color: white;
+}
+
+.btn-cancel-tag {
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+
+.btn-cancel-tag:hover {
+  background: var(--danger-color);
+  color: white;
 }
 
 .tag-card {

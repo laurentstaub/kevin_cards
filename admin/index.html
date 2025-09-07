@@ -83,6 +83,11 @@
                         <i class="fas fa-search"></i>
                         <input type="text" id="search-tags" placeholder="Rechercher des tags...">
                     </div>
+                    <select id="tags-sort">
+                        <option value="usage">Trier par usage</option>
+                        <option value="name">Trier par nom</option>
+                        <option value="date">Trier par date</option>
+                    </select>
                     <button class="btn btn-primary" data-action="new-tag">
                         <i class="fas fa-plus"></i>
                         Nouveau Tag
@@ -91,7 +96,7 @@
             </div>
 
             <div class="content-area">
-                <div class="tags-grid" id="tags-grid">
+                <div class="tags-list" id="tags-list">
                     <div class="loading">
                         <i class="fas fa-spinner fa-spin"></i>
                         Chargement des tags...
@@ -194,41 +199,7 @@
         </div>
     </div>
 
-    <!-- Tag Editor Modal -->
-    <div class="modal-overlay" id="tag-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="tag-modal-title">Nouveau Tag</h2>
-                <button class="modal-close" data-action="close-tag-modal">&times;</button>
-            </div>
 
-            <form id="tag-form" class="modal-body">
-                <div class="form-group">
-                    <label for="tag-name">Nom du tag</label>
-                    <input type="text" id="tag-name" name="name" required 
-                           placeholder="Ex: Antibiotiques">
-                </div>
-
-
-
-
-
-                <div class="form-group">
-                    <label for="tag-description">Description</label>
-                    <textarea id="tag-description" name="description" rows="3" 
-                              placeholder="Description optionnelle du tag..."></textarea>
-                </div>
-            </form>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-action="cancel-tag">Annuler</button>
-                <button type="button" class="btn btn-primary" data-action="save-tag">
-                    <i class="fas fa-save"></i>
-                    Enregistrer
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loading-overlay">
@@ -272,29 +243,25 @@
     </div>
   </template>
 
-  <template id="tag-card-template">
-    <div class="tag-card">
-      <div class="tag-header">
+  <template id="tag-list-item-template">
+    <div class="tag-list-item">
+      <div class="tag-name-section">
         <span class="tag-name"></span>
-        <div class="tag-usage-badge">
-          <span class="usage-count"></span>
-        </div>
+        <input class="tag-name-input" type="text" style="display: none;">
       </div>
-      
-      <div class="tag-stats">
-        <span class="tag-usage">
-          <span class="usage-text"></span>
-        </span>
-        <span class="tag-date"></span>
+      <div class="tag-usage-section">
+        <span class="usage-count"></span>
       </div>
-      
-      <p class="tag-description"></p>
-      
-      <div class="tag-actions">
-        <button class="btn btn-sm btn-outline" data-action="edit-tag" title="Modifier">
+      <div class="tag-actions-section">
+        <button class="btn-edit-tag" title="Modifier le nom">
           <i class="fas fa-edit"></i>
         </button>
-        <!-- Action buttons will be inserted here by JS -->
+        <button class="btn-save-tag" title="Sauvegarder" style="display: none;">
+          <i class="fas fa-check"></i>
+        </button>
+        <button class="btn-cancel-tag" title="Annuler" style="display: none;">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
     </div>
   </template>
@@ -322,6 +289,18 @@
   </template>
 
     <!-- Scripts -->
+    <!-- Modules -->
+    <script src="js/modules/ui-helpers.js"></script>
+    <script src="js/modules/api-client.js"></script>
+    <script src="js/modules/modal-manager.js"></script>
+    <script src="js/modules/form-module.js"></script>
+    <script src="js/modules/tag-module.js"></script>
+    <script src="js/modules/question-module.js"></script>
+    <script src="js/modules/event-manager.js"></script>
+    <script src="js/modules/view-manager.js"></script>
+    <script src="js/modules/tag-management-module.js"></script>
+    
+    <!-- Main Application -->
     <script src="js/admin.js"></script>
 </body>
 </html>

@@ -54,6 +54,7 @@ body {
   --shadow-medium: var(--shadow-md);
   --shadow-large: var(--shadow-lg);
   --shadow-primary: 0 4px 14px 0 rgba(102, 126, 234, 0.39);
+  --bg-primary-rgb: 15, 15, 35;
 }
 
 /* Light theme override */
@@ -68,6 +69,8 @@ body[data-theme="light"] {
   --border-color: var(--border-light);
   --bg-hover: #f1f5f9;
   --primary-bg: rgba(102, 126, 234, 0.1);
+  --bg-primary-rgb: 248, 250, 252;
+
 }
 
 * {
@@ -583,6 +586,38 @@ body::before {
   font-weight: 600;
   color: var(--text-primary);
   font-style: normal;
+}
+
+/* Loading state styles */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 200px;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  margin-bottom: 1rem;
+}
+
+.loading-spinner i {
+  font-size: 2rem;
+  color: var(--primary-color);
+  animation: spin 1s linear infinite;
+}
+
+.loading-state p {
+  font-size: 1.1rem;
+  margin: 0;
+  text-align: center;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .source-text {
@@ -1609,20 +1644,21 @@ body::before {
 }
 
 .setup-header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
-    background: rgba(var(--bg-primary-rgb, 15, 15, 35), 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: var(--border-radius-large);
-    padding: 1rem 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    margin: 0 auto;
-    max-width: 760px;
-    transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  background: rgba(var(--bg-primary-rgb), 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius-large);
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  max-width: 760px;
+  transition: all 0.3s ease;
+
 }
 
 /* Add subtle animation when it becomes sticky */

@@ -1,4 +1,5 @@
-// FlashPharma Admin - Minimal Orchestrator (Fixed Toggle)
+
+// FlashPharma Admin - Minimal Orchestrator
 const AdminApp = (function() {
   
   // Private state (minimal - most moved to modules)
@@ -12,9 +13,16 @@ const AdminApp = (function() {
     }
     
     try {
+      // Initialize all modules
       await initializeModules();
+      
+      // Setup event handling
       setupEventHandling();
+      
+      // Load initial data
       await loadInitialData();
+      
+      // Show default view
       ViewManager.showView('questions');
       
       isInitialized = true;
@@ -56,7 +64,6 @@ const AdminApp = (function() {
       loadQuestions: QuestionModule.loadQuestions,
       searchQuestions: QuestionModule.searchQuestions,
       filterQuestions: QuestionModule.filterQuestions,
-      toggleQuestion: QuestionModule.toggleQuestion,
       openQuestionModal: openQuestionModal,
       saveQuestion: saveQuestion,
       editQuestion: editQuestion,
@@ -192,7 +199,6 @@ const AdminApp = (function() {
     
     // Question management (delegated)
     loadQuestions: QuestionModule.loadQuestions,
-    toggleQuestion: QuestionModule.toggleQuestion,
     openQuestionModal,
     saveQuestion,
     editQuestion,
@@ -217,3 +223,4 @@ if (document.readyState === 'loading') {
 
 // Export to global scope for backward compatibility
 window.adminApp = AdminApp;
+
