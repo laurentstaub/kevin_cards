@@ -608,6 +608,7 @@ class AdminApp {
   async saveQuestion() {
     const form = document.getElementById('question-form');
     const formData = new FormData(form);
+    const questionId = form.dataset.questionId;
     
     const questionData = {
       questionText: formData.get('questionText'),
@@ -615,6 +616,8 @@ class AdminApp {
       tagIds: this.selectedTags.filter(tag => tag.id).map(tag => tag.id),
       sources: this.collectSources()
     };
+
+    console.log('DEBUG: Saving question with data:', questionData);
 
     // Validation
     if (!questionData.questionText.trim() || !questionData.answerText.trim()) {
@@ -625,25 +628,42 @@ class AdminApp {
     this.showLoading(true);
 
     try {
+      // Create any new tags before saving the question
       for (const tag of this.selectedTags.filter(t => t.isNew)) {
+        console.log('DEBUG: Creating new tag:', tag);
         const newTag = await this.apiRequest('/tags', 'POST', {
           name: tag.name,
           color: tag.color
         });
-        tag.id = newTag.id;
+        console.log('DEBUG: New tag created:', newTag);
+        tag.id = newTag.id; // update tag with its new ID from the DB
         tag.isNew = false;
       }
 
+      // Now that all tags exist, collect their IDs
       questionData.tagIds = this.selectedTags.map(tag => tag.id);
       
+      // Determine the API endpoint and method (create vs. update)
+      const method = questionId ? 'PUT' : 'POST';
+      const endpoint = questionId ? `/questions/${questionId}` : '/questions';
+      
+      console.log('DEBUG: About to call API:', { endpoint, method, questionData });
+      
+      // *** Make the API call to save the question ***
+      const result = await this.apiRequest(endpoint, method, questionData);
+      
+      console.log('DEBUG: API call successful, result:', result);
+
+      this.showToast(`Question ${questionId ? 'modifiée' : 'ajoutée'} avec succès`, 'success');
+      
       this.closeModal('question-modal');
-      this.loadQuestions();
+      this.loadQuestions(); // Reload the list to see the changes
     } catch (error) {
       console.error('Save error:', error);
-      this.showToast('Erreur lors de la sauvegarde', 'error');
+      this.showToast(error.message || 'Erreur lors de la sauvegarde', 'error');
+    } finally {
+        this.showLoading(false);
     }
-
-    this.showLoading(false);
   }
 
   collectSources() {

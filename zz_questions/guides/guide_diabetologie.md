@@ -56,11 +56,11 @@ Pour la couverture basale, les analogues lents ont largement supplanté la NPH. 
 
 La **metformine reste le traitement de première ligne** avec un mécanisme d'action principal via l'activation de l'AMPK hépatique réduisant la néoglucogenèse. Les posologies s'échelonnent de *500 mg à 3000 mg par jour* pour la forme immédiate et jusqu'à 2000 mg pour la forme retard, à adapter en fonction de la fonction rénale. [**Le risque d'acidose lactique reste extrêmement faible** (2,4-15 cas pour 100 000 patients-années)](https://doi.org/10.1136/bmj.m4573) mais contre-indique son usage si le DFG est inférieur à 30 mL/min/1,73m².
 
+Les **sulfamides hypoglycémiants (glimépiride, glipizide, glibenclamide)** conservent une place limitée en raison du **risque hypoglycémique et de la prise pondérale** (3-5 kg en moyenne). [Le glibenclamide doit être évité chez le sujet âgé selon les critères de Beers](https://agsjournals.onlinelibrary.wiley.com/toc/15325415/2023/71/7).
+
 Les **inhibiteurs de SGLT2 - empagliflozine (Jardiance), dapagliflozine (Farxiga), canagliflozine (Invokana)** - ont démontré des bénéfices cardiovasculaires majeurs. [L'étude EMPA-REG a montré une **réduction de 38% de la mortalité cardiovasculaire** avec l'empagliflozine](https://doi.org/10.1056/NEJMoa1504720). Ces molécules agissent en *bloquant la réabsorption tubulaire proximale du glucose*, induisant une glycosurie et une diurèse osmotique. Les infections mycosiques génitales (risque multiplié par 3-6) et l'acidocétose diabétique rare mais grave constituent les principaux effets secondaires à surveiller.
 
 Les **inhibiteurs de DPP-4 (sitagliptine, saxagliptine, linagliptine, alogliptine)** offrent une efficacité modeste avec une réduction d'HbA1c de 0,5-0,8% en monothérapie. Leur neutralité pondérale et le faible risque hypoglycémique les positionnent *en deuxième ligne, malgré un coût élevé*. La linagliptine présente l'avantage de ne pas nécessiter d'ajustement rénal.
-
-Les **sulfamides hypoglycémiants (glimépiride, glipizide, glibenclamide)** conservent une place limitée en raison du **risque hypoglycémique et de la prise pondérale** (3-5 kg en moyenne). [Le glibenclamide doit être évité chez le sujet âgé selon les critères de Beers](https://agsjournals.onlinelibrary.wiley.com/toc/15325415/2023/71/7).
 
 ## Les agonistes du GLP-1 révolutionnent la prise en charge avec une perte pondérale significative
 

@@ -118,6 +118,10 @@ const AdminApp = (function() {
       return;
     }
 
+    // Check if this is an edit operation
+    const form = document.getElementById('question-form');
+    const questionId = form.dataset.questionId;
+
     try {
       // Create new tags first using TagModule
       await TagModule.createNewTags();
@@ -125,12 +129,21 @@ const AdminApp = (function() {
       // Update tagIds after creating new tags
       questionData.tagIds = TagModule.getSelectedTagIds();
       
+      // *** Make the API call to save the question ***
+      if (questionId) {
+        // Update existing question
+        await ApiClient.questions.update(questionId, questionData);
+      } else {
+        // Create new question
+        await ApiClient.questions.create(questionData);
+      }
+      
       ModalManager.hide('question-modal');
       QuestionModule.loadQuestions();
-      UIHelpers.toast('Question sauvegardée avec succès', 'success');
+      UIHelpers.toast(`Question ${questionId ? 'modifiée' : 'ajoutée'} avec succès`, 'success');
     } catch (error) {
       console.error('Save error:', error);
-      UIHelpers.toast('Erreur lors de la sauvegarde', 'error');
+      UIHelpers.toast(error.message || 'Erreur lors de la sauvegarde', 'error');
     }
   };
   
