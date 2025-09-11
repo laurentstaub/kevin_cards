@@ -1,38 +1,44 @@
 // Session Setup Management
-const SessionSetup = (function() {
+(function() { // Converted to IIFE to avoid polluting global scope
+    'use strict';
 
     // --- Private State ---
     let selectedMode = 'quick';
     let selectedCount = 10;
     let selectedDifficulty = 'mixed';
     let selectedTags = [];
+    let reviewQuestions = []; // To hold weak questions for review mode
+    let allQuestions = []; // Store all questions once received
     let availableTags = [];
     let availableQuestions = 0;
     let tagsByPriority = {};
 
     // --- Private Methods ---
 
-    const loadInitialData = async function() {
-        try {
-            // Load available tags with priority ordering
-            const tagsResponse = await fetch('/api/tags?priorityOrder=true');
-            const tagsData = await tagsResponse.json();
-            availableTags = tagsData.tags || [];
-            
-            // Classify tags by priority for better organization
-            tagsByPriority = classifyTagsByPriority(availableTags);
-            
-            // Load question count for preview
-            await updateQuestionCount();
-            
-            // Populate tag filters if in focused mode
-            if (selectedMode === 'focused') {
-                populateTagFilters();
-            }
-        } catch (error) {
-            console.error('Failed to load initial data:', error);
-        }
+    const setAllQuestions = function(questions) {
+        allQuestions = questions;
+        // Now that we have questions, perform initial calculation
+        updateQuestionCount();
     };
+
+    const setInitialData = function(questions, tags) {
+        allQuestions = questions;
+        availableTags = tags;
+        
+        // Classify tags by priority for better organization
+        tagsByPriority = classifyTagsByPriority(availableTags);
+        
+        // Update question count for preview
+        updateQuestionCount();
+        
+        // Populate tag filters if in focused mode
+        if (selectedMode === 'focused') {
+            populateTagFilters();
+        }
+        
+        console.log(`Session setup initialized with ${questions.length} questions and ${tags.length} tags`);
+    };
+
 
     const classifyTagsByPriority = function(tags) {
         return {
@@ -66,12 +72,11 @@ const SessionSetup = (function() {
         });
 
         // Action buttons
-        document.getElementById('startSessionTop').addEventListener('click', () => {
-            startSession();
-        });
-
+        document.getElementById('startSessionTop').addEventListener('click', startSession);
         document.getElementById('backToSetup').addEventListener('click', () => {
-            showSetupScreen();
+            if (window.flashcardApp && window.flashcardApp.showSetupInterface) {
+                window.flashcardApp.showSetupInterface();
+            }
         });
     };
 
@@ -84,45 +89,97 @@ const SessionSetup = (function() {
         });
         document.querySelector(`.study-mode[data-mode="${mode}"]`).classList.add('active');
 
-        // Show/hide tag filters
-        const tagFiltersSection = document.getElementById('tagFiltersSection');
-        if (mode === 'focused') {
-            tagFiltersSection.style.display = 'block';
-            populateTagFilters();
+        if (mode === 'review') {
+            prepareReviewMode();
         } else {
-            tagFiltersSection.style.display = 'none';
-            selectedTags = [];
+            enableRegularModeControls();
+            if (mode === 'focused') {
+                const tagFiltersSection = document.getElementById('tagFiltersSection');
+                if (tagFiltersSection) {
+                    tagFiltersSection.style.display = 'block';
+                    populateTagFilters();
+                }
+            }
         }
 
         updateQuestionCount();
     };
+    
+    const prepareReviewMode = function() {
+        if (!window.ProgressTracker || allQuestions.length === 0) {
+            // Data not ready, defer or show loading
+            return;
+        }
+        
+        const weakCardAreas = window.ProgressTracker.getWeakAreas(50);
+        const weakCardIds = weakCardAreas.map(area => parseInt(area.id));
+
+        reviewQuestions = allQuestions.filter(q => weakCardIds.includes(q.id));
+        availableQuestions = reviewQuestions.length;
+
+        // Disable irrelevant controls with null checks
+        const tagFiltersSection = document.getElementById('tagFiltersSection');
+        const difficultySelector = document.getElementById('difficultySelector');
+        const questionCountSelector = document.getElementById('questionCountSelector');
+        
+        if (tagFiltersSection) tagFiltersSection.style.display = 'none';
+        if (difficultySelector) difficultySelector.style.display = 'none';
+        if (questionCountSelector) questionCountSelector.style.display = 'none';
+        
+        // Visually update the preview
+        updatePreview();
+
+        const startButton = document.getElementById('startSessionTop');
+        const stickyCountElement = document.getElementById('stickyQuestionCount');
+
+        if (stickyCountElement) {
+            if (availableQuestions === 0) {
+                stickyCountElement.textContent = "Aucune carte à réviser pour le moment !";
+            } else {
+                stickyCountElement.textContent = `${availableQuestions} carte${availableQuestions > 1 ? 's' : ''} à réviser`;
+            }
+        }
+        
+        if (startButton) {
+            startButton.disabled = availableQuestions === 0;
+        }
+    };
+
+    const enableRegularModeControls = function() {
+        reviewQuestions = []; // Clear review questions
+        
+        const tagFiltersSection = document.getElementById('tagFiltersSection');
+        const difficultySelector = document.getElementById('difficultySelector');
+        const questionCountSelector = document.getElementById('questionCountSelector');
+        const startButton = document.getElementById('startSessionTop');
+        
+        if (tagFiltersSection) tagFiltersSection.style.display = selectedMode === 'focused' ? 'block' : 'none';
+        if (difficultySelector) difficultySelector.style.display = 'block';
+        if (questionCountSelector) questionCountSelector.style.display = 'flex';
+        if (startButton) startButton.disabled = false;
+    };
 
     const selectQuestionCount = function(count) {
         selectedCount = count === 'all' ? 'all' : parseInt(count);
-        
-        // Update UI
-        document.querySelectorAll('.count-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
+        document.querySelectorAll('.count-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelector(`.count-btn[data-count="${count}"]`).classList.add('active');
-
         updatePreview();
     };
 
     const selectDifficulty = function(difficulty) {
         selectedDifficulty = difficulty;
-        
-        // Update UI
-        document.querySelectorAll('.difficulty-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
+        document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelector(`.difficulty-btn[data-difficulty="${difficulty}"]`).classList.add('active');
-
         updateQuestionCount();
     };
 
     const populateTagFilters = async function() {
         const container = document.getElementById('setupTagCategories');
+        
+        if (!container) {
+            console.warn('setupTagCategories container not found');
+            return;
+        }
         
         if (availableTags.length === 0) {
             container.innerHTML = `
@@ -267,6 +324,11 @@ const SessionSetup = (function() {
     const updateSelectedFilters = function() {
         const container = document.getElementById('setupSelectedFilters');
         
+        if (!container) {
+            console.warn('setupSelectedFilters container not found');
+            return;
+        }
+        
         if (selectedTags.length === 0) {
             container.innerHTML = '';
             return;
@@ -301,23 +363,30 @@ const SessionSetup = (function() {
         updateQuestionCount();
     };
 
+    // updateQuestionCount now handles both regular and review modes
     const updateQuestionCount = async function() {
+        if (selectedMode === 'review') {
+            prepareReviewMode(); // Recalculate weak cards and update UI
+            return;
+        }
+        
         try {
-            // Build query parameters
             const params = new URLSearchParams();
-            
             if (selectedMode === 'focused' && selectedTags.length > 0) {
                 params.set('tags', selectedTags.join(','));
             }
-            
             if (selectedDifficulty !== 'mixed') {
                 params.set('difficulty', selectedDifficulty);
             }
-
-            // Get question count without limit
-            params.set('limit', '1000'); // High number to get all questions
+            params.set('limit', '1000');
             
             const response = await fetch(`/api/questions/published?${params}`);
+            
+            // After the fetch, the user might have changed modes. Check again.
+            if (selectedMode === 'review') {
+                return; // Abort if user switched to review mode during fetch
+            }
+
             const data = await response.json();
             
             availableQuestions = data.metadata?.total_cards || data.flashcards?.length || 0;
@@ -329,23 +398,23 @@ const SessionSetup = (function() {
             updatePreview();
         }
     };
-
+    
     const updatePreview = function() {
         const availableElement = document.getElementById('availableQuestions');
         const selectedElement = document.getElementById('selectedCount');
         
-        if (availableElement) {
-            availableElement.textContent = availableQuestions;
-        }
+        if (availableElement) availableElement.textContent = availableQuestions;
         
         if (selectedElement) {
-            const selectedCountValue = selectedCount === 'all' ? 
-                availableQuestions : 
-                Math.min(selectedCount, availableQuestions);
-            selectedElement.textContent = selectedCountValue;
+            if (selectedMode === 'review') {
+                 selectedElement.textContent = availableQuestions;
+            } else {
+                const selectedCountValue = selectedCount === 'all' ? 
+                    availableQuestions : 
+                    Math.min(selectedCount, availableQuestions);
+                selectedElement.textContent = selectedCountValue;
+            }
         }
-        
-        // Update sticky header count
         updateStickyQuestionCount();
     };
     
@@ -353,6 +422,17 @@ const SessionSetup = (function() {
         const stickyCountElement = document.getElementById('stickyQuestionCount');
         if (!stickyCountElement) return;
         
+        // Special handling for review mode
+        if (selectedMode === 'review') {
+            if (availableQuestions === 0) {
+                stickyCountElement.textContent = "Aucune carte à réviser pour le moment !";
+            } else {
+                stickyCountElement.textContent = `${availableQuestions} carte${availableQuestions > 1 ? 's' : ''} à réviser`;
+            }
+            return;
+        }
+        
+        // Regular mode handling
         const selectedCountValue = selectedCount === 'all' ? 'toutes les' : selectedCount;
         const availableCount = availableQuestions;
         
@@ -378,30 +458,40 @@ const SessionSetup = (function() {
     };
 
     const startSession = async function() {
-        // Validate selection
+        if (selectedMode === 'review') {
+            if (reviewQuestions.length === 0) {
+                alert('Aucune question à réviser pour le moment.');
+                return;
+            }
+            saveSessionConfiguration();
+            if (window.flashcardApp) {
+                // For review, the data is local and loading is instant.
+                // No need for a loading state.
+                window.flashcardApp.showStudyInterface();
+                updateSessionHeaderInfo(); // Just update the header text
+                window.flashcardApp.loadCustomQuestions(reviewQuestions);
+            }
+            return; // Important to exit here
+        }
+
+        // --- Regular session start ---
         if (availableQuestions === 0) {
             alert('Aucune question disponible avec ces critères.');
             return;
         }
-
         if (selectedMode === 'focused' && selectedTags.length === 0) {
             alert('Veuillez sélectionner au moins un domaine pour l\'étude ciblée.');
             return;
         }
 
         try {
-            // Save session configuration
             saveSessionConfiguration();
-
-            // Hide setup screen, show study interface
             if (window.flashcardApp && window.flashcardApp.showStudyInterface) {
                 window.flashcardApp.showStudyInterface();
-                updateSessionHeader();
+                updateSessionHeaderInfo(); // Update header text
+                showFlashcardLoadingState(); // Show loading spinner
             }
-
-            // Load questions for the session
             await loadSessionQuestions();
-
         } catch (error) {
             console.error('Failed to start session:', error);
             alert('Erreur lors du démarrage de la session. Veuillez réessayer.');
@@ -410,18 +500,13 @@ const SessionSetup = (function() {
 
     const loadSessionQuestions = async function() {
         try {
-            // Build query parameters based on selected criteria
             const params = new URLSearchParams();
-            
             if (selectedMode === 'focused' && selectedTags.length > 0) {
                 params.set('tags', selectedTags.join(','));
             }
-            
             if (selectedDifficulty !== 'mixed') {
                 params.set('difficulty', selectedDifficulty);
             }
-
-            // Set high limit to get all matching questions
             params.set('limit', '1000');
             
             const response = await fetch(`/api/questions/published?${params}`);
@@ -430,9 +515,8 @@ const SessionSetup = (function() {
             if (!data.flashcards || data.flashcards.length === 0) {
                 throw new Error('No questions found');
             }
-
-            // Process questions and start the study session
-            const questions = data.flashcards.map(card => ({
+            
+            const allFetched = data.flashcards.map(card => ({
                 id: card.id,
                 tags: card.tags ? card.tags.map(tag => typeof tag === 'string' ? tag : tag.name) : [],
                 question: card.question, // Already rendered HTML from published endpoint
@@ -441,28 +525,15 @@ const SessionSetup = (function() {
                 source: extractSource(card.sources)
             }));
 
-            // Shuffle and select questions
-            const shuffledQuestions = shuffleArray(questions);
-            const selectedQuestions = selectedCount === 'all' ? 
-                shuffledQuestions : 
-                shuffledQuestions.slice(0, selectedCount);
+            const shuffled = shuffleArray(allFetched);
+            const selected = selectedCount === 'all' ? shuffled : shuffled.slice(0, selectedCount);
 
-            // Store session configuration and questions for repeat/similar functionality
             if (window.currentSession) {
-                window.currentSession.config = {
-                    mode: selectedMode,
-                    count: selectedCount,
-                    difficulty: selectedDifficulty,
-                    tags: selectedTags
-                };
-                window.currentSession.questions = selectedQuestions;
+                window.currentSession.questions = selected;
             }
-
-            // Initialize the main flashcard system with selected questions
             if (window.flashcardApp) {
-                window.flashcardApp.loadCustomQuestions(selectedQuestions);
+                window.flashcardApp.loadCustomQuestions(selected);
             }
-
         } catch (error) {
             console.error('Failed to load session questions:', error);
             alert('Erreur lors du chargement des questions. Retour à la configuration.');
@@ -481,6 +552,30 @@ const SessionSetup = (function() {
         return shuffled;
     };
 
+    const updateSessionHeaderInfo = function() {
+        const modeDisplay = getStudyModeDisplay();
+        const filtersDisplay = getFiltersDisplay();
+        document.getElementById('sessionMode').textContent = modeDisplay;
+        document.getElementById('sessionFilters').textContent = filtersDisplay;
+    };
+
+    const showFlashcardLoadingState = function() {
+        const questionElement = document.getElementById('question');
+        if (questionElement) {
+            questionElement.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <p>Chargement des questions...</p>
+                </div>
+            `;
+        }
+    };
+    
+    // This function is now deprecated and replaced by the two above.
+    // I'm leaving it here commented out for safety during transition, will remove later.
+    /*
     const updateSessionHeader = function() {
         // Update session header info
         const modeDisplay = getStudyModeDisplay();
@@ -502,6 +597,7 @@ const SessionSetup = (function() {
             `;
         }
     };
+    */
 
     const showSetupScreen = function() {
         document.getElementById('sessionSetup').style.display = 'flex';
@@ -633,29 +729,25 @@ const SessionSetup = (function() {
     // --- Initialization ---
     const init = function() {
         initializeEventListeners();
-        loadInitialData();
+        // No longer loading initial data here - will be provided by scripts.js
     };
 
     // --- Public API ---
-    return {
-        removeTag,
+    const PublicAPI = {
+        init,
+        setAllQuestions,
+        setInitialData, // New method for centralized initialization
         updateQuestionCount,
         updatePreview,
-        init
+        removeTag
     };
 
+    // --- Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof window !== 'undefined') {
+            window.SessionSetup = PublicAPI;
+        }
+        PublicAPI.init();
+    });
+
 })();
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Make SessionSetup globally available before init
-    if (typeof window !== 'undefined') {
-        window.SessionSetup = SessionSetup;
-    }
-    SessionSetup.init();
-});
-
-// Export for global access
-if (typeof window !== 'undefined') {
-    window.sessionSetup = SessionSetup;
-}

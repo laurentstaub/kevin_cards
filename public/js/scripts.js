@@ -105,6 +105,17 @@ const loadQuestions = async function() {
   }
 };
 
+const loadTags = async function() {
+  try {
+    const tagsResponse = await fetch('/api/tags?priorityOrder=true');
+    const tagsData = await tagsResponse.json();
+    return tagsData.tags || [];
+  } catch (error) {
+    console.error('Error loading tags:', error);
+    return [];
+  }
+};
+
 const loadCustomQuestions = function(questions) {
   FlashcardModule.loadFlashcards(questions);
 };
@@ -180,8 +191,8 @@ const showSetupInterface = function() {
   if (setupEl) setupEl.style.display = 'flex';
   if (studyEl) studyEl.style.display = 'none';
   
-  // Also update session setup UI
-  if (window.SessionSetup) {
+  // Also update session setup UI if data is already loaded
+  if (window.SessionSetup && allFlashcards.length > 0) {
     window.SessionSetup.updateQuestionCount();
     window.SessionSetup.updatePreview();
   }
@@ -220,18 +231,25 @@ const initializeApp = async function() {
   
   setupMainEventListeners();
 
-  await loadQuestions();
+  // Load both questions and tags in parallel for better performance
+  const [questionsResult, tagsResult] = await Promise.all([
+    loadQuestions(),
+    loadTags()
+  ]);
 
-  if (window.flashcardApp) {
-    window.flashcardApp.resetQuestions();
-  } else {
-    console.error('flashcardApp is undefined when calling resetQuestions.');
+  // Pass both questions and tags to the session setup module
+  if (window.SessionSetup) {
+    window.SessionSetup.setInitialData(allFlashcards, tagsResult);
   }
+
+  // Set default cards for the initial view (don't auto-start session)
+  const randomCards = UIHelpers.getRandomItems(allFlashcards, 10);
+  FlashcardModule.loadFlashcards(randomCards);
 
   console.log('FlashPharma modular application initialized successfully');
 };
 
-// Create global flashcard app object for session setup to use
+// Create global flashcard app object for other modules to use
 window.flashcardApp = {
   loadCustomQuestions: loadCustomQuestions,
   getAllQuestions: () => allFlashcards,
