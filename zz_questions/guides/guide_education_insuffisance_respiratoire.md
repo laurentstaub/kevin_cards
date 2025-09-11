@@ -1,4 +1,4 @@
-# Guide complet d'éducation thérapeutique de l'insuffisance respiratoire
+# Guide d'éducation thérapeutique de l'insuffisance respiratoire
 
 ## Acronymes et abréviations
 
@@ -33,11 +33,11 @@ L'insuffisance respiratoire chronique résulte d'une **altération des échanges
 
 L'éducation thérapeutique de l'insuffisance respiratoire s'articule autour de **cinq composantes fondamentales** validées par les recommandations internationales :
 
-• **Éducation sur la maladie** : Compréhension des mécanismes physiopathologiques, **reconnaissance précoce des exacerbations** (augmentation dyspnée, modification expectorations), appropriation des facteurs déclenchants et protecteurs
- • **Optimisation thérapeutique** : Maîtrise des dispositifs d'inhalation avec **technique correcte dans 85% des cas** après formation structurée, observance médicamenteuse, gestion des effets secondaires, coordination des traitements
- • **Réhabilitation respiratoire** : **Réentraînement à l'effort** permettant une amélioration de 20-30% de la capacité d'exercice, kinésithérapie respiratoire, sevrage tabagique avec **taux de succès doublé** par l'accompagnement multidisciplinaire
- • **Gestion environnementale** : Éviction des irritants respiratoires, **aménagement du domicile** pour réduire l'effort, planification des activités selon les capacités fonctionnelles, prévention des infections
- • **Support psychosocial** : Prise en charge de l'anxiété et de la dépression présentes chez **40% des patients**, **maintien du lien social**, accompagnement familial, préparation aux situations d'urgence avec plans d'action personnalisés
+* **Éducation sur la maladie** : Compréhension des mécanismes physiopathologiques, **reconnaissance précoce des exacerbations** (augmentation dyspnée, modification expectorations), appropriation des facteurs déclenchants et protecteurs
+* **Optimisation thérapeutique** : Maîtrise des dispositifs d'inhalation avec **technique correcte dans 85% des cas** après formation structurée, observance médicamenteuse, gestion des effets secondaires, coordination des traitements
+* **Réhabilitation respiratoire** : **Réentraînement à l'effort** permettant une amélioration de 20-30% de la capacité d'exercice, kinésithérapie respiratoire, sevrage tabagique avec **taux de succès doublé** par l'accompagnement multidisciplinaire
+* **Gestion environnementale** : Éviction des irritants respiratoires, **aménagement du domicile** pour réduire l'effort, planification des activités selon les capacités fonctionnelles, prévention des infections
+* **Support psychosocial** : Prise en charge de l'anxiété et de la dépression présentes chez **40% des patients**, **maintien du lien social**, accompagnement familial, préparation aux situations d'urgence avec plans d'action personnalisés
 
 ## L'éducation thérapeutique structure la compréhension de la maladie respiratoire
 

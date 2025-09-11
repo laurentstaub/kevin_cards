@@ -224,3 +224,4 @@ if (document.readyState === 'loading') {
 // Export to global scope for backward compatibility
 window.adminApp = AdminApp;
 
+

@@ -394,7 +394,10 @@ const SessionSetup = (function() {
             saveSessionConfiguration();
 
             // Hide setup screen, show study interface
-            showStudyInterface();
+            if (window.flashcardApp && window.flashcardApp.showStudyInterface) {
+                window.flashcardApp.showStudyInterface();
+                updateSessionHeader();
+            }
 
             // Load questions for the session
             await loadSessionQuestions();
@@ -463,7 +466,9 @@ const SessionSetup = (function() {
         } catch (error) {
             console.error('Failed to load session questions:', error);
             alert('Erreur lors du chargement des questions. Retour à la configuration.');
-            showSetupScreen();
+            if (window.flashcardApp && window.flashcardApp.showSetupInterface) {
+                window.flashcardApp.showSetupInterface();
+            }
         }
     };
 
@@ -476,10 +481,7 @@ const SessionSetup = (function() {
         return shuffled;
     };
 
-    const showStudyInterface = function() {
-        document.getElementById('sessionSetup').style.display = 'none';
-        document.getElementById('studyInterface').style.display = 'block';
-        
+    const updateSessionHeader = function() {
         // Update session header info
         const modeDisplay = getStudyModeDisplay();
         const filtersDisplay = getFiltersDisplay();
@@ -637,18 +639,20 @@ const SessionSetup = (function() {
     // --- Public API ---
     return {
         removeTag,
-        showSetupScreen,
-        startSession,
+        updateQuestionCount,
+        updatePreview,
         init
     };
 
 })();
 
 // Initialize when DOM is loaded
-let sessionSetup;
 document.addEventListener('DOMContentLoaded', () => {
-    sessionSetup = SessionSetup;
-    sessionSetup.init();
+    // Make SessionSetup globally available before init
+    if (typeof window !== 'undefined') {
+        window.SessionSetup = SessionSetup;
+    }
+    SessionSetup.init();
 });
 
 // Export for global access

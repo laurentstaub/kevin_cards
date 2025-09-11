@@ -489,6 +489,16 @@ class Question {
     }
   }
 
+  // Get question versions (placeholder - versioning removed)
+  async getVersions() {
+    try {
+      // Versioning system was removed, return empty array for backward compatibility
+      return [];
+    } catch (error) {
+      throw new Error(`Failed to get question versions: ${error.message}`);
+    }
+  }
+
   // Convert to JSON for API responses
   toJSON() {
     return {

@@ -1,4 +1,4 @@
-# Guide complet des entretiens pharmaceutiques anticoagulants oraux
+# Guide des entretiens pharmaceutiques anticoagulants oraux
 
 ## Acronymes et abréviations
 
@@ -19,7 +19,17 @@ Les **anticoagulants oraux directs** ciblent spécifiquement des facteurs clés 
 
 ### Stratégies d'accompagnement pharmaceutique structurées
 
-L'accompagnement pharmaceutique des patients sous anticoagulants oraux s'articule autour de **cinq axes stratégiques** définis par la convention nationale : • **Évaluation initiale personnalisée** : Diagnostic des connaissances avec **score d'appropriation sur 25 points**, identification des facteurs de risque hémorragique (âge >75 ans, insuffisance rénale DFG <50 ml/min, antécédents hémorragiques), analyse de l'environnement thérapeutique avec **détection systématique des interactions médicamenteuses** dans 40% des cas • **Programme d'entretiens thématiques adaptatifs** : Minimum **3 entretiens la première année** puis 2 entretiens annuels, durée de 20-30 minutes, progression pédagogique individualisée avec **objectifs SMART** (Spécifiques, Mesurables, Atteignables, Réalistes, Temporels), traçabilité dans le dossier pharmaceutique • **Optimisation de l'observance thérapeutique** : Taux d'observance cible >80%, stratégies comportementales personnalisées (piluliers, rappels, rituels), gestion proactive des oublis avec **protocole de rattrapage dans les 8 heures pour AVK, 12 heures pour AOD**, plan d'action en cas de voyage ou modification du rythme de vie • **Surveillance des signaux d'alerte** : Reconnaissance des signes hémorragiques majeurs et mineurs avec **échelle de gravité ISTH**, conduite à tenir graduée, coordination avec le prescripteur dans **100% des cas d'INR >5 ou <1,5**, orientation vers les urgences si score HAS-BLED ≥3 • **Coordination interprofessionnelle renforcée** : Transmission systématique des comptes-rendus au médecin traitant via **messagerie sécurisée MSSanté**, liaison avec le biologiste pour suivi INR, collaboration avec l'infirmier pour patients dépendants, intégration dans les **programmes d'ETP certifiés ARS** quand disponibles
+L'accompagnement pharmaceutique des patients sous anticoagulants oraux s'articule autour de **cinq axes stratégiques** définis par la convention nationale : 
+
+• **Évaluation initiale personnalisée** : Diagnostic des connaissances avec **score d'appropriation sur 25 points**, identification des facteurs de risque hémorragique (âge >75 ans, insuffisance rénale DFG <50 ml/min, antécédents hémorragiques), analyse de l'environnement thérapeutique avec **détection systématique des interactions médicamenteuses** dans 40% des cas 
+
+• **Programme d'entretiens thématiques adaptatifs** : Minimum **3 entretiens la première année** puis 2 entretiens annuels, durée de 20-30 minutes, progression pédagogique individualisée avec **objectifs SMART** (Spécifiques, Mesurables, Atteignables, Réalistes, Temporels), traçabilité dans le dossier pharmaceutique 
+
+• **Optimisation de l'observance thérapeutique** : Taux d'observance cible >80%, stratégies comportementales personnalisées (piluliers, rappels, rituels), gestion proactive des oublis avec **protocole de rattrapage dans les 8 heures pour AVK, 12 heures pour AOD**, plan d'action en cas de voyage ou modification du rythme de vie 
+
+• **Surveillance des signaux d'alerte** : Reconnaissance des signes hémorragiques majeurs et mineurs avec **échelle de gravité ISTH**, conduite à tenir graduée, coordination avec le prescripteur dans **100% des cas d'INR >5 ou <1,5**, orientation vers les urgences si score HAS-BLED ≥3 
+
+• **Coordination interprofessionnelle renforcée** : Transmission systématique des comptes-rendus au médecin traitant via **messagerie sécurisée MSSanté**, liaison avec le biologiste pour suivi INR, collaboration avec l'infirmier pour patients dépendants, intégration dans les **programmes d'ETP certifiés ARS** quand disponibles
 
 ## Les entretiens d'évaluation établissent le diagnostic éducatif
 
