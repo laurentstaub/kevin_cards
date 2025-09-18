@@ -17,15 +17,11 @@ let currentSession = {
 };
 
 // DOM elements for orchestrator functions
-let resetBtn, menuToggle, sidebar, sidebarClose, sidebarOverlay, themeToggle;
+let resetBtn, themeToggle;
 
 // Private initialization methods
 const initializeElements = function() {
   resetBtn = document.getElementById('resetBtn');
-  menuToggle = document.getElementById('menuToggle');
-  sidebar = document.getElementById('sidebar');
-  sidebarClose = document.getElementById('sidebarClose');
-  sidebarOverlay = document.getElementById('sidebarOverlay');
   themeToggle = document.getElementById('themeToggle');
 };
 
@@ -42,19 +38,6 @@ const setupMainEventListeners = function() {
       e.stopPropagation();
       UIHelpers.toggleTheme();
     });
-  }
-
-  // Sidebar functionality
-  if (menuToggle) {
-    menuToggle.addEventListener('click', showSidebar);
-  }
-
-  if (sidebarClose) {
-    sidebarClose.addEventListener('click', hideSidebar);
-  }
-
-  if (sidebarOverlay) {
-    sidebarOverlay.addEventListener('click', hideSidebar);
   }
 
   // Session completion event listeners
@@ -106,14 +89,12 @@ const loadQuestions = async function() {
 };
 
 const loadTags = async function() {
-  try {
-    const tagsResponse = await fetch('/api/tags?priorityOrder=true');
-    const tagsData = await tagsResponse.json();
-    return tagsData.tags || [];
-  } catch (error) {
-    console.error('Error loading tags:', error);
-    return [];
+  const result = await ApiClient.tags.loadWithPriority();
+  if (result.success) {
+    return result.tags;
   }
+  return [];
+
 };
 
 const loadCustomQuestions = function(questions) {
@@ -198,24 +179,6 @@ const showSetupInterface = function() {
   }
 };
 
-
-// Sidebar functions
-const showSidebar = function() {
-  if (sidebar && sidebarOverlay) {
-    sidebar.classList.add('active');
-    sidebarOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-};
-
-const hideSidebar = function() {
-  if (sidebar && sidebarOverlay) {
-    sidebar.classList.remove('active');
-    sidebarOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-};
-
 // Module initialization and coordination
 const initializeApp = async function() {
   console.log('Initializing FlashPharma ES6 modular application...');
@@ -232,7 +195,7 @@ const initializeApp = async function() {
   setupMainEventListeners();
 
   // Load both questions and tags in parallel for better performance
-  const [questionsResult, tagsResult] = await Promise.all([
+  const [, tagsResult] = await Promise.all([
     loadQuestions(),
     loadTags()
   ]);
@@ -256,9 +219,6 @@ window.flashcardApp = {
   resetQuestions: () => {
     const randomCards = UIHelpers.getRandomItems(allFlashcards, 10);
     FlashcardModule.loadFlashcards(randomCards);
-  },
-  initFlashcards: () => {
-    FlashcardModule.initFlashcards();
   },
   showStudyInterface: showStudyInterface,
   showSetupInterface: showSetupInterface

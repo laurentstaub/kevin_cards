@@ -127,24 +127,6 @@ export const ApiClient = {
                 };
             }
         },
-
-        // Load all tags
-        loadAll: async function() {
-            try {
-                const data = await request('/tags');
-                return {
-                    success: true,
-                    tags: data.tags || []
-                };
-            } catch (error) {
-                console.error('Error loading tags:', error);
-                return {
-                    success: false,
-                    tags: [],
-                    error: error.message
-                };
-            }
-        }
     },
 
     // Data processing helpers

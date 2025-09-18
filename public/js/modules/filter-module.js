@@ -273,15 +273,3 @@ export function applyFilters() {
     
     FlashcardModule.loadFlashcards(filteredCards);
 }
-
-export function getSelectedTags() {
-    return [...selectedTags];
-}
-
-export function isActive() {
-    return isFilterActive;
-}
-
-export function updateQuestionCount() {
-    updateQuestionCountDisplay();
-}

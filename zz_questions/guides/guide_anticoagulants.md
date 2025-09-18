@@ -5,7 +5,12 @@
 **ANSM** : Agence nationale de sécurité du médicament et des produits de santé
 **AOD** : Anticoagulants oraux directs (terme actuel remplaçant NACO)
 **AVK** : Anti-vitamines K
+**CHA2DS2-VASc** : Score d'évaluation du risque thromboembolique en fibrillation atriale
+**CRPV** : Centre Régional de Pharmacovigilance
 **DFG** : Débit de filtration glomérulaire
+**EHPAD** : Établissement d'hébergement pour personnes âgées dépendantes
+**FANV** : Fibrillation atriale non valvulaire
+**HAS-BLED** : Score d'évaluation du risque hémorragique 
 **HBPM** : Héparines de bas poids moléculaire
 **HNF** : Héparines non fractionnées
 **INR** : International Normalized Ratio
@@ -14,6 +19,7 @@
 **TCA** : Temps de céphaline activée
 **TIH** : Thrombopénie induite par l'héparine
 **TQ** : Temps de Quick
+**TTR** : Time in Therapeutic Range
 **TVP** : Thrombose veineuse profonde
 
 ## Introduction
@@ -126,7 +132,7 @@ Les AVK exercent leur **effet anticoagulant par blocage de la vitamine K époxyd
 
 ### Spécialités françaises et caractéristiques pharmacologiques
 
-**Point critique fondamental : il n'existe aucun générique d'AVK** en raison de la fenêtre thérapeutique étroite.
+**Point critique fondamental : il n'existe aucun générique de Previscan** en raison de la fenêtre thérapeutique étroite. Warfarine a des génériques.
 
 **Trois molécules disponibles** :
 
@@ -219,7 +225,7 @@ La **conduite à tenir face à un surdosage en AVK** suit un protocole gradué s
 
 ### Conduite thérapeutique spécifique selon l'anticoagulant
 
-**Surdosage AVK** : protocole gradué selon l'INR - INR < 4 (surveillance simple), 4-6 (saut d'une prise), 6-10 (arrêt temporaire + vitamine K 1-2 mg per os), ≥ 10 (arrêt + vitamine K 5 mg + avis urgent). **Surdosage AOD : arrêt du traitement, charbon activé si ingestion récente, antidotes spécifiques si disponibles (idarucizumab pour dabigatran). **Surdosage héparines** : sulfate de protamine (inefficace sur fondaparinux).
+**Surdosage AVK** : protocole gradué selon l'INR - INR < 4 (surveillance simple), 4-6 (saut d'une prise), 6-10 (arrêt temporaire + vitamine K 1-2 mg per os), ≥ 10 (arrêt + vitamine K 5 mg + avis urgent).  Surdosage AOD : arrêt du traitement, charbon activé si ingestion récente, antidotes spécifiques si disponibles (idarucizumab pour dabigatran).  **Surdosage héparines** : sulfate de protamine (inefficace sur fondaparinux mais **andexanet alfa** (Ondexxya®), antidote des inhibiteurs du facteur Xa, a montré une **activité neutralisante sur le fondaparinux** *in vitro* et *ex vivo*. Son utilisation dans ce contexte est hors-AMM).
 
 ### Facteurs de risque majeurs transversaux
 
@@ -256,6 +262,83 @@ La **conduite à tenir face à un surdosage en AVK** suit un protocole gradué s
 ### Activités et précautions de vie quotidienne
 
 **Sports déconseillés** : sports de combat, activités à haut risque de chute ou traumatisme. **Précautions professionnelles** : objets tranchants (cuisine, bricolage, jardinage), port d'équipements de protection. **Professionnels à informer** : tous les intervenants médicaux et paramédicaux (médecins, dentistes, kinésithérapeutes, pédicures, infirmières).
+
+
+
+## Pharmacovigilance et signalements spécifiques
+
+### Signalements ANSM récents
+
+**Fluindione et risque immuno-allergique majoré** : Suite aux signalements de réactions cutanées sévères (DRESS, pustulose, vascularites) et d'atteintes rénales, l'ANSM recommande depuis 2017 de **privilégier la warfarine en première intention**. Surveillance renforcée les 6 premiers mois pour tout patient débutant la fluindione.
+
+**Dabigatran et problèmes galéniques** : Cas de surdosage par ouverture inappropriée des gélules, particulièrement en EHPAD. Sensibilisation des équipes soignantes indispensable.
+
+### Évaluation de la causalité et déclaration
+
+**Critères de déclaration obligatoire** : Tout effet indésirable grave ou inattendu, toute inefficacité thérapeutique, toute erreur médicamenteuse avec conséquences cliniques. **Circuits de déclaration** : Portail signalement-sante.gouv.fr pour les professionnels et patients, notification CRPV pour évaluation de causalité.
+
+## Éducation thérapeutique et outils pratiques
+
+### Programme d'éducation structurée
+
+**Entretiens pharmaceutiques AVK** (dispositif remboursé 40€/entretien) : Programme obligatoire comprenant 6 thèmes - mécanisme d'action, surveillance INR, signes d'alerte hémorragique, interactions, alimentation, professionnels à informer.
+
+**Outils éducatifs standardisés** :
+
+- Carnet de suivi ANSM gratuit via CESPHARM
+- Application mobile "Mon suivi anticoagulant"
+- Carte patient mentionnant le traitement anticoagulant
+- Fiche "7 règles d'or" résumant les points essentiels
+
+### Situations particulières et voyage
+
+**Préparation des voyages** : Stock suffisant de médicaments (+30% de la durée), ordonnance récente traduite si nécessaire, identification du traitement en anglais, coordonnées de référent médical local.
+
+**Automesure INR** : Dispositif Coaguchek InRange® pris en charge depuis 2017 pour les porteurs de valve mécanique, après formation certifiante. Rythme : hebdomadaire puis bihebdomadaire une fois stabilisé, contrôle laboratoire tous les 6 mois.
+
+## Cas clinique pratique : optimisation en EHPAD
+
+### Présentation du patient
+
+Homme de 79 ans, 70 kg, 1m75, en EHPAD présentant :
+
+- Fibrillation atriale (score CHA2DS2-VASc = 4 : âge > 75 ans + insuffisance cardiaque)
+- Insuffisance cardiaque stable
+- Insuffisance rénale chronique (créatininémie 16 mg/L)
+
+### Évaluation de la fonction rénale
+
+**Calcul de la clairance selon Cockroft-Gault** : ClCr = [(140-79) × 70] / (0,814 × 16) = 37 mL/min
+
+Stade 3b d'insuffisance rénale chronique nécessitant adaptation posologique des AOD.
+
+### Problème d'administration
+
+**Situation initiale** : Dabigatran 110 mg × 2/j prescrit, mais troubles de déglutition nécessitant écrasement des médicaments.
+
+**Contre-indication absolue** : Les gélules de dabigatran ne peuvent être ouvertes (risque de surdosage +75% selon RCP).
+
+**Solution optimale** : Substitution par apixaban 2,5 mg × 2/j (patient réunissant les critères de réduction : âge ≥ 80 ans et créatinine ≥ 1,5 mg/dL). L'apixaban peut être écrasé et mélangé avec de l'eau ou une compote selon les recommandations SFPC.
+
+### Outils d'aide à la décision utilisés
+
+- **Calcul fonction rénale** : Site GPR (http://sitegpr.com/fr/)
+- **Adaptations galéniques** : Base SFPC Gériatrie (http://geriatrie.sfpc.eu/)
+- **Vérification interactions** : Thériaque, GPR interactions
+
+## Perspectives d'évolution et innovation
+
+### Nouveaux développements thérapeutiques
+
+**Inhibiteurs du facteur XI** : Molécules en développement (osocimab, milvexian) promettant une réduction du risque hémorragique tout en préservant l'efficacité antithrombotique. **Avantages potentiels** : dissociation entre hémostase et thrombose, maintien de l'agrégation plaquettaire.
+
+**Antidotes de nouvelle génération** : Amélioration des agents de neutralisation existants, développement d'antidotes universels, optimisation des coûts de production.
+
+### Intelligence artificielle et aide à la décision
+
+**Algorithmes prédictifs** : Outils d'aide à la prescription intégrant multiple variables (fonction rénale, interactions, comorbidités), prédiction du risque hémorragique personnalisé, optimisation des doses selon profil pharmacogénétique.
+
+**Suivi connecté** : Objets connectés pour surveillance de l'observance, alertes automatiques en cas d'interactions, télésurveillance des patients à risque.
 
 ------
 

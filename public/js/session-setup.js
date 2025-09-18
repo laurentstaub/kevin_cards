@@ -1,8 +1,6 @@
-// Session Setup Management
-(function() { // Converted to IIFE to avoid polluting global scope
+(function() {
     'use strict';
 
-    // --- Private State ---
     let selectedMode = 'quick';
     let selectedCount = 10;
     let selectedDifficulty = 'mixed';
@@ -14,7 +12,6 @@
     let tagsByPriority = {};
 
     // --- Private Methods ---
-
     const setAllQuestions = function(questions) {
         allQuestions = questions;
         // Now that we have questions, perform initial calculation
@@ -24,14 +21,10 @@
     const setInitialData = function(questions, tags) {
         allQuestions = questions;
         availableTags = tags;
-        
-        // Classify tags by priority for better organization
         tagsByPriority = classifyTagsByPriority(availableTags);
-        
-        // Update question count for preview
+
         updateQuestionCount();
-        
-        // Populate tag filters if in focused mode
+
         if (selectedMode === 'focused') {
             populateTagFilters();
         }
@@ -572,86 +565,7 @@
             `;
         }
     };
-    
-    // This function is now deprecated and replaced by the two above.
-    // I'm leaving it here commented out for safety during transition, will remove later.
-    /*
-    const updateSessionHeader = function() {
-        // Update session header info
-        const modeDisplay = getStudyModeDisplay();
-        const filtersDisplay = getFiltersDisplay();
-        
-        document.getElementById('sessionMode').textContent = modeDisplay;
-        document.getElementById('sessionFilters').textContent = filtersDisplay;
-        
-        // Show loading state in flashcard
-        const questionElement = document.getElementById('question');
-        if (questionElement) {
-            questionElement.innerHTML = `
-                <div class="loading-state">
-                    <div class="loading-spinner">
-                        <i class="fas fa-spinner fa-spin"></i>
-                    </div>
-                    <p>Chargement des questions...</p>
-                </div>
-            `;
-        }
-    };
-    */
 
-    const showSetupScreen = function() {
-        document.getElementById('sessionSetup').style.display = 'flex';
-        document.getElementById('studyInterface').style.display = 'none';
-        
-        // Reset session state when going back to setup
-        resetSessionState();
-        
-        // Force a re-layout to ensure proper centering
-        setTimeout(() => {
-            const setupPanel = document.getElementById('sessionSetup');
-            if (setupPanel) {
-                setupPanel.scrollTop = 0;
-                // Trigger a reflow to ensure centering is recalculated
-                setupPanel.offsetHeight;
-            }
-        }, 50);
-    };
-    
-    const resetSessionState = function() {
-        // Reset flashcard app state variables
-        if (window.flashcardApp && window.flashcardApp.resetQuestions) {
-            window.flashcardApp.resetQuestions();
-        }
-        
-        // Reset global session variables (if accessible)
-        if (window.currentSession) {
-            window.currentSession.questions = [];
-            window.currentSession.config = null;
-        }
-        
-        // Reset any DOM elements that might show previous session state
-        const currentCardEl = document.getElementById('currentCard');
-        const totalCardsEl = document.getElementById('totalCards');
-        const recalledCountEl = document.getElementById('recalledCount');
-        
-        if (currentCardEl) currentCardEl.textContent = '0';
-        if (totalCardsEl) totalCardsEl.textContent = '0';
-        if (recalledCountEl) recalledCountEl.textContent = '0';
-        
-        // Hide session completion actions if visible
-        const sessionCompleteActions = document.getElementById('sessionCompleteActions');
-        if (sessionCompleteActions) {
-            sessionCompleteActions.style.display = 'none';
-        }
-        
-        // Show main action buttons
-        const notKnownBtn = document.getElementById('notKnownBtn');
-        const recalledBtn = document.getElementById('recalledBtn');
-        if (notKnownBtn) notKnownBtn.style.display = 'flex';
-        if (recalledBtn) recalledBtn.style.display = 'flex';
-        if (notKnownBtn) notKnownBtn.disabled = false;
-        if (recalledBtn) recalledBtn.disabled = false;
-    };
 
     const getStudyModeDisplay = function() {
         const modes = {
@@ -687,17 +601,6 @@
         }
         
         return parts.join(' • ');
-    };
-
-    const getCategoryDisplayName = function(category) {
-        const categoryNames = {
-            'therapeutic_area': 'Domaines thérapeutiques',
-            'drug_class': 'Classes médicamenteuses',
-            'topic': 'Sujets',
-            'situation': 'Contextes cliniques',
-            'other': 'Autres'
-        };
-        return categoryNames[category] || category;
     };
 
     const saveSessionConfiguration = function() {

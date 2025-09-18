@@ -63,12 +63,20 @@ Cette classe est particulièrement efficace dans les **épilepsies partielles (f
 #### Carbamazépine (Tégrétol®)
 Traitement de première intention des épilepsies partielles
 
-• **Posologie** : 10-15 mg/kg/j en 1 à 3 prises. • **Points clés** : C'est un puissant inducteur enzymatique, responsable de très nombreuses interactions médicamenteuses (ex: diminution de l'efficacité des contraceptifs oraux, des AVK). Le jus de pamplemousse est à éviter. • **Effets indésirables** : Troubles neurologiques (vertiges, sédation), cutanés, et risque d'hyponatrémie et de leucopénie.
+* **Posologie** : 10-15 mg/kg/j en 1 à 3 prises. 
+
+* **Points clés** : C'est un puissant inducteur enzymatique, responsable de très nombreuses interactions médicamenteuses (ex: diminution de l'efficacité des contraceptifs oraux, des AVK). Le jus de pamplemousse est à éviter. 
+
+* **Effets indésirables** : Troubles neurologiques (vertiges, sédation), cutanés, et risque d'hyponatrémie et de leucopénie.
 
 #### Lamotrigine (Lamictal®)
 Anti-épileptique à large spectre, efficace en première intention dans les EG et les épilepsies partielles
 
-• **Posologie** : L'instauration doit être très progressive pour minimiser le risque cutané. Dose moyenne de 100-200 mg/j. • **Risque majeur** : Réactions cutanées graves (syndrome de Lyell), surtout dans les 8 premières semaines. Ce risque est majoré par l'association avec le valproate, qui ralentit son métabolisme. • **Avantages** : La lamotrigine a démontré une efficacité égale et une tolérance au moins égale ou supérieure aux anti-épileptiques plus anciens en première ligne pour l'épilepsie focale.
+* **Posologie** : L'instauration doit être très progressive pour minimiser le risque cutané. Dose moyenne de 100-200 mg/j. 
+
+* **Risque majeur** : Réactions cutanées graves (syndrome de Lyell), surtout dans les 8 premières semaines. Ce risque est majoré par l'association avec le valproate, qui ralentit son métabolisme. 
+
+* **Avantages** : La lamotrigine a démontré une efficacité égale et une tolérance au moins égale ou supérieure aux anti-épileptiques plus anciens en première ligne pour l'épilepsie focale.
 
 #### Oxcarbazépine (Trileptal®) et Eslicarbazépine (Zebinix®)
 
@@ -83,7 +91,13 @@ Utilisé en association dans les épilepsies partielles de l'adulte, il nécessi
 #### Valproate de sodium (Dépakine®)
 Anti-épileptique à très large spectre, efficace sur quasi toutes les formes d'épilepsies et traitement de première intention des EG idiopathiques
 
-• **Posologie** : 20-30 mg/kg/j, souvent en forme à libération prolongée (LP). • **Points clés** : C'est un inhibiteur enzymatique. Le risque le plus important est sa **tératogénicité majeure** : risque élevé de malformations (environ 10%) et de troubles neurodéveloppementaux (jusqu'à 30-40%). Sa prescription chez la femme en âge de procréer est très encadrée et nécessite la signature annuelle d'un **formulaire d'accord de soins** et une contraception efficace. • **Effets indésirables** : Prise de poids fréquente, alopécie, risque d'hépatite et de thrombopénie. • **Contre-indications spéciales** : Le VPA est contre-indiqué chez les enfants de moins de 2 ans (risque accru d'hépatotoxicité).
+• **Posologie** : 20-30 mg/kg/j, souvent en forme à libération prolongée (LP).
+
+• **Points clés** : C'est un inhibiteur enzymatique. Le risque le plus important est sa **tératogénicité majeure** : risque élevé de malformations (environ 10%) et de troubles neurodéveloppementaux (jusqu'à 30-40%). Sa prescription chez la femme en âge de procréer est très encadrée et nécessite la signature annuelle d'un **formulaire d'accord de soins** et une contraception efficace
+
+• **Effets indésirables** : Prise de poids fréquente, alopécie, risque d'hépatite et de thrombopénie
+
+• **Contre-indications spéciales** : Le VPA est contre-indiqué chez les enfants de moins de 2 ans (risque accru d'hépatotoxicité).
 
 #### Benzodiazépines (Clobazam, Clonazépam, Diazépam) et Barbituriques (Phénobarbital)
 

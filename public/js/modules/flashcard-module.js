@@ -199,20 +199,3 @@ export function repeatSameQuestions() {
   initFlashcards();
 }
 
-// Getters for external modules
-export function getCurrentCard() {
-  return flashcards[currentCardIndex] || null;
-}
-
-export function getFlashcards() {
-  return [...flashcards];
-}
-
-export function getProgress() {
-  return {
-    currentIndex: currentCardIndex,
-    total: flashcards.length,
-    recalled: recalledCount,
-    isFlipped: isFlipped
-  };
-}

@@ -135,25 +135,3 @@ export function formatDateTime(dateString) {
 export function show(element) {
     if (element) element.style.display = 'block';
 }
-
-export function hide(element) {
-    if (element) element.style.display = 'none';
-}
-
-export function toggle(element, show) {
-    if (element) {
-        element.style.display = show ? 'block' : 'none';
-    }
-}
-
-export function addClass(element, className) {
-    if (element) element.classList.add(className);
-}
-
-export function removeClass(element, className) {
-    if (element) element.classList.remove(className);
-}
-
-export function toggleClass(element, className, force) {
-    if (element) element.classList.toggle(className, force);
-}
