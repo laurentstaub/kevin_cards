@@ -18,13 +18,22 @@ class Tag {
     try {
       const result = await query(`
         INSERT INTO tags (name, category, color, description, created_by)
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING *
+        VALUES (?, ?, ?, ?, ?)
       `, [name, category, color || '#6c757d', description, createdBy]);
 
-      return new Tag(result.rows[0]);
+      return new Tag({
+        id: result.insertId,
+        name,
+        category,
+        color: color || '#6c757d',
+        description,
+        created_by: createdBy,
+        is_active: 1,
+        created_at: new Date().toISOString(),
+        usage_count: 0
+      });
     } catch (error) {
-      if (error.code === '23505') { // Unique constraint violation
+      if (error.message.includes('UNIQUE constraint failed')) {
         throw new Error(`Tag "${name}" already exists`);
       }
       throw new Error(`Failed to create tag: ${error.message}`);
@@ -36,23 +45,22 @@ class Tag {
     try {
       let whereConditions = [];
       let queryParams = [];
-      let paramIndex = 1;
 
       if (activeOnly) {
-        whereConditions.push('t.is_active = true');
+        whereConditions.push('t.is_active = 1');
       }
 
       if (category) {
-        whereConditions.push(`t.category = $${paramIndex++}`);
+        whereConditions.push(`t.category = ?`);
         queryParams.push(category);
       }
 
-      const whereClause = whereConditions.length > 0 ? 
+      const whereClause = whereConditions.length > 0 ?
         `WHERE ${whereConditions.join(' AND ')}` : '';
 
       // Order by priority if requested, otherwise by category and name
-      const orderClause = priorityOrder ? 
-        'ORDER BY usage_count DESC, t.name ASC' : 
+      const orderClause = priorityOrder ?
+        'ORDER BY usage_count DESC, t.name ASC' :
         'ORDER BY t.category, t.name';
 
       const result = await query(`
@@ -93,7 +101,7 @@ class Tag {
                COUNT(qt.question_id) as usage_count
         FROM tags t
         LEFT JOIN question_tags qt ON t.id = qt.tag_id
-        WHERE t.id = $1
+        WHERE t.id = ?
         GROUP BY t.id
       `, [id]);
 
@@ -117,7 +125,7 @@ class Tag {
                COUNT(qt.question_id) as usage_count
         FROM tags t
         LEFT JOIN question_tags qt ON t.id = qt.tag_id
-        WHERE t.is_active = true
+        WHERE t.is_active = 1
         GROUP BY t.id
         ORDER BY t.category, t.name
       `);
@@ -127,7 +135,7 @@ class Tag {
       result.rows.forEach(row => {
         const tag = new Tag(row);
         tag.usageCount = parseInt(row.usage_count);
-        
+
         const category = tag.category || 'uncategorized';
         if (!tagsByCategory[category]) {
           tagsByCategory[category] = [];
@@ -141,26 +149,24 @@ class Tag {
     }
   }
 
-  // Search tags by name
+  // Search tags by name (simplified for SQLite)
   static async search(searchTerm, limit = 20) {
     try {
       const result = await query(`
         SELECT t.*,
-               COUNT(qt.question_id) as usage_count,
-               similarity(t.name, $1) as similarity
+               COUNT(qt.question_id) as usage_count
         FROM tags t
         LEFT JOIN question_tags qt ON t.id = qt.tag_id
-        WHERE t.is_active = true 
-          AND (t.name ILIKE $2 OR similarity(t.name, $1) > 0.3)
+        WHERE t.is_active = 1
+          AND t.name LIKE ?
         GROUP BY t.id
-        ORDER BY similarity DESC, usage_count DESC, t.name
-        LIMIT $3
-      `, [searchTerm, `%${searchTerm}%`, limit]);
+        ORDER BY usage_count DESC, t.name
+        LIMIT ?
+      `, [`%${searchTerm}%`, limit]);
 
       return result.rows.map(row => {
         const tag = new Tag(row);
         tag.usageCount = parseInt(row.usage_count);
-        tag.similarity = parseFloat(row.similarity);
         return tag;
       });
     } catch (error) {
@@ -171,24 +177,47 @@ class Tag {
   // Update tag
   async update({ name, category, color, description }) {
     try {
-      const result = await query(`
-        UPDATE tags 
-        SET name = COALESCE($1, name),
-            category = COALESCE($2, category),
-            color = COALESCE($3, color),
-            description = COALESCE($4, description)
-        WHERE id = $5
-        RETURNING *
-      `, [name, category, color, description, this.id]);
+      const updateFields = {};
+      const queryParams = [];
 
-      if (result.rows.length === 0) {
+      if (name !== undefined) {
+        updateFields.name = name;
+        queryParams.push(name);
+      }
+      if (category !== undefined) {
+        updateFields.category = category;
+        queryParams.push(category);
+      }
+      if (color !== undefined) {
+        updateFields.color = color;
+        queryParams.push(color);
+      }
+      if (description !== undefined) {
+        updateFields.description = description;
+        queryParams.push(description);
+      }
+
+      if (Object.keys(updateFields).length === 0) {
+        return this;
+      }
+
+      const setClause = Object.keys(updateFields).map(key => `${key} = ?`).join(', ');
+      queryParams.push(this.id);
+
+      const result = await query(`
+        UPDATE tags
+        SET ${setClause}
+        WHERE id = ?
+      `, queryParams);
+
+      if (result.rowCount === 0) {
         throw new Error('Tag not found');
       }
 
-      Object.assign(this, result.rows[0]);
+      Object.assign(this, updateFields);
       return this;
     } catch (error) {
-      if (error.code === '23505') { // Unique constraint violation
+      if (error.message.includes('UNIQUE constraint failed')) {
         throw new Error(`Tag "${name}" already exists`);
       }
       throw new Error(`Failed to update tag: ${error.message}`);
@@ -199,13 +228,12 @@ class Tag {
   async deactivate() {
     try {
       const result = await query(`
-        UPDATE tags 
-        SET is_active = false
-        WHERE id = $1
-        RETURNING *
+        UPDATE tags
+        SET is_active = 0
+        WHERE id = ?
       `, [this.id]);
 
-      Object.assign(this, result.rows[0]);
+      this.isActive = 0;
       return this;
     } catch (error) {
       throw new Error(`Failed to deactivate tag: ${error.message}`);
@@ -217,16 +245,16 @@ class Tag {
     try {
       // Check if tag is used
       const usageResult = await query(`
-        SELECT COUNT(*) as count 
-        FROM question_tags 
-        WHERE tag_id = $1
+        SELECT COUNT(*) as count
+        FROM question_tags
+        WHERE tag_id = ?
       `, [this.id]);
 
       if (parseInt(usageResult.rows[0].count) > 0) {
         throw new Error('Cannot delete tag that is currently in use. Deactivate it instead.');
       }
 
-      await query('DELETE FROM tags WHERE id = $1', [this.id]);
+      await query('DELETE FROM tags WHERE id = ?', [this.id]);
       return true;
     } catch (error) {
       throw new Error(`Failed to delete tag: ${error.message}`);
@@ -240,9 +268,9 @@ class Tag {
         SELECT q.id, q.question_text, q.answer_text, q.is_active, q.created_at
         FROM questions q
         JOIN question_tags qt ON q.id = qt.question_id
-        WHERE qt.tag_id = $1
+        WHERE qt.tag_id = ?
         ORDER BY q.updated_at DESC
-        LIMIT $2 OFFSET $3
+        LIMIT ? OFFSET ?
       `, [this.id, limit, offset]);
 
       return result.rows;
@@ -254,23 +282,18 @@ class Tag {
   // Merge this tag with another tag (moves all questions to target tag)
   async mergeWith(targetTagId) {
     try {
-      // Start transaction
-      await query('BEGIN');
-
       // Move all question associations to target tag
       await query(`
         UPDATE question_tags
-        SET tag_id = $1
-        WHERE tag_id = $2
+        SET tag_id = ?
+        WHERE tag_id = ?
       `, [targetTagId, this.id]);
 
       // Deactivate this tag
       await this.deactivate();
 
-      await query('COMMIT');
       return true;
     } catch (error) {
-      await query('ROLLBACK');
       throw new Error(`Failed to merge tags: ${error.message}`);
     }
   }
@@ -279,19 +302,19 @@ class Tag {
   static async getStatistics() {
     try {
       const result = await query(`
-        SELECT 
-          COUNT(*) FILTER (WHERE is_active = true) as active_tags,
-          COUNT(*) FILTER (WHERE is_active = false) as inactive_tags,
-          COUNT(DISTINCT category) FILTER (WHERE is_active = true) as categories,
+        SELECT
+          SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active_tags,
+          SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) as inactive_tags,
+          COUNT(DISTINCT category) as categories,
           (
-            SELECT COUNT(DISTINCT qt.question_id) 
-            FROM question_tags qt 
-            JOIN tags t ON qt.tag_id = t.id 
-            WHERE t.is_active = true
+            SELECT COUNT(DISTINCT qt.question_id)
+            FROM question_tags qt
+            JOIN tags t ON qt.tag_id = t.id
+            WHERE t.is_active = 1
           ) as tagged_questions,
           (
-            SELECT COUNT(*) 
-            FROM questions q 
+            SELECT COUNT(*)
+            FROM questions q
             WHERE NOT EXISTS (
               SELECT 1 FROM question_tags qt WHERE qt.question_id = q.id
             )
@@ -312,10 +335,10 @@ class Tag {
         SELECT t.*, COUNT(qt.question_id) as usage_count
         FROM tags t
         JOIN question_tags qt ON t.id = qt.tag_id
-        WHERE t.is_active = true
+        WHERE t.is_active = 1
         GROUP BY t.id
         ORDER BY usage_count DESC, t.name
-        LIMIT $1
+        LIMIT ?
       `, [limit]);
 
       return result.rows.map(row => {
@@ -333,11 +356,11 @@ class Tag {
   static async getTagsByPriority() {
     try {
       const result = await query(`
-        SELECT t.*, 
+        SELECT t.*,
                COUNT(qt.question_id) as usage_count
         FROM tags t
         LEFT JOIN question_tags qt ON t.id = qt.tag_id
-        WHERE t.is_active = true
+        WHERE t.is_active = 1
         GROUP BY t.id
         ORDER BY usage_count DESC, t.name
       `);
@@ -363,72 +386,6 @@ class Tag {
     }
   }
 
-  // Get tag health metrics
-  static async getTagHealthMetrics() {
-    try {
-      const result = await query(`
-        SELECT 
-          COUNT(*) FILTER (WHERE usage_count >= 20) as primary_tags,
-          COUNT(*) FILTER (WHERE usage_count >= 10 AND usage_count < 20) as secondary_tags,
-          COUNT(*) FILTER (WHERE usage_count >= 5 AND usage_count < 10) as minor_tags,
-          COUNT(*) FILTER (WHERE usage_count >= 1 AND usage_count < 5) as rare_tags,
-          COUNT(*) FILTER (WHERE usage_count = 0) as orphan_tags,
-          AVG(usage_count) as average_usage,
-          MAX(usage_count) as max_usage,
-          COUNT(DISTINCT category) as categories_count
-        FROM (
-          SELECT t.id, t.category, COUNT(qt.question_id) as usage_count
-          FROM tags t
-          LEFT JOIN question_tags qt ON t.id = qt.tag_id
-          WHERE t.is_active = true
-          GROUP BY t.id, t.category
-        ) tag_stats
-      `);
-
-      return result.rows[0];
-    } catch (error) {
-      throw new Error(`Failed to get tag health metrics: ${error.message}`);
-    }
-  }
-
-  // Find similar tags for consolidation suggestions
-  static async findSimilarTags(threshold = 0.6) {
-    try {
-      const result = await query(`
-        SELECT 
-          t1.id as tag1_id, t1.name as tag1_name, t1_usage.usage_count as tag1_usage,
-          t2.id as tag2_id, t2.name as tag2_name, t2_usage.usage_count as tag2_usage,
-          similarity(t1.name, t2.name) as similarity_score
-        FROM tags t1
-        JOIN tags t2 ON t1.id < t2.id
-        LEFT JOIN (
-          SELECT tag_id, COUNT(*) as usage_count 
-          FROM question_tags 
-          GROUP BY tag_id
-        ) t1_usage ON t1.id = t1_usage.tag_id
-        LEFT JOIN (
-          SELECT tag_id, COUNT(*) as usage_count 
-          FROM question_tags 
-          GROUP BY tag_id
-        ) t2_usage ON t2.id = t2_usage.tag_id
-        WHERE t1.is_active = true 
-          AND t2.is_active = true
-          AND similarity(t1.name, t2.name) >= $1
-          AND t1.category = t2.category
-        ORDER BY similarity_score DESC, t1_usage.usage_count DESC
-      `, [threshold]);
-
-      return result.rows.map(row => ({
-        tag1: { id: row.tag1_id, name: row.tag1_name, usageCount: parseInt(row.tag1_usage || 0) },
-        tag2: { id: row.tag2_id, name: row.tag2_name, usageCount: parseInt(row.tag2_usage || 0) },
-        similarityScore: parseFloat(row.similarity_score),
-        suggestion: row.tag1_usage >= row.tag2_usage ? 'merge_tag2_into_tag1' : 'merge_tag1_into_tag2'
-      }));
-    } catch (error) {
-      throw new Error(`Failed to find similar tags: ${error.message}`);
-    }
-  }
-
   // Convert to JSON for API responses
   toJSON() {
     return {
@@ -440,7 +397,6 @@ class Tag {
       isActive: this.isActive,
       createdAt: this.createdAt,
       createdBy: this.createdBy,
-      creatorName: this.creatorName,
       usageCount: this.usageCount
     };
   }

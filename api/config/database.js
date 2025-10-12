@@ -1,60 +1,77 @@
-import pkg from 'pg';
-const { Pool } = pkg;
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Database connection pool
-// Railway provides DATABASE_URL, but we also support individual variables for flexibility
-const pool = new Pool(
-  process.env.DATABASE_URL ? 
-    {
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-      max: 20, // Maximum number of clients in pool
-      idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-      connectionTimeoutMillis: 2000, // Return error after 2 seconds if connection could not be established
-    } : 
-    {
-      host: process.env.DB_HOST || 'localhost',
-      port: process.env.DB_PORT || 5432,
-      database: process.env.DB_NAME || 'flashpharma',
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD,
-      max: 20, // Maximum number of clients in pool
-      idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-      connectionTimeoutMillis: 2000, // Return error after 2 seconds if connection could not be established
-    }
-);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-// Test database connection
-pool.on('connect', () => {
-  console.log('✅ Connected to PostgreSQL database');
-});
+// SQLite database path - defaults to a local file in the project root
+const dbPath = process.env.SQLITE_DB_PATH || join(__dirname, '../../database/flashpharma.db');
 
-pool.on('error', (err) => {
-  console.error('❌ Database connection error:', err);
-  process.exit(-1);
-});
+let db = null;
+
+// Initialize database connection
+export const initializeDatabase = async () => {
+  try {
+    db = await open({
+      filename: dbPath,
+      driver: sqlite3.Database
+    });
+
+    // Enable foreign keys
+    await db.exec('PRAGMA foreign_keys = ON');
+
+    console.log('Connected to SQLite database at:', dbPath);
+    return db;
+  } catch (error) {
+    console.error('Database connection error:', error);
+    process.exit(-1);
+  }
+};
 
 // Helper function to execute queries
-export const query = async (text, params) => {
+export const query = async (text, params = []) => {
+  if (!db) {
+    await initializeDatabase();
+  }
+
   const start = Date.now();
   try {
-    const res = await pool.query(text, params);
+    let result;
+
+    // Handle different query types
+    if (text.trim().toUpperCase().startsWith('SELECT')) {
+      result = await db.all(text, params);
+      result = { rows: result, rowCount: result.length };
+    } else if (text.trim().toUpperCase().startsWith('INSERT')) {
+      const res = await db.run(text, params);
+      result = {
+        rows: [{ id: res.lastID }],
+        rowCount: res.changes,
+        insertId: res.lastID
+      };
+    } else {
+      const res = await db.run(text, params);
+      result = { rows: [], rowCount: res.changes };
+    }
+
     const duration = Date.now() - start;
-    
+
     if (process.env.NODE_ENV === 'development') {
-      console.log('📊 SQL Query executed:', {
+      console.log('SQL Query executed:', {
         query: text.substring(0, 100) + (text.length > 100 ? '...' : ''),
         duration: `${duration}ms`,
-        rows: res.rowCount
+        rows: result.rowCount
       });
     }
-    
-    return res;
+
+    return result;
   } catch (error) {
-    console.error('❌ Database query error:', {
+    console.error('Database query error:', {
       query: text,
       params,
       error: error.message
@@ -63,17 +80,76 @@ export const query = async (text, params) => {
   }
 };
 
-// Helper function to get a client from the pool for transactions
+// Helper function to get database instance for transactions
 export const getClient = async () => {
-  const client = await pool.connect();
-  return client;
+  if (!db) {
+    await initializeDatabase();
+  }
+
+  // SQLite doesn't use connection pools like PostgreSQL
+  // Return a transaction-like interface
+  return {
+    query: async (text, params) => {
+      return await query(text, params);
+    },
+    release: () => {
+      // No-op for SQLite
+    },
+    async begin() {
+      await db.exec('BEGIN TRANSACTION');
+    },
+    async commit() {
+      await db.exec('COMMIT');
+    },
+    async rollback() {
+      await db.exec('ROLLBACK');
+    }
+  };
+};
+
+// Initialize database with schema
+export const setupDatabase = async () => {
+  try {
+    if (!db) {
+      await initializeDatabase();
+    }
+
+    // Check if tables exist
+    const tables = await db.all(`
+      SELECT name FROM sqlite_master
+      WHERE type='table' AND name NOT LIKE 'sqlite_%'
+    `);
+
+    if (tables.length === 0) {
+      console.log('Setting up database schema...');
+      const fs = await import('fs');
+
+      try {
+        const schemaPath = join(__dirname, '../../database/schema-sqlite.sql');
+        const schema = fs.readFileSync(schemaPath, 'utf8');
+        await db.exec(schema);
+        console.log('Database schema created successfully');
+      } catch (error) {
+        console.error('Error reading schema file:', error);
+        throw error;
+      }
+    }
+
+    return db;
+  } catch (error) {
+    console.error('Database setup error:', error);
+    throw error;
+  }
 };
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-  console.log('🔄 Closing database connections...');
-  await pool.end();
+  console.log('Closing database connection...');
+  if (db) {
+    await db.close();
+  }
   process.exit(0);
 });
 
-export default pool;
+// Export database instance
+export default db;
