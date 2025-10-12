@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import readline from 'readline';
 import { query, getClient } from './api/config/database.js';
+import { processMarkdown } from './api/utils/markdown.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -199,24 +200,46 @@ async function loadToDatabase(selectedFile, options = {}) {
           }
         }
         
-        // Insert the question
-        // For published status, we need to also set validated_by due to check constraint
+        // Process markdown to generate HTML and metadata
+        const questionProcessed = processMarkdown(questionText, 'question');
+        const answerProcessed = processMarkdown(answerText, 'answer');
+
+        // Combine entities from both question and answer
+        const combinedEntities = {
+          drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
+          drug_classes: [...new Set([...questionProcessed.entities.drug_classes, ...answerProcessed.entities.drug_classes])],
+          conditions: [...new Set([...questionProcessed.entities.conditions, ...answerProcessed.entities.conditions])],
+          dosages: [...new Set([...questionProcessed.entities.dosages, ...answerProcessed.entities.dosages])],
+          routes: [...new Set([...questionProcessed.entities.routes, ...answerProcessed.entities.routes])]
+        };
+
+        const metadata = {
+          entities: combinedEntities,
+          question_stats: questionProcessed.stats,
+          answer_stats: answerProcessed.stats,
+          total_word_count: questionProcessed.stats.word_count + answerProcessed.stats.word_count,
+          last_processed: new Date().toISOString()
+        };
+
+        // Insert the question with HTML and metadata
         const questionResult = await client.query(
           `INSERT INTO questions (
             question_text,
             answer_text,
-            status,
-            created_by,
-            validated_by,
-            validated_at
-          ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+            question_html,
+            answer_html,
+            is_active,
+            sources,
+            metadata
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
           [
             questionText,
             answerText,
-            options.status || 'published',
-            1, // System user (created_by)
-            options.status === 'published' ? 1 : null, // System user as validator for published
-            options.status === 'published' ? new Date() : null // Validation timestamp
+            questionProcessed.html,
+            answerProcessed.html,
+            true, // Set as active by default
+            JSON.stringify(sources || []), // Store sources as JSONB
+            JSON.stringify(metadata) // Store metadata as JSONB
           ]
         );
         
@@ -245,8 +268,8 @@ async function loadToDatabase(selectedFile, options = {}) {
             }
             
             const createTagResult = await client.query(
-              'INSERT INTO tags (name, category, created_by) VALUES ($1, $2, $3) RETURNING id',
-              [tagName.trim(), category, 1]
+              'INSERT INTO tags (name, category) VALUES ($1, $2) RETURNING id',
+              [tagName.trim(), category]
             );
             tagId = createTagResult.rows[0].id;
           } else {
@@ -260,31 +283,8 @@ async function loadToDatabase(selectedFile, options = {}) {
           );
         }
         
-        // Add sources if provided
-        if (sources && sources.length > 0) {
-          for (const source of sources) {
-            if (source.title || source.url) {
-              await client.query(
-                `INSERT INTO question_sources (
-                  question_id,
-                  source_type,
-                  title,
-                  url,
-                  authority,
-                  year
-                ) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING`,
-                [
-                  questionId,
-                  source.type || 'website',
-                  source.title || null,
-                  source.url || null,
-                  source.authority || null,
-                  source.year || null
-                ]
-              );
-            }
-          }
-        }
+        // Sources are already stored in the sources JSONB column
+        // No need for separate question_sources table
         
         successCount++;
         
@@ -325,7 +325,8 @@ async function main() {
   console.log(`\n${colors.bright}${colors.magenta}╔════════════════════════════════════════════════════╗${colors.reset}`);
   console.log(`${colors.bright}${colors.magenta}║   Chargement des Questions dans PostgreSQL        ║${colors.reset}`);
   console.log(`${colors.bright}${colors.magenta}╚════════════════════════════════════════════════════╝${colors.reset}\n`);
-  
+
+
   // Get all available JSON files
   const files = getQuestionFiles();
   

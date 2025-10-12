@@ -44,15 +44,6 @@ const updateQuestionSchema = Joi.object({
   tagIds: Joi.array().items(Joi.number().integer().positive()).optional()
 });
 
-// Simple validation for toggle operations
-const toggleSchema = Joi.object({
-  adminNote: Joi.string().max(500).optional().default('')
-});
-
-const deleteSchema = Joi.object({
-  reason: Joi.string().max(500).optional().default('')
-});
-
 // GET /api/questions - List questions with filters and pagination
 router.get('/', async (req, res) => {
   try {

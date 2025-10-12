@@ -1,4 +1,4 @@
-# Guide complet des antibiotiques
+# Guide des antibiotiques
 
 ## Acronymes et abréviations
 

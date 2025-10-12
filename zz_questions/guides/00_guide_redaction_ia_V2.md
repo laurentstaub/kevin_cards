@@ -8,8 +8,8 @@ Ce guide méthodologique permet à une IA de rédiger des guides médicaux spéc
 
 ### 1. En-tête et titre
 
-- **Format** : "Guide complet des [domaine médical spécifique]"
-- **Exemple** : "Guide complet des anticoagulants"
+- **Format** : "Guide des [domaine médical spécifique]"
+- **Exemple** : "Guide des anticoagulants"
 
 ### 2. Section acronymes (obligatoire)
 
@@ -77,6 +77,171 @@ Ce guide méthodologique permet à une IA de rédiger des guides médicaux spéc
 3. **Données chiffrées systématiques** : Pourcentages d'efficacité, durées d'action, demi-vies, clairances
 4. **Comparaisons inter-molécules** avec avantages/inconvénients
 5. **Éléments en gras** : Points clés, bénéfices majeurs, risques critiques
+
+## Intégration des schémas Mermaid
+
+### Moment optimal d'intégration
+
+**Recommandation : Intégration dès la phase de conception** pour une meilleure cohérence narrative et pédagogique.
+
+### Critères d'inclusion des diagrammes Mermaid
+
+- **Algorithmes thérapeutiques complexes** : Arbres de décision multi-critères
+- **Cascades physiopathologiques** : Mécanismes d'action en chaîne
+- **Parcours de soins** : Timelines de traitement et surveillance
+- **Interactions médicamenteuses** : Réseaux complexes de contre-indications
+- **Classifications hiérarchiques** : Scores de risque, stades évolutifs
+
+### Types de diagrammes par section
+
+#### Introduction : Mindmaps et Overview
+
+~~~markdown
+## Physiopathologie de [pathologie]
+
+```mermaid
+mindmap
+  root((Pathologie))
+    Facteurs de risque
+      Génétiques
+      Environnementaux
+    Mécanismes
+      Voie A
+      Voie B
+    Conséquences
+      Complications
+      Pronostic
+#### Corps du document : Flowcharts décisionnels
+```markdown
+## Algorithme de prescription
+
+```mermaid
+flowchart TD
+    A[Patient éligible] --> B{Contre-indications ?}
+    B -->|Oui| C[Alternative thérapeutique]
+    B -->|Non| D[Posologie standard]
+    D --> E{Ajustement nécessaire ?}
+    E -->|Oui| F[Dose adaptée]
+    E -->|Non| G[Surveillance standard]
+    
+    style A fill:#e8f4f8
+    style C fill:#ffebee
+    style G fill:#e8f5e8
+#### Suivi thérapeutique : Timelines et Gantt
+```markdown
+## Calendrier de surveillance
+
+```mermaid
+gantt
+    title Suivi thérapeutique sur 12 mois
+    dateFormat YYYY-MM-DD
+    section Bilans biologiques
+    Bilan initial    :active, bio1, 2024-01-01, 1d
+    Contrôle M1      :bio2, 2024-02-01, 1d
+    Contrôle M3      :bio3, 2024-04-01, 1d
+    Bilan annuel     :bio4, 2024-12-01, 1d
+    section Consultations
+    Initiation       :active, consult1, 2024-01-01, 1d
+    Suivi M6         :consult2, 2024-07-01, 1d
+### Règles d'intégration technique
+
+#### Placement stratégique
+- **Après l'introduction conceptuelle** : Le diagramme illustre le propos
+- **Avant les détails techniques** : Vue d'ensemble puis approfondissement
+- **En complément des tableaux** : Visualisation des données complexes
+
+#### Formatting Mermaid standardisé
+```markdown
+### Titre explicite du processus
+
+```mermaid
+[type] [orientation]
+    [contenu structuré]
+    
+    style [élément] fill:[couleur],stroke:[bordure]
+~~~
+
+**Légende obligatoire :** Explication des codes couleurs et symboles
+
+```
+#### Codes couleurs médicaux recommandés
+- **Vert (#e8f5e8)** : Actions recommandées, objectifs atteints
+- **Rouge (#ffebee)** : Contre-indications, alertes, urgences
+- **Bleu (#e8f4f8)** : Points d'entrée, situations initiales
+- **Orange (#fff3e0)** : Surveillance renforcée, précautions
+- **Gris (#f5f5f5)** : Éléments neutres, informations générales
+
+### Avantages de l'intégration précoce
+
+#### Cohérence narrative
+- Les diagrammes guident la structure rédactionnelle
+- Évite les redondances entre texte et schémas
+- Hiérarchise naturellement l'information
+
+#### Optimisation pédagogique
+- Apprentissage visuel et textuel complémentaires
+- Mémorisation renforcée par double encodage
+- Navigation intuitive dans les protocoles complexes
+
+#### Maintenance facilitée
+- Synchronisation automatique contenu-schémas
+- Versioning unifié des modifications
+- Évolutivité technique préservée
+
+### Stratégie d'implémentation
+
+#### Phase 1 : Identification des besoins visuels
+1. **Cartographier les processus complexes** du domaine médical
+2. **Identifier les points de décision critiques** nécessitant clarification
+3. **Recenser les données relationnelles** (interactions, classifications)
+
+#### Phase 2 : Conception des diagrammes
+1. **Créer les wireframes** des principaux algorithmes
+2. **Définir la charte graphique** avec codes couleurs médicaux
+3. **Valider la cohérence** entre diagrammes et contenu textuel
+
+#### Phase 3 : Intégration rédactionnelle
+1. **Rédiger en mode "diagramme-first"** : partir du schéma pour détailler
+2. **Synchroniser légendes et texte** pour éviter les contradictions
+3. **Optimiser le flow lecture** : diagramme → explication → détails
+
+### Exemples d'application par spécialité
+
+#### Cardiologie : Stratification du risque
+```markdown
+```mermaid
+quadrantChart
+    title Évaluation risque cardiovasculaire
+    x-axis Faible risque --> Risque élevé
+    y-axis Jeune --> Âgé
+    
+    quadrant-1 Prévention secondaire intensive
+    quadrant-2 Surveillance rapprochée
+    quadrant-3 Prévention primaire standard
+    quadrant-4 Évaluation spécialisée
+#### Infectiologie : Antibiothérapie
+```markdown
+```mermaid
+flowchart LR
+    A[Suspicion infection] --> B{Gravité clinique}
+    B -->|Sepsis| C[ATB large spectre immédiat]
+    B -->|Modérée| D[Prélèvements puis ATB ciblée]
+    B -->|Légère| E[ATB probabiliste]
+    
+    C --> F[Réévaluation H48]
+    D --> F
+    E --> G[Contrôle H72]
+### Recommandations techniques
+
+#### Compatibilité multi-plateforme
+- **Format Mermaid natif** : Compatible Hugo, GitBook, Notion
+- **Fallback HTML** : Export statique pour systèmes non compatibles
+- **Responsive design** : Adaptation mobile avec zooming
+
+#### Performance et accessibilité
+- **Alt text descriptif** : Description textuelle des diagrammes
+- **Contrast ratios** : Respect WCAG pour daltoniens
+- **Lazy loading** : Chargement optimisé des diagrammes complexes
 
 ## Règles de rédaction strictes
 
@@ -159,7 +324,7 @@ Ce guide méthodologique permet à une IA de rédiger des guides médicaux spéc
 [En France, 1,1 million de patients traités par AVK génèrent **plus de 17 000 hospitalisations annuelles** pour hémorragies](https://ansm.sante.fr/dossiers-thematiques/anticoagulants)
 ```
 
-## Formatage des tableaux (nouveauté)
+## Formatage des tableaux (compatible Typora)
 
 ### Quand utiliser des tableaux
 
@@ -168,63 +333,52 @@ Ce guide méthodologique permet à une IA de rédiger des guides médicaux spéc
 - **Classifications complexes** : Stades, grades, scores de risque
 - **Conduites à tenir** : Selon paramètres biologiques, cliniques
 
-- ## Formatage des tableaux (compatible Typora)
+### Structure HTML avec styles inline (format Typora)
 
-  ### Quand utiliser des tableaux
+Pour une compatibilité optimale avec Typora et autres éditeurs Markdown, utilisez exclusivement des styles CSS inline directement dans les attributs `style` de chaque élément HTML :
 
-  - **Protocoles thérapeutiques** : Algorithmes de dosage, ajustements
-  - **Comparaisons multi-critères** : Efficacité, tolérance, coût, surveillance
-  - **Classifications complexes** : Stades, grades, scores de risque
-  - **Conduites à tenir** : Selon paramètres biologiques, cliniques
+```html
+<table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+<thead>
+<tr style="background-color: #f5f5f5;">
+<th style="width: 25%; padding: 12px; border: 1px solid #ddd; text-align: left; font-weight: bold;">Paramètre</th>
+<th style="width: 35%; padding: 12px; border: 1px solid #ddd; text-align: left; font-weight: bold;">Conduite A</th>
+<th style="width: 40%; padding: 12px; border: 1px solid #ddd; text-align: left; font-weight: bold;">Conduite B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 1</td>
+<td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 2</td>
+<td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 3</td>
+</tr>
+<tr style="background-color: #f9f9f9;">
+<td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 4</td>
+<td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 5</td>
+<td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 6</td>
+</tr>
+</tbody>
+</table>
+```
 
-  ### Structure HTML avec styles inline (format Typora)
+### Points clés pour la compatibilité Typora
 
-  Pour une compatibilité optimale avec Typora et autres éditeurs Markdown, utilisez exclusivement des styles CSS inline directement dans les attributs `style` de chaque élément HTML :
+- **NE PAS utiliser** : balises `<style>` séparées ou classes CSS
+- **TOUJOURS utiliser** : attributs `style` directement dans chaque balise HTML
+- **Alternance de couleurs** : ajouter `style="background-color: #f9f9f9;"` aux lignes paires (`<tr>`)
+- **Styles essentiels** :
+  - Table : `width: 100%; border-collapse: collapse; margin: 20px 0;`
+  - En-têtes (`th`) : `padding: 12px; border: 1px solid #ddd; text-align: left; font-weight: bold; background-color: #f5f5f5;`
+  - Cellules (`td`) : `padding: 12px; border: 1px solid #ddd; vertical-align: top;`
+  - Largeurs : définir les `width` en pourcentages dans les `th`
 
-  html
+### Règles de contenu des tableaux
 
-  ```html
-  <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-  <thead>
-  <tr style="background-color: #f5f5f5;">
-  <th style="width: 25%; padding: 12px; border: 1px solid #ddd; text-align: left; font-weight: bold;">Paramètre</th>
-  <th style="width: 35%; padding: 12px; border: 1px solid #ddd; text-align: left; font-weight: bold;">Conduite A</th>
-  <th style="width: 40%; padding: 12px; border: 1px solid #ddd; text-align: left; font-weight: bold;">Conduite B</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-  <td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 1</td>
-  <td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 2</td>
-  <td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 3</td>
-  </tr>
-  <tr style="background-color: #f9f9f9;">
-  <td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 4</td>
-  <td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 5</td>
-  <td style="padding: 12px; border: 1px solid #ddd; vertical-align: top;">Contenu cellule 6</td>
-  </tr>
-  </tbody>
-  </table>
-  ```
-
-  ### Points clés pour la compatibilité Typora
-
-  - **NE PAS utiliser** : balises `<style>` séparées ou classes CSS
-  - **TOUJOURS utiliser** : attributs `style` directement dans chaque balise HTML
-  - **Alternance de couleurs** : ajouter `style="background-color: #f9f9f9;"` aux lignes paires (`<tr>`)
-  - **Styles essentiels** :
-    - Table : `width: 100%; border-collapse: collapse; margin: 20px 0;`
-    - En-têtes (`th`) : `padding: 12px; border: 1px solid #ddd; text-align: left; font-weight: bold; background-color: #f5f5f5;`
-    - Cellules (`td`) : `padding: 12px; border: 1px solid #ddd; vertical-align: top;`
-    - Largeurs : définir les `width` en pourcentages dans les `th`
-
-  ### Règles de contenu des tableaux
-
-  - **Titres explicites** : Décrivant précisément le contenu
-  - **Formatage riche** : `<strong>`, `<br>`, entités HTML (`<`, `≥`)
-  - **Données quantifiées** : Dosages précis, pourcentages, délais
-  - **Hiérarchisation visuelle** : Alternance de couleurs, groupements logiques
-  - **Accessibilité** : Largeurs de colonnes adaptées au contenu
+- **Titres explicites** : Décrivant précisément le contenu
+- **Formatage riche** : `<strong>`, `<br>`, entités HTML (`<`, `≥`)
+- **Données quantifiées** : Dosages précis, pourcentages, délais
+- **Hiérarchisation visuelle** : Alternance de couleurs, groupements logiques
+- **Accessibilité** : Largeurs de colonnes adaptées au contenu
 
 ## Section références bibliographiques (enrichie)
 
@@ -292,15 +446,15 @@ Ce guide méthodologique permet à une IA de rédiger des guides médicaux spéc
 3. **Collecter données épidémiologiques** : Prévalence, incidence, projections, coûts
 4. **Répertorier molécules** : Princeps, biosimilaires, génériques, nouveautés
 5. **Analyser interactions** : Matrices d'interactions, voies métaboliques
-6. **Préparer tableaux** : Identifier données complexes nécessitant structuration
+6. **Préparer tableaux et diagrammes** : Identifier données complexes nécessitant structuration visuelle
 
 ### Phase de rédaction (méthodologie stricte)
 
 1. **Suivre structure obligatoire** : Plan standardisé sans déviations
-2. **Intégrer liens en temps réel** : Pas d'ajout a posteriori
+2. **Intégrer liens et diagrammes en temps réel** : Pas d'ajout a posteriori
 3. **Vérifier cohérence quantitative** : Unités, ordres de grandeur, concordances
 4. **Équilibrer sections** : Longueur proportionnelle à importance clinique
-5. **Formater tableaux** : HTML avec CSS pour contrôle visuel optimal
+5. **Formater tableaux et Mermaid** : HTML/CSS et diagrammes pour contrôle visuel optimal
 6. **Diversifier formulations** : Éviter répétitions, enrichir vocabulaire technique
 
 ### Phase de relecture (contrôle qualité)
@@ -309,7 +463,7 @@ Ce guide méthodologique permet à une IA de rédiger des guides médicaux spéc
 2. **Contrôler acronymes** : Définitions complètes en section dédiée
 3. **Valider cohérence scientifique** : Pas de contradictions internes
 4. **Assurer complétude** : Toutes molécules/situations importantes couvertes
-5. **Tester tableaux** : Rendu visuel et accessibilité du contenu
+5. **Tester tableaux et diagrammes** : Rendu visuel et accessibilité du contenu
 6. **Harmoniser style** : Tonalité et niveau technique homogènes
 
 ## Domaines d'application étendus
@@ -363,11 +517,12 @@ Ce guide méthodologique permet à une IA de rédiger des guides médicaux spéc
 - **Scores de risque** : Algorithmes avec interprétation
 - **Ajustements** : Insuffisance rénale, hépatique, interactions
 
-### Éléments visuels enrichis
+### Éléments visuels enrichis avec Mermaid
 
 - **Schémas mécanistiques** : Voies d'action, métabolisme
 - **Algorithmes décisionnels** : Arbres de décision thérapeutique
 - **Timelines** : Chronologie des effets, surveillance
+- **Diagrammes Mermaid** : Flowcharts, mindmaps, gantt, graphiques intégrés
 
 ### Personnalisation par utilisateur
 
@@ -375,4 +530,4 @@ Ce guide méthodologique permet à une IA de rédiger des guides médicaux spéc
 - **Niveaux d'expertise** : Résident, praticien, expert
 - **Contextes de soins** : Hospitalier, ambulatoire, urgences
 
-Cette version enrichie du guide de rédaction intègre les spécificités observées dans le guide des anticoagulants, notamment la gestion avancée des interactions médicamenteuses, le formatage professionnel des tableaux, et une approche plus détaillée de la structuration du contenu médical spécialisé.
+Cette version enrichie du guide de rédaction intègre les spécificités observées dans le guide des anticoagulants, notamment la gestion avancée des interactions médicamenteuses, le formatage professionnel des tableaux, l'intégration native des diagrammes Mermaid, et une approche plus détaillée de la structuration du contenu médical spécialisé.

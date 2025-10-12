@@ -273,12 +273,6 @@ const QuestionModule = (function() {
     setSorting,
     setItemsPerPage,
     
-    // State getters
-    getCurrentPage: () => currentPage,
-    getItemsPerPage: () => itemsPerPage,
-    getOrderBy: () => orderBy,
-    getOrderDirection: () => orderDirection,
-    
     // Rendering (for advanced usage)
     renderQuestions
   };

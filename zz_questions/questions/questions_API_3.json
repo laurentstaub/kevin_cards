@@ -1,0 +1,204 @@
+{
+  "questions": [
+    {
+      "question": "Quelle est la DCI de la molécule active du **Vastarel®** ?",
+      "answer": "**Trimétazidine**\n\nAnti-ischémique myocardique.\n\n*Schéma de prise* : 2 comprimés par jour, matin et soir au cours des repas.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Kardégic®** à prendre le soir ?",
+      "answer": "**Acide acétylsalicylique (aspirine)**\n\nAntiagrégant plaquettaire.\n\n*Schéma de prise* : 1 prise le soir de préférence (meilleure efficacité sur l'agrégation plaquettaire nocturne).",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Fosamax®** ?",
+      "answer": "**Alendronate**\n\nBisphosphonate, traitement de l'ostéoporose.\n\n*Schéma de prise* : À jeun, 30 minutes avant le petit-déjeuner, avec un grand verre d'eau du robinet. Rester debout ou assis pendant 30 minutes après la prise.",
+      "tags": ["Fondamental", "Rhumatologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Ténormine®** ?",
+      "answer": "**Aténolol**\n\nBêta-bloquant cardiosélectif.\n\n*Schéma de prise* : 1 prise par jour, de préférence le matin.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Cortancyl®** ?",
+      "answer": "**Prednisone**\n\nCorticoïde systémique.\n\n*Schéma de prise* : Prise matinale unique pour respecter le rythme circadien du cortisol, au cours du repas.",
+      "tags": ["Fondamental", "Rhumatologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Skenan®** ?",
+      "answer": "**Sulfate de morphine à libération prolongée**\n\nAnalgésique opioïde fort, formulation LP.\n\n*Schéma de prise* : Toutes les 12 heures, à heures fixes.",
+      "tags": ["Fondamental", "Antalgiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Diflucan®** ?",
+      "answer": "**Fluconazole**\n\nAntifongique triazolé systémique.",
+      "tags": ["Fondamental", "Infectiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Mopral®** pris le matin ?",
+      "answer": "**Oméprazole**\n\nInhibiteur de la pompe à protons.\n\n*Schéma de prise* : 1 prise le matin à jeun, 15-30 minutes avant le petit-déjeuner.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Zyrtec®** ?",
+      "answer": "**Cétirizine**\n\nAntihistaminique H1 de 2ème génération.",
+      "tags": ["Fondamental", "Allergologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Josacine®** ?",
+      "answer": "**Josamycine**\n\nMacrolide, antibiotique.",
+      "tags": ["Fondamental", "Antibiotiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Lamaline®** ?",
+      "answer": "**Paracétamol + opium + caféine**\n\nAssociation analgésique de palier 2.",
+      "tags": ["Fondamental", "Antalgiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Voltarène® LP** ?",
+      "answer": "**Diclofénac sodique à libération prolongée**\n\nAINS, formulation LP.\n\n*Schéma de prise* : 1 prise par jour au cours d'un repas.",
+      "tags": ["Fondamental", "Antalgiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Imovane®** ?",
+      "answer": "**Zopiclone**\n\nHypnotique de la famille des cyclopyrrolones.\n\n*Schéma de prise* : Au coucher, juste avant de se mettre au lit.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Flagyl®** ?",
+      "answer": "**Métronidazole**\n\nAntibiotique anti-anaérobies et antiparasitaire.",
+      "tags": ["Fondamental", "Antibiotiques"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Ropinirole®** ?",
+      "answer": "**Ropinirole**\n\nAgoniste dopaminergique, traitement de la maladie de Parkinson.\n\n*Schéma de prise* : Pendant les repas pour limiter les nausées.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Nifluril®** ?",
+      "answer": "**Acide niflumique**\n\nAINS, utilisé notamment en ORL.",
+      "tags": ["Fondamental", "ORL"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Daflon®** ?",
+      "answer": "**Diosmine + hespéridine**\n\nVeinotonique, protecteur vasculaire.\n\n*Schéma de prise* : 2 comprimés par jour, au milieu des repas (midi et soir).",
+      "tags": ["Fondamental", "Phlébologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Catapressan®** ?",
+      "answer": "**Clonidine**\n\nAntihypertenseur central, agoniste alpha-2.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Forlax®** ?",
+      "answer": "**Macrogol 4000**\n\nLaxatif osmotique.\n\n*Schéma de prise* : De préférence le matin, à diluer dans un verre d'eau.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Lanzor®** ?",
+      "answer": "**Lansoprazole**\n\nInhibiteur de la pompe à protons.\n\n*Schéma de prise* : Le matin à jeun, 30 minutes avant le petit-déjeuner.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Tardyferon®** ?",
+      "answer": "**Sulfate ferreux à libération prolongée**\n\nSupplémentation en fer.\n\n*Schéma de prise* : À distance des repas (2h avant ou après) pour optimiser l'absorption.",
+      "tags": ["Fondamental", "Hématologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Célébrex®** ?",
+      "answer": "**Célécoxib**\n\nAINS inhibiteur sélectif de la COX-2.",
+      "tags": ["Fondamental", "Rhumatologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Spasfon-Lyoc®** ?",
+      "answer": "**Phloroglucinol**\n\nAntispasmodique, forme lyophilisée orodispersible.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Théralène®** ?",
+      "answer": "**Alimémazine**\n\nAntihistaminique H1 sédatif.\n\n*Schéma de prise* : Le soir au coucher pour profiter de l'effet sédatif.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Amarel®** ?",
+      "answer": "**Glimépiride**\n\nSulfamide hypoglycémiant.\n\n*Schéma de prise* : Juste avant ou pendant le premier repas de la journée.",
+      "tags": ["Fondamental", "Diabétologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Inipomp®** ?",
+      "answer": "**Oméprazole**\n\nInhibiteur de la pompe à protons, générique du Mopral®.\n\n*Schéma de prise* : Le matin à jeun.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Tiorfan®** ?",
+      "answer": "**Racécadotril**\n\nAntisécrétoire intestinal, traitement symptomatique de la diarrhée.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Smecta®** ?",
+      "answer": "**Diosmectite**\n\nPansement digestif, antidiarrhéique.\n\n*Schéma de prise* : À distance des autres médicaments (> 2h).",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Stablon®** ?",
+      "answer": "**Tianeptine**\n\nAntidépresseur atypique.\n\n*Schéma de prise* : 3 prises par jour avant les repas.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Derinox®** ?",
+      "answer": "**Naphtazoline**\n\nVasoconstricteur nasal, décongestionnant.\n\n*Schéma de prise* : Maximum 5 jours (risque de rhinite médicamenteuse).",
+      "tags": ["Fondamental", "ORL"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Utrogestan®** ?",
+      "answer": "**Progestérone naturelle micronisée**\n\nProgestatif.\n\n*Schéma de prise* : Voie orale le soir au coucher (effet sédatif) ou voie vaginale.",
+      "tags": ["Fondamental", "Gynécologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Modopar®** ?",
+      "answer": "**Lévodopa + bensérazide**\n\nTraitement de la maladie de Parkinson.\n\n*Schéma de prise* : 30 minutes avant ou 1h après les repas pour optimiser l'absorption.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Hexaquine®** ?",
+      "answer": "**Quinine**\n\nAntipaludique et traitement des crampes nocturnes.\n\n*Schéma de prise* : Le soir au coucher pour les crampes.",
+      "tags": ["Fondamental", "Infectiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Daktarin®** gel buccal ?",
+      "answer": "**Miconazole**\n\nAntifongique imidazolé topique.",
+      "tags": ["Fondamental", "Infectiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Viscéralgine®** ?",
+      "answer": "**Tiémonium**\n\nAntispasmodique anticholinergique.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Carbocistéine®** ?",
+      "answer": "**Carbocistéine**\n\nMucolytique, fluidifiant bronchique.",
+      "tags": ["Fondamental", "Pneumologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Bisoprolol®** ?",
+      "answer": "**Bisoprolol**\n\nBêta-bloquant cardiosélectif.\n\n*Schéma de prise* : 1 prise le matin au cours du petit-déjeuner.",
+      "tags": ["Fondamental", "Cardiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Mébévérine®** ?",
+      "answer": "**Mébévérine**\n\nAntispasmodique musculotrope.\n\n*Schéma de prise* : 20 minutes avant les repas.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Cynomel®** ?",
+      "answer": "**Liothyronine (T3)**\n\nHormone thyroïdienne, forme active rapide.\n\n*Schéma de prise* : Le matin à jeun, 30 minutes avant le petit-déjeuner.",
+      "tags": ["Fondamental", "Endocrinologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Singulair®** ?",
+      "answer": "**Montélukast**\n\nAntileucotriènes, traitement de l'asthme.\n\n*Schéma de prise* : 1 prise le soir.",
+      "tags": ["Fondamental", "Pneumologie"]
+    }
+  ]
+}

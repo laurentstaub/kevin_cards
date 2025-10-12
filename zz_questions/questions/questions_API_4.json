@@ -1,0 +1,199 @@
+{
+  "questions": [
+    {
+      "question": "Quelle est la DCI de la molécule active du **Séresta®** ?",
+      "answer": "**Oxazépam**\n\nBenzodiazépine anxiolytique à demi-vie courte.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Lysanxia®** ?",
+      "answer": "**Prazépam**\n\nBenzodiazépine anxiolytique à demi-vie longue.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Temesta®** ?",
+      "answer": "**Lorazépam**\n\nBenzodiazépine anxiolytique à demi-vie intermédiaire.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Mogadon®** ?",
+      "answer": "**Nitrazépam**\n\nBenzodiazépine hypnotique.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Aricept®** ?",
+      "answer": "**Donépézil**\n\nInhibiteur de l'acétylcholinestérase, traitement de la maladie d'Alzheimer.\n\n*Schéma de prise* : 1 prise le soir au coucher.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Exelon®** ?",
+      "answer": "**Rivastigmine**\n\nInhibiteur de l'acétylcholinestérase, traitement d'Alzheimer et Parkinson.\n\n*Schéma de prise* : 2 prises par jour pendant les repas.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Reminyl®** ?",
+      "answer": "**Galantamine**\n\nInhibiteur de l'acétylcholinestérase, traitement de la maladie d'Alzheimer.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Requip®** ?",
+      "answer": "**Ropinirole**\n\nAgoniste dopaminergique non ergoté, maladie de Parkinson.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Sifrol®** ?",
+      "answer": "**Pramipexole**\n\nAgoniste dopaminergique, traitement de Parkinson et syndrome des jambes sans repos.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Neupro®** ?",
+      "answer": "**Rotigotine**\n\nAgoniste dopaminergique transdermique (patch), maladie de Parkinson.\n\n*Schéma de prise* : Patch à changer toutes les 24h, même heure chaque jour.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Tasmar®** ?",
+      "answer": "**Tolcapone**\n\nInhibiteur de la COMT, traitement adjuvant de Parkinson.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Comtan®** ?",
+      "answer": "**Entacapone**\n\nInhibiteur de la COMT, traitement adjuvant de Parkinson.\n\n*Schéma de prise* : Avec chaque dose de lévodopa.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Azilect®** ?",
+      "answer": "**Rasagiline**\n\nInhibiteur de la MAO-B, traitement de la maladie de Parkinson.\n\n*Schéma de prise* : 1 prise par jour, matin ou soir.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Athymil®** ?",
+      "answer": "**Miansérine**\n\nAntidépresseur tétracyclique.\n\n*Schéma de prise* : Prise unique le soir (effet sédatif).",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Norset®** ?",
+      "answer": "**Mirtazapine**\n\nAntidépresseur noradrénergique et sérotoninergique spécifique (NaSSA).\n\n*Schéma de prise* : Prise unique le soir au coucher (effet sédatif).",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Ixel®** ?",
+      "answer": "**Milnacipran**\n\nInhibiteur de la recapture de la sérotonine et de la noradrénaline (IRSNA).",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Seroplex®** ?",
+      "answer": "**Escitalopram**\n\nISRS (énantiomère S du citalopram), antidépresseur.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Seropram®** ?",
+      "answer": "**Citalopram**\n\nInhibiteur sélectif de la recapture de la sérotonine (ISRS).",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Floxyfral®** ?",
+      "answer": "**Fluvoxamine**\n\nInhibiteur sélectif de la recapture de la sérotonine (ISRS).",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Zoloft®** ?",
+      "answer": "**Sertraline**\n\nInhibiteur sélectif de la recapture de la sérotonine (ISRS).",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Leponex®** ?",
+      "answer": "**Clozapine**\n\nAntipsychotique atypique, surveillance hématologique obligatoire.\n\n*Schéma de prise* : 1 à 3 prises par jour, surveillance NFS hebdomadaire puis mensuelle.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Solian®** ?",
+      "answer": "**Amisulpride**\n\nAntipsychotique benzamide substitué.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Xeroquel®** ?",
+      "answer": "**Quétiapine**\n\nAntipsychotique atypique.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Geodon®** ?",
+      "answer": "**Ziprasidone**\n\nAntipsychotique atypique.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Invega®** ?",
+      "answer": "**Palipéridone**\n\nAntipsychotique atypique, métabolite actif de la rispéridone.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Tercian®** ?",
+      "answer": "**Cyamémazine**\n\nNeuroleptique phénothiazine, effet sédatif marqué.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Nozinan®** ?",
+      "answer": "**Lévomépromazine**\n\nNeuroleptique phénothiazine sédatif puissant.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Loxapac®** ?",
+      "answer": "**Loxapine**\n\nNeuroleptique dibenzoxazépine.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Fluanxol®** ?",
+      "answer": "**Flupenthixol**\n\nNeuroleptique thioxanthène.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Piportil®** ?",
+      "answer": "**Pipotiazine**\n\nNeuroleptique phénothiazine à action prolongée (forme injectable retard).",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Moditen®** ?",
+      "answer": "**Fluphénazine**\n\nNeuroleptique phénothiazine.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Téralithe®** ?",
+      "answer": "**Carbonate de lithium**\n\nThymorégulateur, traitement des troubles bipolaires.\n\n*Schéma de prise* : Surveillance de la lithiémie régulière obligatoire.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Trileptal®** ?",
+      "answer": "**Oxcarbazépine**\n\nAntiépileptique et thymorégulateur, dérivé de la carbamazépine.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Neurontin®** ?",
+      "answer": "**Gabapentine**\n\nAntiépileptique et traitement des douleurs neuropathiques.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Urbanyl®** ?",
+      "answer": "**Clobazam**\n\nBenzodiazépine antiépileptique.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Zarontin®** ?",
+      "answer": "**Éthosuximide**\n\nAntiépileptique spécifique des absences.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Sabril®** ?",
+      "answer": "**Vigabatrin**\n\nAntiépileptique, inhibiteur irréversible de la GABA-transaminase.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Zonegran®** ?",
+      "answer": "**Zonisamide**\n\nAntiépileptique de nouvelle génération.",
+      "tags": ["Fondamental", "Neurologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active du **Vimpat®** ?",
+      "answer": "**Lacosamide**\n\nAntiépileptique, modulateur des canaux sodiques.",
+      "tags": ["Fondamental", "Neurologie"]
+    }
+  ]
+}

@@ -9,21 +9,37 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 8080;
 
+// Debug logging middleware
+app.use((req, res, next) => {
+  console.log(`Frontend server: ${req.method} ${req.url}`);
+  next();
+});
+
 // Proxy API requests to the backend server
-app.use('/api', createProxyMiddleware({
-  target: 'http://localhost:8084/api',
+const proxyOptions = {
+  target: 'http://localhost:3001',
   changeOrigin: true,
   pathRewrite: {
-    '^/api': ''  // Remove /api prefix as target already includes it
+    '^/': '/api/'  // Add back the /api prefix
   },
-  logLevel: 'warn',
+  logger: console,
+  onProxyReq: (proxyReq, req, res) => {
+    console.log(`[PROXY] ${req.method} ${req.originalUrl} -> http://localhost:3001/api${req.url}`);
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    console.log(`[PROXY] Response: ${proxyRes.statusCode} for ${req.method} ${req.originalUrl}`);
+  },
   onError: (err, req, res) => {
-    console.error('Proxy error:', err);
-    res.status(502).json({ 
-      error: 'API server is not available. Please ensure the API server is running on port 8084.' 
-    });
+    console.error('[PROXY] Error:', err.message);
+    if (!res.headersSent) {
+      res.status(502).json({
+        error: 'API server is not available. Please ensure the API server is running on port 3001.'
+      });
+    }
   }
-}));
+};
+
+app.use('/api', createProxyMiddleware(proxyOptions));
 
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));

@@ -1,0 +1,159 @@
+{
+  "questions": [
+    {
+      "question": "Quelle est la DCI de la molécule active de **Biseptine®** ?",
+      "answer": "**Chlorhexidine + benzalkonium**\n\nAntiseptique dermique à large spectre.",
+      "tags": ["Fondamental", "Dermatologie"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Avaxim®** ?",
+      "answer": "**Vaccin inactivé contre l'hépatite A**\n\nVaccin viral inactivé sur cellules diploïdes humaines.\n\n**⚠️ À garder au frais (2-8°C)**",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Typhim Vi®** ?",
+      "answer": "**Vaccin polyosidique contre la fièvre typhoïde**\n\nVaccin polysaccharidique capsulaire Vi de Salmonella typhi.\n\n**⚠️ À garder au frais (2-8°C)**",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Nimenrix®** ?",
+      "answer": "**Vaccin conjugué contre les méningocoques A, C, W135 et Y**\n\nVaccin tétravalent conjugué à la protéine tétanique.\n\n**⚠️ À garder au frais (2-8°C)**",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active d'**Azyter®** ?",
+      "answer": "**Azithromycine**\n\nMacrolide, antibiotique ophtalmique en collyre.",
+      "tags": ["Fondamental", "Ophtalmologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Tiorfanor®** ?",
+      "answer": "**Racécadotril**\n\nAntisécrétoire intestinal, traitement symptomatique de la diarrhée aiguë (forme orodispersible).",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Vogalène®** ?",
+      "answer": "**Métopimazine**\n\nAntiémétique neuroleptique, antagoniste dopaminergique.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Diamox®** ?",
+      "answer": "**Acétazolamide**\n\nInhibiteur de l'anhydrase carbonique, diurétique et traitement du glaucome.\n\n*Schéma de prise* : Selon indication, peut être utilisé en prévention du mal des montagnes.",
+      "tags": ["Fondamental", "Ophtalmologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active d'**Antadys®** ?",
+      "answer": "**Acide niflumique**\n\nAINS, utilisé notamment dans les douleurs gynécologiques (dysménorrhées).",
+      "tags": ["Fondamental", "Gynécologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Quasym®** ?",
+      "answer": "**Méthylphénidate à libération prolongée**\n\nPsychostimulant, traitement du TDAH.\n\n*Schéma de prise* : 1 prise le matin pendant ou après le petit-déjeuner.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Malarone®** ?",
+      "answer": "**Atovaquone + proguanil**\n\nAssociation antipaludique pour prophylaxie et traitement.\n\n*Schéma de prise* : Pendant ou après un repas, à la même heure chaque jour.",
+      "tags": ["Fondamental", "Infectiologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Medikinet®** ?",
+      "answer": "**Méthylphénidate à libération modifiée**\n\nPsychostimulant, traitement du TDAH.\n\n*Schéma de prise* : 1 prise le matin pendant le petit-déjeuner.",
+      "tags": ["Fondamental", "Psychiatrie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Trimbow®** ?",
+      "answer": "**Béclométasone + formotérol + glycopyrronium**\n\nTriple association : corticoïde inhalé + bêta-2 agoniste longue durée d'action + anticholinergique.\n\nTraitement de la BPCO.",
+      "tags": ["Fondamental", "Pneumologie"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Wegovy®** ?",
+      "answer": "**Sémaglutide**\n\nAnalogue du GLP-1, traitement de l'obésité (dose plus élevée que pour le diabète).\n\n**⚠️ À garder au frais (2-8°C)** avant première utilisation.\n\n*Schéma de prise* : 1 injection sous-cutanée par semaine, même jour chaque semaine.",
+      "tags": ["Fondamental", "Endocrinologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Débridat®** ?",
+      "answer": "**Trimébutine**\n\nRégulateur de la motricité intestinale, traitement du syndrome de l'intestin irritable.\n\n*Schéma de prise* : Avant les repas.",
+      "tags": ["Fondamental", "Gastro-entérologie"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Gardasil 9®** ?",
+      "answer": "**Vaccin nonavalent contre les papillomavirus humains (HPV)**\n\nVaccin recombinant contre 9 types d'HPV (6, 11, 16, 18, 31, 33, 45, 52, 58).\n\n**⚠️ À garder au frais (2-8°C)**\n\n*Schéma vaccinal* : 2 doses (11-14 ans) ou 3 doses (≥15 ans).",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Shingrix®** ?",
+      "answer": "**Vaccin recombinant contre le zona**\n\nVaccin sous-unitaire adjuvanté contenant la glycoprotéine E du VZV.\n\n**⚠️ À garder au frais (2-8°C)**\n\n*Schéma vaccinal* : 2 doses à 2 mois d'intervalle.",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Bexsero®** ?",
+      "answer": "**Vaccin recombinant contre le méningocoque B**\n\nVaccin multicomposant contre Neisseria meningitidis groupe B.\n\n**⚠️ À garder au frais (2-8°C)**",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Boostrix®** ?",
+      "answer": "**Vaccin diphtérie-tétanos-coqueluche acellulaire (dTpa)**\n\nVaccin de rappel avec doses réduites de diphtérie et coqueluche.\n\n**⚠️ À garder au frais (2-8°C)**",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Twinrix®** ?",
+      "answer": "**Vaccin combiné hépatite A et hépatite B**\n\nAssociation de virus inactivé de l'hépatite A et d'antigène HBs recombinant.\n\n**⚠️ À garder au frais (2-8°C)**\n\n*Schéma vaccinal* : 3 doses (M0, M1, M6) ou accéléré (J0, J7, J21 + rappel M12).",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **RotaTeq®** ?",
+      "answer": "**Vaccin oral pentavalent contre les rotavirus**\n\nVaccin vivant atténué humain-bovin réassorti.\n\n**⚠️ À garder au frais (2-8°C)**\n\n*Schéma vaccinal* : 3 doses par voie orale entre 6 et 32 semaines.",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la composition du vaccin **Prevenar 13®** ?",
+      "answer": "**Vaccin pneumococcique conjugué 13-valent**\n\nVaccin conjugué contre 13 sérotypes de Streptococcus pneumoniae.\n\n**⚠️ À garder au frais (2-8°C)**",
+      "tags": ["Fondamental", "Vaccins", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active d'**Humalog®** ?",
+      "answer": "**Insuline lispro**\n\nAnalogue rapide de l'insuline humaine.\n\n**⚠️ À garder au frais (2-8°C)** avant ouverture. Une fois en utilisation : 28 jours à température ambiante.\n\n*Schéma de prise* : Juste avant ou immédiatement après le repas (0-15 minutes).",
+      "tags": ["Fondamental", "Diabétologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active d'**Ovitrelle®** ?",
+      "answer": "**Choriogonadotropine alfa**\n\nhCG recombinante, déclenchement de l'ovulation en PMA.\n\n**⚠️ À garder au frais (2-8°C)**",
+      "tags": ["Fondamental", "Gynécologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active d'**Enbrel®** ?",
+      "answer": "**Étanercept**\n\nAnti-TNF alpha, protéine de fusion recombinante. Biomédicament.\n\n**⚠️ À garder au frais (2-8°C)**\n\n*Schéma de prise* : Injection sous-cutanée 1 à 2 fois par semaine selon indication.",
+      "tags": ["Fondamental", "Rhumatologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active d'**Humira®** ?",
+      "answer": "**Adalimumab**\n\nAnticorps monoclonal anti-TNF alpha. Biomédicament.\n\n**⚠️ À garder au frais (2-8°C)**\n\n*Schéma de prise* : Injection sous-cutanée toutes les 2 semaines (selon indication).",
+      "tags": ["Fondamental", "Rhumatologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Fiasp®** ?",
+      "answer": "**Insuline asparte à action ultra-rapide**\n\nAnalogue rapide de l'insuline avec accélérateur d'absorption (nicotinamide).\n\n**⚠️ À garder au frais (2-8°C)** avant ouverture. Une fois en utilisation : 28 jours à température ambiante.\n\n*Schéma de prise* : Au début du repas ou dans les 20 minutes suivant le début du repas.",
+      "tags": ["Fondamental", "Diabétologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Tresiba®** ?",
+      "answer": "**Insuline dégludec**\n\nAnalogue lent de l'insuline, durée d'action >42 heures.\n\n**⚠️ À garder au frais (2-8°C)** avant ouverture. Une fois en utilisation : 56 jours à température ambiante.\n\n*Schéma de prise* : 1 injection par jour, à heure flexible (peut varier d'un jour à l'autre).",
+      "tags": ["Fondamental", "Diabétologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **NovoRapid®** ?",
+      "answer": "**Insuline asparte**\n\nAnalogue rapide de l'insuline humaine.\n\n**⚠️ À garder au frais (2-8°C)** avant ouverture. Une fois en utilisation : 28 jours à température ambiante.\n\n*Schéma de prise* : Immédiatement avant le repas ou dans les 10 minutes suivant le début du repas.",
+      "tags": ["Fondamental", "Diabétologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Victoza®** ?",
+      "answer": "**Liraglutide**\n\nAnalogue du GLP-1, traitement du diabète de type 2.\n\n**⚠️ À garder au frais (2-8°C)** avant ouverture. Une fois en utilisation : 30 jours à température ambiante.\n\n*Schéma de prise* : 1 injection sous-cutanée par jour, à n'importe quel moment de la journée.",
+      "tags": ["Fondamental", "Diabétologie", "Frais"]
+    },
+    {
+      "question": "Quelle est la DCI de la molécule active de **Toujeo®** ?",
+      "answer": "**Insuline glargine 300 unités/ml**\n\nAnalogue lent de l'insuline, formulation concentrée.\n\n**⚠️ À garder au frais (2-8°C)** avant ouverture. Une fois en utilisation : 42 jours à température ambiante.\n\n*Schéma de prise* : 1 injection sous-cutanée par jour, à heure fixe.",
+      "tags": ["Fondamental", "Diabétologie", "Frais"]
+    }
+  ]
+}

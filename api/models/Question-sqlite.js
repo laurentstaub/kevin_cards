@@ -11,8 +11,8 @@ class Question {
     this.isActive = data.is_active;
     this.adminNotes = data.admin_notes;
     this.deletedAt = data.deleted_at;
-    this.sources = data.sources || [];
-    this.metadata = data.metadata || {};
+    this.sources = data.sources ? JSON.parse(data.sources) : [];
+    this.metadata = data.metadata ? JSON.parse(data.metadata) : {};
     this.createdAt = data.created_at;
     this.updatedAt = data.updated_at;
   }
@@ -23,7 +23,7 @@ class Question {
       // Process markdown to extract metadata
       const questionProcessed = processMarkdown(questionText, 'question');
       const answerProcessed = processMarkdown(answerText, 'answer');
-      
+
       // Combine entities from both question and answer
       const combinedEntities = {
         drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
@@ -46,12 +46,22 @@ class Question {
       const answerHtml = answerProcessed.html;
 
       const result = await query(`
-        INSERT INTO questions (question_text, answer_text, question_html, answer_html, sources, metadata)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *
-      `, [questionText, answerText, questionHtml, answerHtml, JSON.stringify(sources), JSON.stringify(metadata)]);
+        INSERT INTO questions (question_text, answer_text, question_html, answer_html, sources, metadata, created_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `, [questionText, answerText, questionHtml, answerHtml, JSON.stringify(sources), JSON.stringify(metadata), 1]);
 
-      const question = new Question(result.rows[0]);
+      const question = new Question({
+        id: result.insertId,
+        question_text: questionText,
+        answer_text: answerText,
+        question_html: questionHtml,
+        answer_html: answerHtml,
+        sources: JSON.stringify(sources),
+        metadata: JSON.stringify(metadata),
+        is_active: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      });
 
       // Add tags if provided
       if (tagIds.length > 0) {
@@ -68,23 +78,9 @@ class Question {
   static async findById(id) {
     try {
       const result = await query(`
-        SELECT q.*, 
-               COALESCE(
-                 JSON_AGG(
-                   JSON_BUILD_OBJECT(
-                     'id', t.id,
-                     'name', t.name,
-                     'category', t.category,
-                     'color', t.color
-                   )
-                 ) FILTER (WHERE t.id IS NOT NULL), 
-                 '[]'::json
-               ) as tags
+        SELECT q.*
         FROM questions q
-        LEFT JOIN question_tags qt ON q.id = qt.question_id
-        LEFT JOIN tags t ON qt.tag_id = t.id
-        WHERE q.id = $1
-        GROUP BY q.id
+        WHERE q.id = ?
       `, [id]);
 
       if (result.rows.length === 0) {
@@ -93,7 +89,16 @@ class Question {
 
       const questionData = result.rows[0];
       const question = new Question(questionData);
-      question.tags = questionData.tags;
+
+      // Get tags separately for SQLite
+      const tagsResult = await query(`
+        SELECT t.id, t.name, t.category, t.color
+        FROM tags t
+        JOIN question_tags qt ON t.id = qt.tag_id
+        WHERE qt.question_id = ?
+      `, [id]);
+
+      question.tags = tagsResult.rows;
 
       return question;
     } catch (error) {
@@ -102,51 +107,46 @@ class Question {
   }
 
   // Get questions with filters and pagination
-  static async findMany({ 
-    active, 
-    tagIds, 
-    search, 
-    limit = 20, 
-    offset = 0, 
-    orderBy = 'updated_at', 
-    orderDirection = 'DESC' 
+  static async findMany({
+    active,
+    tagIds,
+    search,
+    limit = 20,
+    offset = 0,
+    orderBy = 'updated_at',
+    orderDirection = 'DESC'
   }) {
     try {
       let whereConditions = [];
       let queryParams = [];
-      let paramIndex = 1;
 
       // Filter by active status
       if (active !== undefined) {
-        whereConditions.push(`q.is_active = $${paramIndex++}`);
-        queryParams.push(active);
+        whereConditions.push(`q.is_active = ?`);
+        queryParams.push(active ? 1 : 0);
       }
 
-
-      // Full-text search
+      // Full-text search (simplified for SQLite)
       if (search) {
-        const searchParam1 = paramIndex++;
-        const searchParam2 = paramIndex++;
-        const searchParam3 = paramIndex++;
         whereConditions.push(`(
-          q.search_vector @@ plainto_tsquery('french', $${searchParam1}) OR
-          q.question_text ILIKE $${searchParam2} OR
-          q.answer_text ILIKE $${searchParam3}
+          q.question_text LIKE ? OR
+          q.answer_text LIKE ?
         )`);
-        queryParams.push(search, `%${search}%`, `%${search}%`);
+        queryParams.push(`%${search}%`, `%${search}%`);
       }
 
       // Filter by tags
       if (tagIds && tagIds.length > 0) {
+        const placeholders = tagIds.map(() => '?').join(',');
         whereConditions.push(`q.id IN (
-          SELECT DISTINCT qt.question_id 
-          FROM question_tags qt 
-          WHERE qt.tag_id = ANY($${paramIndex++})
+          SELECT DISTINCT qt.question_id
+          FROM question_tags qt
+          WHERE qt.tag_id IN (${placeholders})
         )`);
-        queryParams.push(tagIds);
+        queryParams.push(...tagIds);
       }
 
-      const whereClause = whereConditions.length > 0 ? 
+      const whereClause = whereConditions.length > 0 ?
         `WHERE ${whereConditions.join(' AND ')}` : '';
 
       // Validate orderBy column to prevent SQL injection
@@ -156,44 +156,34 @@ class Question {
 
       // Add pagination params
       queryParams.push(limit, offset);
-      const limitOffset = `LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
-
-      // Build the rank column for search
-      let rankColumn = '1 as rank';
-      if (search) {
-        queryParams.push(search);
-        rankColumn = `ts_rank(q.search_vector, plainto_tsquery('french', $${paramIndex++})) as rank`;
-      }
 
       const result = await query(`
-        SELECT q.*, 
-               COALESCE(
-                 JSON_AGG(
-                   JSON_BUILD_OBJECT(
-                     'id', t.id,
-                     'name', t.name,
-                     'category', t.category,
-                     'color', t.color
-                   )
-                 ) FILTER (WHERE t.id IS NOT NULL), 
-                 '[]'::json
-               ) as tags,
-               ${rankColumn}
+        SELECT DISTINCT q.*
         FROM questions q
         LEFT JOIN question_tags qt ON q.id = qt.question_id
         LEFT JOIN tags t ON qt.tag_id = t.id
         ${whereClause}
-        GROUP BY q.id
-        ORDER BY ${search ? 'rank DESC,' : ''} q.${safeOrderBy} ${safeOrderDirection}
-        ${limitOffset}
+        ORDER BY q.${safeOrderBy} ${safeOrderDirection}
+        LIMIT ? OFFSET ?
       `, queryParams);
 
-      return result.rows.map(row => {
+      const questions = result.rows.map(row => {
         const question = new Question(row);
-        question.tags = row.tags;
-        if (search) question.rank = row.rank;
         return question;
       });
+
+      // Get tags for each question separately
+      for (const question of questions) {
+        const tagsResult = await query(`
+          SELECT t.id, t.name, t.category, t.color
+          FROM tags t
+          JOIN question_tags qt ON t.id = qt.tag_id
+          WHERE qt.question_id = ?
+        `, [question.id]);
+        question.tags = tagsResult.rows;
+      }
+
+      return questions;
     } catch (error) {
       throw new Error(`Failed to fetch questions: ${error.message}`);
     }
@@ -204,39 +194,34 @@ class Question {
     try {
       let whereConditions = [];
       let queryParams = [];
-      let paramIndex = 1;
 
       // Filter by active status
       if (active !== undefined) {
-        whereConditions.push(`q.is_active = $${paramIndex++}`);
-        queryParams.push(active);
+        whereConditions.push(`q.is_active = ?`);
+        queryParams.push(active ? 1 : 0);
       }
-
 
       // Full-text search
       if (search) {
-        const searchParam1 = paramIndex++;
-        const searchParam2 = paramIndex++;
-        const searchParam3 = paramIndex++;
         whereConditions.push(`(
-          q.search_vector @@ plainto_tsquery('french', $${searchParam1}) OR
-          q.question_text ILIKE $${searchParam2} OR
-          q.answer_text ILIKE $${searchParam3}
+          q.question_text LIKE ? OR
+          q.answer_text LIKE ?
         )`);
-        queryParams.push(search, `%${search}%`, `%${search}%`);
+        queryParams.push(`%${search}%`, `%${search}%`);
       }
 
       // Filter by tags
       if (tagIds && tagIds.length > 0) {
+        const placeholders = tagIds.map(() => '?').join(',');
         whereConditions.push(`q.id IN (
-          SELECT DISTINCT qt.question_id 
-          FROM question_tags qt 
-          WHERE qt.tag_id = ANY($${paramIndex++})
+          SELECT DISTINCT qt.question_id
+          FROM question_tags qt
+          WHERE qt.tag_id IN (${placeholders})
         )`);
-        queryParams.push(tagIds);
+        queryParams.push(...tagIds);
       }
 
-      const whereClause = whereConditions.length > 0 ? 
+      const whereClause = whereConditions.length > 0 ?
         `WHERE ${whereConditions.join(' AND ')}` : '';
 
       const result = await query(`
@@ -257,10 +242,9 @@ class Question {
     try {
       const updateFields = {};
       const queryParams = [];
-      let paramIndex = 1;
 
       let metadata = this.metadata;
-      
+
       // Check if text content has changed to regenerate HTML
       const textChanged = (questionText !== undefined && questionText !== this.questionText) ||
                           (answerText !== undefined && answerText !== this.answerText);
@@ -268,10 +252,10 @@ class Question {
       if (textChanged) {
         const questionToProcess = questionText !== undefined ? questionText : this.questionText;
         const answerToProcess = answerText !== undefined ? answerText : this.answerText;
-        
+
         const questionProcessed = processMarkdown(questionToProcess, 'question');
         const answerProcessed = processMarkdown(answerToProcess, 'answer');
-        
+
         // Add text and HTML to the update fields
         if (questionText !== undefined) {
           updateFields.question_text = questionText;
@@ -281,7 +265,7 @@ class Question {
           updateFields.answer_text = answerText;
           updateFields.answer_html = answerProcessed.html;
         }
-        
+
         // Regenerate metadata
         const combinedEntities = {
           drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
@@ -312,25 +296,24 @@ class Question {
       // Dynamically build the SET clause
       const setClause = Object.keys(updateFields).map(key => {
         queryParams.push(updateFields[key]);
-        return `${key} = $${paramIndex++}`;
+        return `${key} = ?`;
       }).join(', ');
-      
+
       queryParams.push(this.id);
 
       const result = await query(`
-        UPDATE questions 
-        SET ${setClause}, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $${paramIndex}
-        RETURNING *
+        UPDATE questions
+        SET ${setClause}, updated_at = datetime('now')
+        WHERE id = ?
       `, queryParams);
 
-      if (result.rows.length === 0) {
+      if (result.rowCount === 0) {
         throw new Error('Question not found after update');
       }
 
       // Update instance properties
-      const updatedData = result.rows[0];
-      Object.assign(this, new Question(updatedData));
+      Object.assign(this, updateFields);
+      this.updatedAt = new Date().toISOString();
 
       return this;
     } catch (error) {
@@ -338,25 +321,27 @@ class Question {
     }
   }
 
-  // Toggle active status (simple!)
+  // Toggle active status
   async toggleActive(adminNote = '') {
     try {
       const result = await query(`
-        UPDATE questions 
-        SET is_active = NOT is_active,
+        UPDATE questions
+        SET is_active = CASE WHEN is_active = 1 THEN 0 ELSE 1 END,
             admin_notes = COALESCE(admin_notes, '') ||
-                         CASE 
-                           WHEN admin_notes IS NOT NULL AND admin_notes != '' 
-                           THEN ' | ' 
-                           ELSE '' 
+                         CASE
+                           WHEN admin_notes IS NOT NULL AND admin_notes != ''
+                           THEN ' | '
+                           ELSE ''
                          END ||
-                         $2,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
-        RETURNING *
-      `, [this.id, adminNote || `Toggled ${this.isActive ? 'inactive' : 'active'} on ${new Date().toLocaleDateString()}`]);
+                         ?,
+            updated_at = datetime('now')
+        WHERE id = ?
+      `, [adminNote || `Toggled ${this.isActive ? 'inactive' : 'active'} on ${new Date().toLocaleDateString()}`, this.id]);
 
-      Object.assign(this, new Question(result.rows[0]));
+      this.isActive = this.isActive ? 0 : 1;
+      this.adminNotes = (this.adminNotes || '') + (this.adminNotes ? ' | ' : '') + (adminNote || `Toggled ${this.isActive ? 'active' : 'inactive'} on ${new Date().toLocaleDateString()}`);
+      this.updatedAt = new Date().toISOString();
+
       return this;
     } catch (error) {
       throw new Error(`Failed to toggle question active status: ${error.message}`);
@@ -367,22 +352,25 @@ class Question {
   async softDelete(reason = '') {
     try {
       const result = await query(`
-        UPDATE questions 
-        SET deleted_at = CURRENT_TIMESTAMP,
-            is_active = FALSE,
+        UPDATE questions
+        SET deleted_at = datetime('now'),
+            is_active = 0,
             admin_notes = COALESCE(admin_notes, '') ||
-                         CASE 
-                           WHEN admin_notes IS NOT NULL AND admin_notes != '' 
-                           THEN ' | ' 
-                           ELSE '' 
+                         CASE
+                           WHEN admin_notes IS NOT NULL AND admin_notes != ''
+                           THEN ' | '
+                           ELSE ''
                          END ||
-                         $2,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
-        RETURNING *
-      `, [this.id, `Deleted: ${reason || 'No reason provided'}`]);
+                         ?,
+            updated_at = datetime('now')
+        WHERE id = ?
+      `, [`Deleted: ${reason || 'No reason provided'}`, this.id]);
 
-      Object.assign(this, new Question(result.rows[0]));
+      this.deletedAt = new Date().toISOString();
+      this.isActive = 0;
+      this.adminNotes = (this.adminNotes || '') + (this.adminNotes ? ' | ' : '') + `Deleted: ${reason || 'No reason provided'}`;
+      this.updatedAt = new Date().toISOString();
+
       return this;
     } catch (error) {
       throw new Error(`Failed to delete question: ${error.message}`);
@@ -393,21 +381,23 @@ class Question {
   async restore() {
     try {
       const result = await query(`
-        UPDATE questions 
+        UPDATE questions
         SET deleted_at = NULL,
             admin_notes = COALESCE(admin_notes, '') ||
-                         CASE 
-                           WHEN admin_notes IS NOT NULL AND admin_notes != '' 
-                           THEN ' | ' 
-                           ELSE '' 
+                         CASE
+                           WHEN admin_notes IS NOT NULL AND admin_notes != ''
+                           THEN ' | '
+                           ELSE ''
                          END ||
-                         $2,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
-        RETURNING *
-      `, [this.id, `Restored on ${new Date().toLocaleDateString()}`]);
+                         ?,
+            updated_at = datetime('now')
+        WHERE id = ?
+      `, [`Restored on ${new Date().toLocaleDateString()}`, this.id]);
 
-      Object.assign(this, new Question(result.rows[0]));
+      this.deletedAt = null;
+      this.adminNotes = (this.adminNotes || '') + (this.adminNotes ? ' | ' : '') + `Restored on ${new Date().toLocaleDateString()}`;
+      this.updatedAt = new Date().toISOString();
+
       return this;
     } catch (error) {
       throw new Error(`Failed to restore question: ${error.message}`);
@@ -418,18 +408,20 @@ class Question {
   async updateTags(tagIds) {
     try {
       // Remove existing tags
-      await query('DELETE FROM question_tags WHERE question_id = $1', [this.id]);
+      await query('DELETE FROM question_tags WHERE question_id = ?', [this.id]);
 
       // Add new tags
       if (tagIds.length > 0) {
-        const values = tagIds.map((tagId, index) => 
-          `($1, $${index + 2})`
-        ).join(', ');
+        const values = tagIds.map(() => '(?, ?)').join(', ');
+        const params = [];
+        for (const tagId of tagIds) {
+          params.push(this.id, tagId);
+        }
 
         await query(`
           INSERT INTO question_tags (question_id, tag_id)
           VALUES ${values}
-        `, [this.id, ...tagIds]);
+        `, params);
       }
 
       return this;
@@ -442,7 +434,7 @@ class Question {
   getRenderedContent() {
     const questionProcessed = processMarkdown(this.questionText);
     const answerProcessed = processMarkdown(this.answerText);
-    
+
     return {
       questionHtml: questionProcessed.html,
       answerHtml: answerProcessed.html,
@@ -455,7 +447,7 @@ class Question {
     try {
       const questionProcessed = processMarkdown(this.questionText, 'question');
       const answerProcessed = processMarkdown(this.answerText, 'answer');
-      
+
       // Regenerate metadata too
       const combinedEntities = {
         drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
@@ -475,14 +467,17 @@ class Question {
       };
 
       const result = await query(`
-        UPDATE questions 
-        SET question_html = $1, answer_html = $2, metadata = $3, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $4
-        RETURNING *
+        UPDATE questions
+        SET question_html = ?, answer_html = ?, metadata = ?, updated_at = datetime('now')
+        WHERE id = ?
       `, [questionProcessed.html, answerProcessed.html, JSON.stringify(metadata), this.id]);
 
       // Update instance
-      Object.assign(this, new Question(result.rows[0]));
+      this.questionHtml = questionProcessed.html;
+      this.answerHtml = answerProcessed.html;
+      this.metadata = metadata;
+      this.updatedAt = new Date().toISOString();
+
       return this;
     } catch (error) {
       throw new Error(`Failed to regenerate HTML: ${error.message}`);
