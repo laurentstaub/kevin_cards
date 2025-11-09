@@ -1641,10 +1641,13 @@ body::before {
     position: sticky;
     top: 5rem;
     z-index: 1000;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
+    padding: 1.5rem;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    background-color: rgba(20, 20, 30, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .setup-header-content {
