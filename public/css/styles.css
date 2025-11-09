@@ -1649,8 +1649,12 @@ body::before {
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
-  background: rgba(var(--bg-primary-rgb), 0.95);
-  backdrop-filter: blur(10px);
+  /* Fallback background pour navigateurs sans support des variables CSS */
+  background: var(--bg-primary);
+  /* Background semi-transparent avec flou pour un effet moderne */
+  background: rgba(var(--bg-primary-rgb), 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--border-radius-large);
   padding: 1rem 1.5rem;
   border: 1px solid var(--border-color);
