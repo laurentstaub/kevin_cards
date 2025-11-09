@@ -178,30 +178,38 @@ class Tag {
   async update({ name, category, color, description }) {
     try {
       const updateFields = {};
-      const queryParams = [];
 
       if (name !== undefined) {
         updateFields.name = name;
-        queryParams.push(name);
       }
       if (category !== undefined) {
         updateFields.category = category;
-        queryParams.push(category);
       }
       if (color !== undefined) {
         updateFields.color = color;
-        queryParams.push(color);
       }
       if (description !== undefined) {
         updateFields.description = description;
-        queryParams.push(description);
       }
 
       if (Object.keys(updateFields).length === 0) {
         return this;
       }
 
-      const setClause = Object.keys(updateFields).map(key => `${key} = ?`).join(', ');
+      // Validate column names to prevent SQL injection
+      const ALLOWED_UPDATE_FIELDS = ['name', 'category', 'color', 'description'];
+      const invalidFields = Object.keys(updateFields).filter(key => !ALLOWED_UPDATE_FIELDS.includes(key));
+      if (invalidFields.length > 0) {
+        throw new Error(`Invalid update fields: ${invalidFields.join(', ')}`);
+      }
+
+      // Build SET clause and collect parameters in correct order
+      const queryParams = [];
+      const setClause = Object.keys(updateFields).map(key => {
+        queryParams.push(updateFields[key]);
+        return `${key} = ?`;
+      }).join(', ');
+
       queryParams.push(this.id);
 
       const result = await query(`

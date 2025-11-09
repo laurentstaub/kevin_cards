@@ -149,10 +149,20 @@ class Question {
       const whereClause = whereConditions.length > 0 ?
         `WHERE ${whereConditions.join(' AND ')}` : '';
 
-      // Validate orderBy column to prevent SQL injection
-      const allowedOrderColumns = ['id', 'created_at', 'updated_at'];
-      const safeOrderBy = allowedOrderColumns.includes(orderBy) ? orderBy : 'updated_at';
-      const safeOrderDirection = ['ASC', 'DESC'].includes(orderDirection.toUpperCase()) ? orderDirection.toUpperCase() : 'DESC';
+      // Strict mapping to prevent SQL injection - no direct interpolation
+      const ORDER_BY_COLUMNS = {
+        'id': 'q.id',
+        'created_at': 'q.created_at',
+        'updated_at': 'q.updated_at'
+      };
+
+      const ORDER_DIRECTIONS = {
+        'ASC': 'ASC',
+        'DESC': 'DESC'
+      };
+
+      const orderColumn = ORDER_BY_COLUMNS[orderBy] || ORDER_BY_COLUMNS['updated_at'];
+      const direction = ORDER_DIRECTIONS[orderDirection?.toUpperCase()] || 'DESC';
 
       // Add pagination params
       queryParams.push(limit, offset);
@@ -163,7 +173,7 @@ class Question {
         LEFT JOIN question_tags qt ON q.id = qt.question_id
         LEFT JOIN tags t ON qt.tag_id = t.id
         ${whereClause}
-        ORDER BY q.${safeOrderBy} ${safeOrderDirection}
+        ORDER BY ${orderColumn} ${direction}
         LIMIT ? OFFSET ?
       `, queryParams);
 
@@ -293,7 +303,14 @@ class Question {
         return this;
       }
 
-      // Dynamically build the SET clause
+      // Validate column names to prevent SQL injection
+      const ALLOWED_UPDATE_FIELDS = ['question_text', 'answer_text', 'question_html', 'answer_html', 'metadata', 'sources'];
+      const invalidFields = Object.keys(updateFields).filter(key => !ALLOWED_UPDATE_FIELDS.includes(key));
+      if (invalidFields.length > 0) {
+        throw new Error(`Invalid update fields: ${invalidFields.join(', ')}`);
+      }
+
+      // Dynamically build the SET clause with validated fields
       const setClause = Object.keys(updateFields).map(key => {
         queryParams.push(updateFields[key]);
         return `${key} = ?`;
