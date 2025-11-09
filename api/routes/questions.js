@@ -1,6 +1,7 @@
 import express from 'express';
 import Joi from 'joi';
 import Question from '../models/Question.js';
+import { asyncHandler, NotFoundError, ValidationError } from '../utils/errors.js';
 
 const router = express.Router();
 
@@ -129,50 +130,31 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/questions/:id - Get a specific question by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const question = await Question.findById(parseInt(id));
+router.get('/:id', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const question = await Question.findById(parseInt(id));
 
-    if (!question) {
-      return res.status(404).json({ error: 'Question not found' });
-    }
-
-    res.json(question.toJSON());
-  } catch (error) {
-    console.error('Error fetching question:', error);
-    res.status(500).json({
-      error: 'Failed to fetch question',
-      message: error.message
-    });
+  if (!question) {
+    throw new NotFoundError('Question', id);
   }
-});
+
+  res.json(question.toJSON());
+}));
 
 // POST /api/questions - Create a new question
-router.post('/', async (req, res) => {
-  try {
-    const { error, value } = createQuestionSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({
-        error: 'Validation failed',
-        details: error.details.map(d => d.message)
-      });
-    }
-
-    const question = await Question.create({
-      ...value,
-      createdBy: req.user?.id || 1 // Default to admin user for now
-    });
-
-    res.status(201).json(question.toJSON());
-  } catch (error) {
-    console.error('Error creating question:', error);
-    res.status(500).json({
-      error: 'Failed to create question',
-      message: error.message
-    });
+router.post('/', asyncHandler(async (req, res) => {
+  const { error, value } = createQuestionSchema.validate(req.body);
+  if (error) {
+    throw new ValidationError('Validation failed', error.details.map(d => d.message));
   }
-});
+
+  const question = await Question.create({
+    ...value,
+    createdBy: req.user?.id || 1 // Default to admin user for now
+  });
+
+  res.status(201).json(question.toJSON());
+}));
 
 // PUT /api/questions/:id - Update a question
 router.put('/:id', async (req, res) => {

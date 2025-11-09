@@ -3,6 +3,7 @@ import { open } from 'sqlite';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import dotenv from 'dotenv';
+import logger from '../utils/logger.js';
 
 dotenv.config();
 
@@ -25,10 +26,10 @@ export const initializeDatabase = async () => {
     // Enable foreign keys
     await db.exec('PRAGMA foreign_keys = ON');
 
-    console.log('Connected to SQLite database at:', dbPath);
+    logger.info('Connected to SQLite database', { path: dbPath });
     return db;
   } catch (error) {
-    console.error('Database connection error:', error);
+    logger.error('Database connection error:', { message: error.message, stack: error.stack });
     process.exit(-1);
   }
 };
@@ -62,7 +63,7 @@ export const query = async (text, params = []) => {
     const duration = Date.now() - start;
 
     if (process.env.NODE_ENV === 'development') {
-      console.log('SQL Query executed:', {
+      logger.debug('SQL Query executed', {
         query: text.substring(0, 100) + (text.length > 100 ? '...' : ''),
         duration: `${duration}ms`,
         rows: result.rowCount
@@ -71,7 +72,7 @@ export const query = async (text, params = []) => {
 
     return result;
   } catch (error) {
-    console.error('Database query error:', {
+    logger.error('Database query error', {
       query: text,
       params,
       error: error.message
@@ -121,16 +122,16 @@ export const setupDatabase = async () => {
     `);
 
     if (tables.length === 0) {
-      console.log('Setting up database schema...');
+      logger.info('Setting up database schema...');
       const fs = await import('fs');
 
       try {
         const schemaPath = join(__dirname, '../../database/schema-sqlite.sql');
         const schema = fs.readFileSync(schemaPath, 'utf8');
         await db.exec(schema);
-        console.log('Database schema created successfully');
+        logger.info('Database schema created successfully');
       } catch (error) {
-        console.error('Error reading schema file:', error);
+        logger.error('Error reading schema file', { message: error.message, stack: error.stack });
         throw error;
       }
     }
@@ -140,7 +141,7 @@ export const setupDatabase = async () => {
 
     return db;
   } catch (error) {
-    console.error('Database setup error:', error);
+    logger.error('Database setup error', { message: error.message, stack: error.stack });
     throw error;
   }
 };
@@ -154,7 +155,7 @@ const runMigrations = async () => {
     const migrationsDir = join(__dirname, '../../database/migrations');
 
     if (!existsSync(migrationsDir)) {
-      console.log('No migrations directory found, skipping migrations');
+      logger.debug('No migrations directory found, skipping migrations');
       return;
     }
 
@@ -163,11 +164,11 @@ const runMigrations = async () => {
       .sort();
 
     if (migrationFiles.length === 0) {
-      console.log('No migrations to run');
+      logger.debug('No migrations to run');
       return;
     }
 
-    console.log(`Running ${migrationFiles.length} migration(s)...`);
+    logger.info(`Running ${migrationFiles.length} migration(s)...`);
 
     for (const file of migrationFiles) {
       const migrationPath = join(migrationsDir, file);
@@ -175,27 +176,27 @@ const runMigrations = async () => {
 
       try {
         await db.exec(migration);
-        console.log(`✓ Applied migration: ${file}`);
+        logger.info(`✓ Applied migration: ${file}`);
       } catch (error) {
         // Ignore errors for CREATE INDEX IF NOT EXISTS (index might already exist)
         if (!error.message.includes('already exists')) {
-          console.error(`✗ Error in migration ${file}:`, error.message);
+          logger.error(`✗ Error in migration ${file}`, { error: error.message });
         } else {
-          console.log(`  Index already exists in ${file}, skipping`);
+          logger.debug(`Index already exists in ${file}, skipping`);
         }
       }
     }
 
-    console.log('Migrations completed');
+    logger.info('Migrations completed');
   } catch (error) {
-    console.error('Migration error:', error);
+    logger.error('Migration error', { message: error.message, stack: error.stack });
     // Don't throw - migrations are non-critical
   }
 };
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-  console.log('Closing database connection...');
+  logger.info('Closing database connection...');
   if (db) {
     await db.close();
   }

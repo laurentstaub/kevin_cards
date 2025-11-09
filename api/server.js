@@ -3,6 +3,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { initializeDatabase, setupDatabase } from './config/database.js';
+import logger from './utils/logger.js';
+import { errorHandler, NotFoundError } from './utils/errors.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -27,16 +29,17 @@ app.use(cors({
   credentials: true
 }));
 
-// Rate limiting
+// Rate limiting (configurable via environment)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // Default: 15 minutes
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100 // Default: 100 requests per window
 });
 app.use('/api/', limiter);
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Body parsing middleware (configurable limit)
+const bodyLimit = process.env.BODY_PARSER_LIMIT || '10mb';
+app.use(express.json({ limit: bodyLimit }));
+app.use(express.urlencoded({ extended: true, limit: bodyLimit }));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -50,7 +53,7 @@ app.get('/api/health', (req, res) => {
 // Initialize database and start server
 async function startServer() {
   try {
-    console.log('Initializing SQLite database...');
+    logger.info('Initializing SQLite database...');
     await initializeDatabase();
     await setupDatabase();
 
@@ -61,34 +64,22 @@ async function startServer() {
     app.use('/api/questions', questionsRouter);
     app.use('/api/tags', tagsRouter);
 
-    // Error handling middleware
-    app.use((err, req, res, next) => {
-      console.error('API Error:', err);
-
-      if (err.type === 'entity.parse.failed') {
-        return res.status(400).json({
-          error: 'Invalid JSON in request body'
-        });
-      }
-
-      res.status(500).json({
-        error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-      });
+    // 404 handler - must be before error handler
+    app.use('*', (req, res, next) => {
+      next(new NotFoundError('API endpoint'));
     });
 
-    // 404 handler
-    app.use('*', (req, res) => {
-      res.status(404).json({ error: 'API endpoint not found' });
-    });
+    // Centralized error handling with custom error classes
+    app.use(errorHandler(logger));
 
     app.listen(PORT, () => {
-      console.log(`SQLite API server running on port ${PORT}`);
-      console.log(`Health check: http://localhost:${PORT}/api/health`);
-      console.log('Environment:', process.env.NODE_ENV || 'development');
+      logger.info(`SQLite API server running on port ${PORT}`);
+      logger.info(`Health check: http://localhost:${PORT}/api/health`);
+      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
 
   } catch (error) {
-    console.error('Failed to start server:', error);
+    logger.error('Failed to start server:', { message: error.message, stack: error.stack });
     process.exit(1);
   }
 }

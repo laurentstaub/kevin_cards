@@ -36,10 +36,10 @@
     "marked-highlight": "^2.2.2",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
-    "turndown": "^7.1.2"
+    "turndown": "^7.1.2",
+    "winston": "^3.18.3"
   },
   "devDependencies": {
-    "live-server": "^1.2.0",
     "nodemon": "^3.0.2"
   }
 }
