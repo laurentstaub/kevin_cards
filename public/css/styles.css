@@ -1641,6 +1641,14 @@ body::before {
     position: sticky;
     top: 5rem;
     z-index: 1000;
+    /* Background pour couvrir le contenu qui défile en dessous */
+    background-color: var(--bg-primary);
+    padding: 1rem 0;
+    /* Étend le background sur toute la largeur */
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .setup-header-content {
