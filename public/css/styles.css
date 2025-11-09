@@ -1649,10 +1649,10 @@ body::before {
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
-  /* Fallback background pour navigateurs sans support des variables CSS */
-  background: var(--bg-primary);
-  /* Background semi-transparent avec flou pour un effet moderne */
-  background: rgba(var(--bg-primary-rgb), 0.98);
+  /* Background solide avec les couleurs du thème */
+  background-color: var(--bg-secondary);
+  /* Ajout d'un léger dégradé pour plus de profondeur */
+  background-image: linear-gradient(to bottom, var(--bg-secondary), var(--bg-primary));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: var(--border-radius-large);
@@ -1662,7 +1662,6 @@ body::before {
   margin: 0 auto;
   max-width: 760px;
   transition: all 0.3s ease;
-
 }
 
 /* Add subtle animation when it becomes sticky */
