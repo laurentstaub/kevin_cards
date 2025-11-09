@@ -135,10 +135,61 @@ export const setupDatabase = async () => {
       }
     }
 
+    // Run migrations if they exist
+    await runMigrations();
+
     return db;
   } catch (error) {
     console.error('Database setup error:', error);
     throw error;
+  }
+};
+
+// Run database migrations
+const runMigrations = async () => {
+  try {
+    const fs = await import('fs');
+    const { readdirSync, existsSync } = fs;
+
+    const migrationsDir = join(__dirname, '../../database/migrations');
+
+    if (!existsSync(migrationsDir)) {
+      console.log('No migrations directory found, skipping migrations');
+      return;
+    }
+
+    const migrationFiles = readdirSync(migrationsDir)
+      .filter(file => file.endsWith('.sql'))
+      .sort();
+
+    if (migrationFiles.length === 0) {
+      console.log('No migrations to run');
+      return;
+    }
+
+    console.log(`Running ${migrationFiles.length} migration(s)...`);
+
+    for (const file of migrationFiles) {
+      const migrationPath = join(migrationsDir, file);
+      const migration = fs.readFileSync(migrationPath, 'utf8');
+
+      try {
+        await db.exec(migration);
+        console.log(`✓ Applied migration: ${file}`);
+      } catch (error) {
+        // Ignore errors for CREATE INDEX IF NOT EXISTS (index might already exist)
+        if (!error.message.includes('already exists')) {
+          console.error(`✗ Error in migration ${file}:`, error.message);
+        } else {
+          console.log(`  Index already exists in ${file}, skipping`);
+        }
+      }
+    }
+
+    console.log('Migrations completed');
+  } catch (error) {
+    console.error('Migration error:', error);
+    // Don't throw - migrations are non-critical
   }
 };
 

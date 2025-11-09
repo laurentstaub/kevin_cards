@@ -17,6 +17,31 @@ class Question {
     this.updatedAt = data.updated_at;
   }
 
+  // Private helper: Combine entities from question and answer
+  static _combineEntities(questionProcessed, answerProcessed) {
+    return {
+      drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
+      drug_classes: [...new Set([...questionProcessed.entities.drug_classes, ...answerProcessed.entities.drug_classes])],
+      conditions: [...new Set([...questionProcessed.entities.conditions, ...answerProcessed.entities.conditions])],
+      dosages: [...new Set([...questionProcessed.entities.dosages, ...answerProcessed.entities.dosages])],
+      routes: [...new Set([...questionProcessed.entities.routes, ...answerProcessed.entities.routes])]
+    };
+  }
+
+  // Private helper: Generate complete metadata object
+  static _generateMetadata(questionProcessed, answerProcessed, existingMetadata = {}) {
+    const combinedEntities = this._combineEntities(questionProcessed, answerProcessed);
+
+    return {
+      ...existingMetadata,
+      entities: combinedEntities,
+      question_stats: questionProcessed.stats,
+      answer_stats: answerProcessed.stats,
+      total_word_count: questionProcessed.stats.word_count + answerProcessed.stats.word_count,
+      last_processed: new Date().toISOString()
+    };
+  }
+
   // Create a new question (starts as inactive by default)
   static async create({ questionText, answerText, sources = [], tagIds = [] }) {
     try {
@@ -24,22 +49,8 @@ class Question {
       const questionProcessed = processMarkdown(questionText, 'question');
       const answerProcessed = processMarkdown(answerText, 'answer');
 
-      // Combine entities from both question and answer
-      const combinedEntities = {
-        drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
-        drug_classes: [...new Set([...questionProcessed.entities.drug_classes, ...answerProcessed.entities.drug_classes])],
-        conditions: [...new Set([...questionProcessed.entities.conditions, ...answerProcessed.entities.conditions])],
-        dosages: [...new Set([...questionProcessed.entities.dosages, ...answerProcessed.entities.dosages])],
-        routes: [...new Set([...questionProcessed.entities.routes, ...answerProcessed.entities.routes])]
-      };
-
-      const metadata = {
-        entities: combinedEntities,
-        question_stats: questionProcessed.stats,
-        answer_stats: answerProcessed.stats,
-        total_word_count: questionProcessed.stats.word_count + answerProcessed.stats.word_count,
-        last_processed: new Date().toISOString()
-      };
+      // Generate metadata using helper method (DRY principle)
+      const metadata = this._generateMetadata(questionProcessed, answerProcessed);
 
       // Generate HTML from markdown
       const questionHtml = questionProcessed.html;
@@ -182,15 +193,42 @@ class Question {
         return question;
       });
 
-      // Get tags for each question separately
-      for (const question of questions) {
+      // Fix N+1 query problem: Get all tags in a single query
+      if (questions.length > 0) {
+        const questionIds = questions.map(q => q.id);
+        const placeholders = questionIds.map(() => '?').join(',');
+
         const tagsResult = await query(`
-          SELECT t.id, t.name, t.category, t.color
+          SELECT qt.question_id, t.id, t.name, t.category, t.color
           FROM tags t
           JOIN question_tags qt ON t.id = qt.tag_id
-          WHERE qt.question_id = ?
-        `, [question.id]);
-        question.tags = tagsResult.rows;
+          WHERE qt.question_id IN (${placeholders})
+          ORDER BY t.name
+        `, questionIds);
+
+        // Group tags by question_id
+        const tagsByQuestionId = {};
+        tagsResult.rows.forEach(row => {
+          if (!tagsByQuestionId[row.question_id]) {
+            tagsByQuestionId[row.question_id] = [];
+          }
+          tagsByQuestionId[row.question_id].push({
+            id: row.id,
+            name: row.name,
+            category: row.category,
+            color: row.color
+          });
+        });
+
+        // Assign tags to questions
+        questions.forEach(question => {
+          question.tags = tagsByQuestionId[question.id] || [];
+        });
+      } else {
+        // No questions, no need to fetch tags
+        questions.forEach(question => {
+          question.tags = [];
+        });
       }
 
       return questions;
@@ -276,22 +314,8 @@ class Question {
           updateFields.answer_html = answerProcessed.html;
         }
 
-        // Regenerate metadata
-        const combinedEntities = {
-          drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
-          drug_classes: [...new Set([...questionProcessed.entities.drug_classes, ...answerProcessed.entities.drug_classes])],
-          conditions: [...new Set([...questionProcessed.entities.conditions, ...answerProcessed.entities.conditions])],
-          dosages: [...new Set([...questionProcessed.entities.dosages, ...answerProcessed.entities.dosages])],
-          routes: [...new Set([...questionProcessed.entities.routes, ...answerProcessed.entities.routes])]
-        };
-        metadata = {
-          ...this.metadata,
-          entities: combinedEntities,
-          question_stats: questionProcessed.stats,
-          answer_stats: answerProcessed.stats,
-          total_word_count: questionProcessed.stats.word_count + answerProcessed.stats.word_count,
-          last_processed: new Date().toISOString()
-        };
+        // Regenerate metadata using helper method (DRY principle)
+        metadata = Question._generateMetadata(questionProcessed, answerProcessed, this.metadata);
         updateFields.metadata = JSON.stringify(metadata);
       }
 
@@ -465,23 +489,8 @@ class Question {
       const questionProcessed = processMarkdown(this.questionText, 'question');
       const answerProcessed = processMarkdown(this.answerText, 'answer');
 
-      // Regenerate metadata too
-      const combinedEntities = {
-        drugs: [...new Set([...questionProcessed.entities.drugs, ...answerProcessed.entities.drugs])],
-        drug_classes: [...new Set([...questionProcessed.entities.drug_classes, ...answerProcessed.entities.drug_classes])],
-        conditions: [...new Set([...questionProcessed.entities.conditions, ...answerProcessed.entities.conditions])],
-        dosages: [...new Set([...questionProcessed.entities.dosages, ...answerProcessed.entities.dosages])],
-        routes: [...new Set([...questionProcessed.entities.routes, ...answerProcessed.entities.routes])]
-      };
-
-      const metadata = {
-        ...this.metadata,
-        entities: combinedEntities,
-        question_stats: questionProcessed.stats,
-        answer_stats: answerProcessed.stats,
-        total_word_count: questionProcessed.stats.word_count + answerProcessed.stats.word_count,
-        last_processed: new Date().toISOString()
-      };
+      // Regenerate metadata using helper method (DRY principle)
+      const metadata = Question._generateMetadata(questionProcessed, answerProcessed, this.metadata);
 
       const result = await query(`
         UPDATE questions
