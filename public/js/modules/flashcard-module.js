@@ -28,7 +28,17 @@ const initializeElements = function() {
 const updateDisplay = function() {
   if (totalCardsElement) totalCardsElement.textContent = String(flashcards.length);
   if (recalledCountElement) recalledCountElement.textContent = String(recalledCount);
-  if (currentCardElement) currentCardElement.textContent = currentCardIndex + 1;
+  if (currentCardElement) {
+    let displayIndex;
+    if (flashcards.length === 0) {
+      displayIndex = 0;
+    } else {
+      const maxDisplayValue = flashcards.length;
+      const calculatedValue = currentCardIndex + 1;
+      displayIndex = Math.min(calculatedValue, maxDisplayValue);
+    }
+    currentCardElement.textContent = displayIndex;
+  }
 };
 
 const updateButtonStates = function() {

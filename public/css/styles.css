@@ -1939,6 +1939,8 @@ body::before {
     gap: 0.5rem;
     font-size: 0.875rem;
     color: var(--text-light);
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .session-separator {

@@ -42,7 +42,7 @@
 
 ### Prévalence et enjeux épidémiologiques
 
-Les nausées et vomissements représentent un problème de santé publique majeur touchant diverses populations. [En France, 1,1 million de patients sont traités par AVK avec plus de 17 000 hospitalisations annuelles liées aux complications](https://ansm.sante.fr/dossiers-thematiques/anticoagulants). Dans le contexte de la chimiothérapie, **30 à 50% des femmes enceintes** souffrent de nausées et vomissements au premier trimestre, tandis que les nausées et vomissements chimio-induits affectent une proportion significative des patients oncologiques, avec des conséquences importantes sur la qualité de vie et l'observance thérapeutique.
+Les nausées et vomissements représentent un problème de santé publique majeur touchant diverses populations. Dans le contexte de la chimiothérapie, **30 à 50% des femmes enceintes** souffrent de nausées et vomissements au premier trimestre, tandis que les nausées et vomissements chimio-induits affectent une proportion significative des patients oncologiques, avec des conséquences importantes sur la qualité de vie et l'observance thérapeutique.
 
 ### Rappels physiologiques essentiels
 

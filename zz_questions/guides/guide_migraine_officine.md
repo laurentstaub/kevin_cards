@@ -34,7 +34,7 @@
 
 ### Prévalence et enjeux épidémiologiques
 
-En France, [12 à 16% des adultes souffrent de migraine avec une prédominance féminine de 3 femmes pour 1 homme](https://www.has-sante.fr/jcms/c_272505/fr/prise-en-charge-diagnostique-et-therapeutique-de-la-migraine-chez-l-adulte-et-chez-l-enfant). Le pic de prévalence se situe entre 30 et 45 ans, période de forte activité professionnelle et familiale. Cette pathologie représente un **coût sociétal majeur** avec plus de 85% des patients migraineux rapportant un impact sur leur rendement professionnel et leur qualité de vie. [La migraine génère environ 17 000 hospitalisations annuelles et constitue la première cause de céphalée consultée en médecine générale](https://www.ansm.sante.fr/dossiers-thematiques/cephalees).
+En France, [12 à 16% des adultes souffrent de migraine avec une prédominance féminine de 3 femmes pour 1 homme](https://www.has-sante.fr/jcms/c_272505/fr/prise-en-charge-diagnostique-et-therapeutique-de-la-migraine-chez-l-adulte-et-chez-l-enfant). Le pic de prévalence se situe entre 30 et 45 ans, période de forte activité professionnelle et familiale. Cette pathologie représente un **coût sociétal majeur** avec plus de 85% des patients migraineux rapportant un impact sur leur rendement professionnel et leur qualité de vie.
 
 ### Rappels physiopathologiques essentiels
 
