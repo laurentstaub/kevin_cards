@@ -805,14 +805,14 @@ body::before {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .stat-card {
   background: var(--bg-elevated);
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 12px;
   text-align: center;
   border: 1px solid var(--border-color);
@@ -825,7 +825,7 @@ body::before {
 }
 
 .stat-value {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--primary-color);
   margin-bottom: 0.5rem;
@@ -834,7 +834,6 @@ body::before {
 .stat-label {
   font-size: 0.85rem;
   color: var(--text-secondary);
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -972,7 +971,7 @@ body::before {
 .btn-revision {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   color: white;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
   font-size: 0.9rem;
   padding: 0.6rem 1.2rem;
 }
@@ -1889,7 +1888,7 @@ body::before {
 .stat-label {
     font-size: 0.875rem;
     color: var(--text-light);
-    text-transform: uppercase;
+
     letter-spacing: 0.5px;
 }
 
@@ -2250,6 +2249,10 @@ body::before {
     .stat-number {
         font-size: 1.5rem;
     }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 480px) {
@@ -2262,6 +2265,10 @@ body::before {
     }
     
     .preview-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
         grid-template-columns: 1fr;
     }
 }

@@ -134,7 +134,15 @@ const FormModule = (function() {
       // Validate source before adding
       const validation = validateSource(source);
       if (validation.isValid) {
-        sources.push(source);
+        // Only include fields accepted by the API schema
+        const cleanSource = {
+          title: source.title,
+          type: source.type
+        };
+        if (source.url) cleanSource.url = source.url;
+        if (source.year) cleanSource.year = source.year;
+        
+        sources.push(cleanSource);
       } else {
         console.warn('Invalid source skipped:', validation.errors);
       }

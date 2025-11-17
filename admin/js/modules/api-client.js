@@ -36,14 +36,20 @@ const ApiClient = (function() {
         }
         
         let errorMessage = `HTTP ${response.status}`;
+        let errorDetails = null;
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorData.error || errorMessage;
+          errorDetails = errorData.details || errorData.errors;
         } catch (parseError) {
           // If JSON parsing fails, use status text or default message
           errorMessage = response.statusText || errorMessage;
         }
-        throw new Error(errorMessage);
+        const error = new Error(errorMessage);
+        if (errorDetails) {
+          error.details = errorDetails;
+        }
+        throw error;
       }
 
       // Handle empty responses
@@ -117,6 +123,10 @@ const ApiClient = (function() {
       
       update: function(id, questionData) {
         return request(`/questions/${id}`, 'PUT', questionData);
+      },
+      
+      updateTags: function(id, tagIds) {
+        return request(`/questions/${id}/tags`, 'PUT', { tagIds });
       },
       
       toggle: function(id) {

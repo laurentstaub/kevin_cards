@@ -30,7 +30,6 @@ const QuestionModule = (function() {
       status.textContent = question.isActive ? 'Actif' : 'Inactif';
       status.className = `question-status status-${question.isActive ? 'active' : 'inactive'}`;
       
-      card.querySelector('.question-date').textContent = UIHelpers.formatDate(question.createdAt);
       card.querySelector('.question-preview').innerHTML = UIHelpers.stripHtml(question.questionText);
 
       // Tags

@@ -109,7 +109,7 @@ const AdminApp = (function() {
     }
 
     // Get selected tags from TagModule
-    questionData.tagIds = TagModule.getSelectedTagIds();
+    const tagIds = TagModule.getSelectedTagIds();
 
     // Validate using FormModule
     const validation = FormModule.validate('question', questionData);
@@ -127,15 +127,19 @@ const AdminApp = (function() {
       await TagModule.createNewTags();
       
       // Update tagIds after creating new tags
-      questionData.tagIds = TagModule.getSelectedTagIds();
+      const finalTagIds = TagModule.getSelectedTagIds();
       
       // *** Make the API call to save the question ***
       if (questionId) {
-        // Update existing question
+        // Update existing question (without tagIds - tags are updated separately)
         await ApiClient.questions.update(questionId, questionData);
+        
+        // Update tags separately using the dedicated endpoint
+        await ApiClient.questions.updateTags(questionId, finalTagIds);
       } else {
-        // Create new question
-        await ApiClient.questions.create(questionData);
+        // Create new question (tagIds is accepted in create schema)
+        const createData = { ...questionData, tagIds: finalTagIds };
+        await ApiClient.questions.create(createData);
       }
       
       ModalManager.hide('question-modal');
@@ -143,7 +147,14 @@ const AdminApp = (function() {
       UIHelpers.toast(`Question ${questionId ? 'modifiée' : 'ajoutée'} avec succès`, 'success');
     } catch (error) {
       console.error('Save error:', error);
-      UIHelpers.toast(error.message || 'Erreur lors de la sauvegarde', 'error');
+      let errorMessage = error.message || 'Erreur lors de la sauvegarde';
+      
+      // Show validation details if available
+      if (error.details && Array.isArray(error.details) && error.details.length > 0) {
+        errorMessage += ': ' + error.details.join(', ');
+      }
+      
+      UIHelpers.toast(errorMessage, 'error');
     }
   };
   
