@@ -36,3 +36,6 @@ build/
 # Temporary files
 *.tmp
 .cache/
+
+# Sauvegardes de base
+database/*.db.bak-*
