@@ -1,15 +1,16 @@
 {
   "name": "00_kevin_cards",
   "version": "1.0.0",
-  "description": "## Description Ce projet est une application web de cartes mémoire (flashcards) conçue spécifiquement pour les pharmaciens. Elle comprend un système de cartes de base avec un ensemble fixe de questions et réponses en français.",
-  "main": "src/js/scripts.js",
+  "description": "Application de flashcards en francais pour les pharmaciens d officine.",
+  "main": "public/js/scripts.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "api": "node api/server.js",
-    "dev": "nodemon api/server.js",
-    "db:reset": "rm -f database/flashpharma.db && echo \"SQLite database will be recreated on next startup\""
+    "dev": "SERVE_STATIC=true PORT=8080 nodemon api/server.js",
+    "start": "SERVE_STATIC=true PORT=8080 node api/server.js",
+    "dev:api": "nodemon api/server.js",
+    "dev:web": "node server.js",
+    "db:reset": "rm -f database/flashpharma.db && echo \"SQLite database will be recreated on next startup\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,8 @@
   },
   "homepage": "https://github.com/laurentstaub/kevin_cards#readme",
   "dependencies": {
+    "@google/genai": "^1.30.0",
+    "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

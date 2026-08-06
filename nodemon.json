@@ -1,0 +1,5 @@
+{
+  "watch": ["api", "database"],
+  "ext": "js,json,sql",
+  "ignore": ["database/*.db", "database/*.db-journal", "database/*.db-wal", "database/*.db-shm"]
+}
