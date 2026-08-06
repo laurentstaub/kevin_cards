@@ -453,7 +453,7 @@
     const startSession = async function() {
         if (selectedMode === 'review') {
             if (reviewQuestions.length === 0) {
-                alert('Aucune question à réviser pour le moment.');
+                window.Toast.info('Aucune carte à réviser pour le moment.');
                 return;
             }
             saveSessionConfiguration();
@@ -469,11 +469,11 @@
 
         // --- Regular session start ---
         if (availableQuestions === 0) {
-            alert('Aucune question disponible avec ces critères.');
+            window.Toast.warning('Aucune question ne correspond à ces critères.');
             return;
         }
         if (selectedMode === 'focused' && selectedTags.length === 0) {
-            alert('Veuillez sélectionner au moins un domaine pour l\'étude ciblée.');
+            window.Toast.warning('Sélectionnez au moins un domaine pour l\'étude ciblée.');
             return;
         }
 
@@ -487,7 +487,7 @@
             await loadSessionQuestions();
         } catch (error) {
             console.error('Failed to start session:', error);
-            alert('Erreur lors du démarrage de la session. Veuillez réessayer.');
+            window.Toast.error('Le démarrage de la session a échoué. Réessayez.');
         }
     };
 
@@ -529,7 +529,7 @@
             }
         } catch (error) {
             console.error('Failed to load session questions:', error);
-            alert('Erreur lors du chargement des questions. Retour à la configuration.');
+            window.Toast.error('Le chargement des questions a échoué. Retour à la configuration.');
             if (window.flashcardApp && window.flashcardApp.showSetupInterface) {
                 window.flashcardApp.showSetupInterface();
             }
@@ -603,15 +603,35 @@
         return parts.join(' • ');
     };
 
+    // Configuration of the session currently running. Kept in memory so other
+    // modules can read it through getSessionConfig(); mirrored to localStorage
+    // so it survives a page reload.
+    let currentConfig = null;
+
     const saveSessionConfiguration = function() {
-        const config = {
+        currentConfig = {
             mode: selectedMode,
             count: selectedCount,
             difficulty: selectedDifficulty,
-            tags: selectedTags,
+            tags: [...selectedTags],
             timestamp: Date.now()
         };
-        localStorage.setItem('lastSessionConfig', JSON.stringify(config));
+        localStorage.setItem('lastSessionConfig', JSON.stringify(currentConfig));
+    };
+
+    const getSessionConfig = function() {
+        if (currentConfig) {
+            return currentConfig;
+        }
+        // Fallback after a reload: recover the last configuration used.
+        try {
+            const stored = localStorage.getItem('lastSessionConfig');
+            currentConfig = stored ? JSON.parse(stored) : null;
+        } catch (error) {
+            console.error('Unreadable stored session configuration:', error);
+            currentConfig = null;
+        }
+        return currentConfig;
     };
 
     const extractSource = function(sources) {
@@ -642,7 +662,8 @@
         setInitialData, // New method for centralized initialization
         updateQuestionCount,
         updatePreview,
-        removeTag
+        removeTag,
+        getSessionConfig
     };
 
     // --- Initialization ---

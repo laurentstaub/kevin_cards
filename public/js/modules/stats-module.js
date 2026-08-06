@@ -186,6 +186,6 @@ export function handleClearProgress() {
     if (confirm('Êtes-vous sûr de vouloir réinitialiser toutes vos statistiques ? Cette action est irréversible.')) {
         window.ProgressTracker.resetAllProgress();
         updateStatsDisplay();
-        alert('Vos statistiques ont été complètement réinitialisées.');
+        window.Toast.success('Vos statistiques ont été réinitialisées.');
     }
 }

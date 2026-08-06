@@ -11,7 +11,9 @@ import * as RevisionModule from './modules/revision-module.js';
 // Private state - shared between modules via global objects or passed directly
 let allFlashcards = [];
 let questionData = null;
-let currentSession = {
+// const, not let: this object is exported on window and must always be
+// mutated in place so external readers never hold a stale reference.
+const currentSession = {
     questions: [],
     config: null
 };
@@ -105,42 +107,59 @@ const resetGame = function() {
   FlashcardModule.reset();
 };
 
+// Resolve the configuration of the session in progress. SessionSetup owns it,
+// so ask that module first and cache the answer on currentSession.
+const resolveSessionConfig = function() {
+    if (currentSession.config) {
+        return currentSession.config;
+    }
+    const config = window.SessionSetup && window.SessionSetup.getSessionConfig
+        ? window.SessionSetup.getSessionConfig()
+        : null;
+    if (config) {
+        currentSession.config = config;
+    }
+    return config;
+};
+
 const startSimilarSession = async function() {
-    if (!currentSession.config) {
+    const config = resolveSessionConfig();
+
+    if (!config) {
         console.error('No session configuration found');
-        alert('Impossible de créer une session similaire. Configuration manquante.');
+        window.Toast.error('Impossible de relancer une session similaire.');
         return;
     }
 
     try {
         const params = new URLSearchParams();
-        if (currentSession.config.mode === 'focused' && currentSession.config.tags && currentSession.config.tags.length > 0) {
-            params.set('tags', currentSession.config.tags.join(','));
+        if (config.mode === 'focused' && config.tags && config.tags.length > 0) {
+            params.set('tags', config.tags.join(','));
         }
-        if (currentSession.config.difficulty !== 'mixed') {
-            params.set('difficulty', currentSession.config.difficulty);
+        if (config.difficulty !== 'mixed') {
+            params.set('difficulty', config.difficulty);
         }
         params.set('limit', '1000');
-        
-    const result = await ApiClient.questions.loadWithParams(params);
-    if (!result.success || result.questions.length === 0) {
+
+        const result = await ApiClient.questions.loadWithParams(params);
+        if (!result.success || result.questions.length === 0) {
             throw new Error('No questions found with similar criteria');
         }
 
-    const questions = ApiClient.processSessionQuestions(result);
-    const shuffledQuestions = UIHelpers.shuffleArray(questions);
-        const selectedCount = currentSession.config.count === 'all' ? 
-            shuffledQuestions.length : 
-            Math.min(currentSession.config.count, shuffledQuestions.length);
+        const questions = ApiClient.processSessionQuestions(result);
+        const shuffledQuestions = UIHelpers.shuffleArray(questions);
+        const selectedCount = config.count === 'all'
+            ? shuffledQuestions.length
+            : Math.min(config.count, shuffledQuestions.length);
         const selectedQuestions = shuffledQuestions.slice(0, selectedCount);
 
         currentSession.questions = selectedQuestions;
-    FlashcardModule.loadFlashcards(selectedQuestions);
+        FlashcardModule.loadFlashcards(selectedQuestions);
         console.log(`Started similar session with ${selectedQuestions.length} new questions`);
 
     } catch (error) {
         console.error('Failed to start similar session:', error);
-        alert('Erreur lors du chargement de la session similaire. Veuillez réessayer.');
+        window.Toast.error('Le chargement de la session similaire a échoué. Réessayez.');
     }
 };
 
@@ -149,11 +168,11 @@ const startNewSession = function() {
     window.ProgressTracker.endSession();
   }
   
-  currentSession = {
-    questions: [],
-    config: null
-  };
-  
+  // Mutate rather than reassign: window.currentSession holds this reference
+  // and would otherwise keep pointing at the discarded object.
+  currentSession.questions = [];
+  currentSession.config = null;
+
   // Use the new view manager function
   showSetupInterface();
 };

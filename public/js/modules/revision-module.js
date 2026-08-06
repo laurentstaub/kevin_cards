@@ -154,7 +154,7 @@ const startRevisionSession = function() {
     }
 
     if (cardsToStudy.length === 0) {
-        alert('Aucune carte sélectionnée pour la révision.');
+        window.Toast.warning('Sélectionnez au moins une carte à réviser.');
         return;
     }
 
