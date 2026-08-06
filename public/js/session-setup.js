@@ -191,7 +191,6 @@
             html += `
                 <div class="tag-priority-section tag-section-primary">
                     <div class="priority-header">
-                        <i class="fas fa-crown"></i>
                         <span>Domaines principaux</span>
                         <small>(${tagsByPriority.primary.length} tags)</small>
                     </div>

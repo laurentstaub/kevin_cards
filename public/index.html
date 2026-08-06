@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlashPharma</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/fonts.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body data-theme="dark">
@@ -49,24 +46,24 @@
             <div class="setup-content">
                 <!-- Study Mode Selection -->
                 <div class="setup-section">
-                    <h3><i class="fas fa-graduation-cap"></i> Mode d'étude</h3>
+                    <h3>Mode d'étude</h3>
                     <div class="study-modes">
                         <div class="study-mode active" data-mode="quick">
-                            <div class="mode-icon"><i class="fas fa-bolt"></i></div>
+                            <div class="mode-icon"></div>
                             <div class="mode-info">
                                 <h4>Étude rapide</h4>
                                 <p>10 questions aléatoires</p>
                             </div>
                         </div>
                         <div class="study-mode" data-mode="focused">
-                            <div class="mode-icon"><i class="fas fa-target"></i></div>
+                            <div class="mode-icon"></div>
                             <div class="mode-info">
                                 <h4>Étude ciblée</h4>
                                 <p>Questions par domaine</p>
                             </div>
                         </div>
                         <div class="study-mode" data-mode="review">
-                            <div class="mode-icon"><i class="fas fa-redo"></i></div>
+                            <div class="mode-icon"></div>
                             <div class="mode-info">
                                 <h4>Révision</h4>
                                 <p>Questions difficiles</p>
@@ -77,7 +74,7 @@
 
                 <!-- Question Count -->
                 <div class="setup-section">
-                    <h3><i class="fas fa-list-ol"></i> Nombre de questions</h3>
+                    <h3>Nombre de questions</h3>
                     <div class="question-count-selector">
                         <button class="count-btn active" data-count="10">10</button>
                         <button class="count-btn" data-count="20">20</button>
@@ -88,7 +85,7 @@
 
                 <!-- Tag Filters (shown only in focused mode) -->
                 <div class="setup-section" id="tagFiltersSection" style="display: none;">
-                    <h3><i class="fas fa-tags"></i> Domaines d'étude</h3>
+                    <h3>Domaines d'étude</h3>
                     <div class="tag-categories" id="setupTagCategories">
                         <div class="loading-tags">
                             <i class="fas fa-spinner fa-spin"></i>
@@ -100,22 +97,18 @@
 
                 <!-- Difficulty Level -->
                 <div class="setup-section">
-                    <h3><i class="fas fa-signal"></i> Niveau de difficulté</h3>
+                    <h3>Niveau de difficulté</h3>
                     <div class="difficulty-selector">
                         <button class="difficulty-btn active" data-difficulty="mixed">
-                            <i class="fas fa-random"></i>
                             Mixte
                         </button>
                         <button class="difficulty-btn" data-difficulty="easy">
-                            <i class="fas fa-seedling"></i>
                             Facile
                         </button>
                         <button class="difficulty-btn" data-difficulty="medium">
-                            <i class="fas fa-balance-scale"></i>
                             Moyen
                         </button>
                         <button class="difficulty-btn" data-difficulty="hard">
-                            <i class="fas fa-fire"></i>
                             Difficile
                         </button>
                     </div>
@@ -206,7 +199,7 @@
         <div class="modal-body">
             <!-- Global Stats -->
             <div class="stats-section">
-                <h3><i class="fas fa-trophy"></i> Vue d'ensemble</h3>
+                <h3>Vue d'ensemble</h3>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-value" id="totalCardsStudied">0</div>
@@ -229,7 +222,7 @@
             
             <!-- Session History -->
             <div class="stats-section">
-                <h3><i class="fas fa-history"></i> Sessions récentes</h3>
+                <h3>Sessions récentes</h3>
                 <div id="recentSessions" class="sessions-list">
                     <!-- Will be populated by JavaScript -->
                 </div>
@@ -237,7 +230,7 @@
             
             <!-- Performance Section -->
             <div class="stats-section">
-                <h3><i class="fas fa-chart-line"></i> Performance</h3>
+                <h3>Performance</h3>
                 <div class="performance-container">
                     <div class="stat-info">
                         <span id="weakCardsCount">0</span> cartes individuelles avec un taux de réussite < 50%
@@ -246,7 +239,6 @@
                         <small>Note: Les cartes faibles sont calculées individuellement sur toutes les sessions, contrairement aux sessions qui montrent la performance globale d'une session.</small>
                     </div>
                     <button class="btn btn-revision" id="startRevisionBtn" style="display: none;">
-                        <i class="fas fa-redo-alt"></i>
                         <span id="revisionBtnText">Retravailler les cartes faibles</span>
                     </button>
                 </div>
@@ -254,7 +246,7 @@
             
             <!-- Weak Cards Details -->
             <div class="stats-section">
-                <h3><i class="fas fa-exclamation-triangle"></i> Cartes à retravailler</h3>
+                <h3>Cartes à retravailler</h3>
                 <div id="weakAreas" class="weak-areas-list">
                     <!-- Will be populated by JavaScript -->
                 </div>
@@ -283,7 +275,6 @@
         
         <div class="modal-body">
             <div class="filter-info">
-                <i class="fas fa-info-circle"></i>
                 <span>Sélectionnez un ou plusieurs tags. Les cartes contenant <strong>au moins un</strong> des tags sélectionnés seront incluses.</span>
             </div>
             
@@ -325,7 +316,6 @@
                         <label class="revision-mode">
                             <input type="radio" name="revisionMode" value="all" checked>
                             <span class="revision-mode-label">
-                                <i class="fas fa-list"></i>
                                 <strong>Révision complète</strong>
                                 <small>Toutes les cartes difficiles</small>
                             </span>
@@ -333,7 +323,6 @@
                         <label class="revision-mode">
                             <input type="radio" name="revisionMode" value="priority">
                             <span class="revision-mode-label">
-                                <i class="fas fa-exclamation-triangle"></i>
                                 <strong>Priorité élevée</strong>
                                 <small>Les 10 cartes les plus difficiles</small>
                             </span>
@@ -341,7 +330,6 @@
                         <label class="revision-mode">
                             <input type="radio" name="revisionMode" value="custom">
                             <span class="revision-mode-label">
-                                <i class="fas fa-check-square"></i>
                                 <strong>Sélection manuelle</strong>
                                 <small>Choisir les cartes à réviser</small>
                             </span>

@@ -1,10 +1,10 @@
 /* FlashPharma Admin CSS - Matching Frontend Design */
 :root {
   /* Modern Color Palette - Matching Frontend */
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-color: #667eea;
-  --primary-dark: #5a67d8;
-  --secondary-color: #764ba2;
+  --primary-gradient: #5b5fd6;
+  --primary-color: #5b5fd6;
+  --primary-dark: #4f52c4;
+  --secondary-color: #5b5fd6;
   --accent-color: #f093fb;
   
   /* Status Colors */
@@ -36,7 +36,7 @@
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --border-radius: 8px;
+  --border-radius: 4px;
   --border-radius-sm: 4px;
   --border-radius-lg: 12px;
 }
@@ -415,7 +415,7 @@ select:focus {
 
 .question-status {
   padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -545,7 +545,7 @@ select:focus {
   padding: 0.25rem 0.5rem;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
-  border-radius: 12px;
+  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -624,7 +624,7 @@ select:focus {
   color: var(--text-secondary);
   padding: 0.25rem 0.75rem;
   background: var(--bg-tertiary);
-  border-radius: 12px;
+  border-radius: 4px;
   min-width: 40px;
   text-align: center;
 }
@@ -717,7 +717,7 @@ select:focus {
   padding: 0.25rem 0.5rem;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
-  border-radius: 12px;
+  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -964,7 +964,7 @@ select:focus {
   padding: 0.25rem 0.5rem;
   background: var(--primary-color);
   color: white;
-  border-radius: 12px;
+  border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 500;
 }
