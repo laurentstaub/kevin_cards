@@ -1,358 +1,210 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guide de travail pour Claude Code (claude.ai/code) sur ce dépôt.
 
-## Project Overview
+## Vue d'ensemble
 
-FlashPharma is a French-language flashcard application designed for pharmacy students and professionals. The project has evolved from a simple MVP to a full-stack application with PostgreSQL database backend and admin interface.
+FlashPharma est une application de flashcards en français pour les pharmaciens d'officine et les étudiants en pharmacie. Application complète : API Express, base SQLite, application d'étude publique et panneau d'administration.
 
-**Current State:** Full-stack application with Express.js API, PostgreSQL database, and admin panel
-**Architecture:** Client-server architecture with separate API backend and static frontend
+**Architecture :** client-serveur, frontend statique en JavaScript vanilla, backend REST séparé.
 
-## Development Commands
+## Commandes
 
-### Starting the Application
-- `npm start` or `npm run dev` - Start the main Express.js server on port 8080
-- `npm run api` - Start the API server with nodemon on port 3001 (auto-reload for development)
-- `node server.js` - Alternative way to start the main server
+### Démarrage
 
-### Database Management
-- `npm run db:setup` - Initialize database schema (requires existing flashpharma database)
-- `npm run db:reset` - Drop, recreate, and setup the database from scratch
-- `npm run migrate:preview` - Preview JSON to PostgreSQL migration without executing
-- `npm run migrate:execute` - Execute the migration from JSON files to PostgreSQL
-- `npm run load:questions` - Load questions from JSON into the database
+```bash
+npm run dev     # Tout-en-un avec nodemon, port 8080
+```
 
-### Testing
-- No test framework configured yet - tests are planned for future phases
+Un seul processus : `SERVE_STATIC=true PORT=8080 nodemon api/server.js`. Le serveur API sert aussi `public/` et `admin/`, il n'y a pas de proxy. `nodemon.json` restreint la surveillance à `api/` et `database/` et ignore les fichiers `.db`, sinon chaque écriture depuis l'administration redémarrerait le serveur.
 
-### Dependencies
-- `npm install` - Install all dependencies including Express, PostgreSQL client, security middleware
+- Application d'étude : `http://localhost:8080`
+- Administration : `http://localhost:8080/admin`
+- Health check : `http://localhost:8080/api/health`
 
-## Architecture
+Mode deux processus, utile seulement pour travailler sur `server.js` ou diagnostiquer le proxy :
 
-### Current Structure
+```bash
+npm run dev:api   # API seule, port 3001
+npm run dev:web   # Frontend + proxy, port 8080
+```
+
+### Base de données
+
+```bash
+npm run db:reset    # Supprime le fichier SQLite ; recréé au démarrage suivant
+```
+
+Il n'existe pas de script `db:setup` : le schéma (`database/schema-sqlite.sql`) et les migrations (`database/migrations/*.sql`) sont appliqués automatiquement par `api/config/database.js` au démarrage de l'API, si les tables sont absentes.
+
+Scripts ponctuels, à lancer directement :
+
+```bash
+node tools/export_db_to_json.js       # Export du contenu vers JSON
+node tools/load_questions_to_db.js    # Import depuis JSON
+node tools/regenerate_html.js         # Régénération du HTML depuis le Markdown
+node database/migrate-questions.js    # Migration historique
+```
+
+### Tests
+
+Aucun framework configuré. `npm test` échoue volontairement.
+
+## Structure
+
 ```
 /
-├── server.js              # Main Express server serving static files
-├── api/                   # Backend API server
-│   ├── server.js          # API server with security middleware (port 3001)
-│   ├── config/
-│   │   └── database.js    # PostgreSQL connection configuration
+├── server.js               # Serveur frontend : statiques + proxy /api (port 8080)
+├── api/
+│   ├── server.js           # Serveur API (port 3001)
+│   ├── config/database.js  # Connexion SQLite, schéma, migrations
 │   ├── models/
-│   │   ├── Question.js    # Question model with CRUD operations
-│   │   └── Tag.js         # Tag model and management
+│   │   ├── Question.js
+│   │   └── Tag.js
 │   ├── routes/
-│   │   ├── questions.js   # Question endpoints (/api/questions)
-│   │   └── tags.js        # Tag endpoints (/api/tags)
+│   │   ├── questions.js    # /api/questions
+│   │   └── tags.js         # /api/tags
 │   └── utils/
-│       └── markdown.js    # Markdown/HTML conversion utilities
-├── admin/                 # Admin panel for content management
-│   ├── index.html         # Admin interface
-│   ├── css/admin.css      # Admin panel styles
-│   └── js/admin.js        # Admin functionality
-├── database/              # Database utilities and migrations
-│   ├── schema.sql         # PostgreSQL database schema
-│   ├── migrate-questions.js  # JSON to PostgreSQL migration script
-│   └── migrations/        # SQL migration files
-├── src/                   # Frontend application
-│   ├── index.html         # Main application HTML
-│   ├── css/styles.css     # Modern dark/light theme CSS
+│       ├── errors.js       # Classes d'erreur + middleware centralisé
+│       ├── logger.js       # Winston
+│       └── markdown.js     # Markdown <-> HTML
+├── public/                 # Application d'étude
+│   ├── index.html
+│   ├── css/styles.css
 │   └── js/
-│       ├── scripts.js     # Main flashcard logic
-│       └── progress.js    # Progress tracking functionality
-├── zz_questions/          # Source data and documentation
-│   ├── questions/         # JSON question banks
-│   │   ├── 00_questions.json  # Main question set
-│   │   └── questions_diabetologie.json  # Specialty question sets
-│   └── guides/            # Content creation guides
-└── tools/
-    └── json_card_viewer.html  # Development tool for viewing JSON structure
+│       ├── scripts.js          # Point d'entrée (module ES6)
+│       ├── progress.js
+│       ├── session-setup.js
+│       └── modules/            # api-client, filter, flashcard, revision, stats, ui-helpers
+├── admin/                  # Panneau d'administration
+│   ├── index.html
+│   ├── css/admin.css
+│   └── js/
+│       ├── admin.js
+│       └── modules/            # api-client, event-manager, form, modal-manager,
+│                               # question, tag, tag-management, ui-helpers, view-manager
+├── database/
+│   ├── flashpharma.db      # Base SQLite (NON versionnée)
+│   ├── schema-sqlite.sql   # Schéma de référence
+│   ├── schema.sql          # Ancien schéma PostgreSQL, conservé pour mémoire
+│   └── migrations/
+├── docs/
+├── tools/
+└── zz_questions/           # Sources de contenu, fiches, guides de rédaction
 ```
 
-### Key Components
+Note : le frontend vit dans `public/`, pas dans `src/`. Le dossier `src/` n'existe plus.
 
-1. **Main Server (server.js)**: Express.js static file server
-   - Serves frontend files from `/src` and `/admin` directories
-   - Proxies API requests to backend server
-   - Handles SPA routing with catch-all route
-   - Runs on port 8080
+## Points d'attention techniques
 
-2. **API Server (api/server.js)**: Backend REST API
-   - Express.js with security middleware (Helmet, CORS, rate limiting)
-   - PostgreSQL database connection via pg client
-   - RESTful endpoints for questions and tags
-   - Runs on port 3001
+**Base de données : SQLite, pas PostgreSQL.** La migration a eu lieu ; il n'y a plus de dépendance `pg`. `database/schema.sql` est un vestige PostgreSQL, le schéma actif est `schema-sqlite.sql`. `api/config/database.js` expose une fonction `query()` qui imite l'interface de `pg` (`{ rows, rowCount }`) pour limiter la réécriture des modèles.
 
-3. **Database Layer**:
-   - PostgreSQL database named 'flashpharma'
-   - Questions table with markdown and HTML content fields
-   - Tags table with hierarchical category structure
-   - Many-to-many relationship via question_tags junction table
+**Ports.** `PORT` (injecté par la plateforme d'hébergement) est prioritaire, puis `API_PORT` / `FRONTEND_PORT` de `.env`, puis les défauts 3001 / 8080.
 
-4. **Admin Panel (admin/)**: Content management interface
-   - Full CRUD operations for questions
-   - Tag management and categorization
-   - Markdown editor with preview
-   - Search and filtering capabilities
+**Helmet est monté sur `/api` uniquement.** Les pages statiques chargent des polices Google et Font Awesome depuis des CDN, que la politique de sécurité du contenu de l'API interdit.
 
-5. **Frontend Application (src/)**: User-facing flashcard app
-   - Vanilla JS/CSS/HTML (no framework dependencies)
-   - Modern dark/light theme with CSS custom properties
-   - Flip card animations with CSS transforms
-   - Progress tracking with local storage
-   - Fetches data from API server
+**Déploiement mono-processus.** Avec `NODE_ENV=production` (ou `SERVE_STATIC=true`), `api/server.js` sert aussi `public/` et `admin/`. C'est aussi le mode de développement par défaut : `server.js` et son proxy ne servent plus qu'au diagnostic.
 
-6. **Data Migration Tools**:
-   - JSON to PostgreSQL migration scripts
-   - Markdown to HTML conversion utilities
-   - Question validation and formatting tools
+**Migration cassée.** `database/migrations/001_add_html_columns.sql` utilise `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`, une syntaxe que SQLite ne connaît pas : la migration échoue à chaque démarrage sur une base neuve (`near "EXISTS": syntax error`). Sans conséquence — les colonnes sont déjà créées par `schema-sqlite.sql` et `runMigrations()` avale l'erreur — mais le message pollue les journaux.
 
-### Data Formats
+**`http-proxy-middleware` v3.** Les gestionnaires d'événements se déclarent sous la clé `on: { error, proxyReq, proxyRes }`, pas via `onError` / `onProxyReq` (syntaxe v2, silencieusement ignorée).
 
-#### Database Schema (PostgreSQL)
-```sql
--- Questions table
-CREATE TABLE questions (
-  id SERIAL PRIMARY KEY,
-  question_markdown TEXT NOT NULL,
-  answer_markdown TEXT NOT NULL,
-  question_html TEXT,
-  answer_html TEXT,
-  difficulty VARCHAR(20),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+**Cycle de vie d'une question.** Le système de statuts éditoriaux a été retiré (`database/remove_status_system.sql`). Il reste `is_active` (la carte est-elle servie à l'application d'étude) et `deleted_at` (suppression logique, réversible via `PATCH /api/questions/:id/restore`). La route `/api/questions/published` est un alias historique qui redirige vers `/active`.
 
--- Tags table with categories
-CREATE TABLE tags (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100) UNIQUE NOT NULL,
-  category VARCHAR(100),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+**Markdown source de vérité.** `question_text` et `answer_text` contiennent le Markdown. `question_html` et `answer_html` sont un cache de rendu, régénérable par `POST /api/questions/:id/regenerate-html`. Ne jamais éditer le HTML directement.
 
--- Junction table for many-to-many relationship
-CREATE TABLE question_tags (
-  question_id INTEGER REFERENCES questions(id) ON DELETE CASCADE,
-  tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
-  PRIMARY KEY (question_id, tag_id)
-);
-```
+## Rédaction du contenu
 
-#### Legacy JSON Format (for migration)
-```json
-{
-  "metadata": {
-    "title": "...",
-    "total_cards": 65,
-    "available_tags": [...],
-    "tag_categories": {...}
-  },
-  "flashcards": [
-    {
-      "id": 1,
-      "tags": ["Antibiotiques", "Beta-lactamines"],
-      "question": "<div class=\"card-content\">...</div>",
-      "answer": "<div class=\"card-content\">...</div>",
-      "difficulty": "hard|medium|easy"
-    }
-  ]
-}
-```
+### Une question, un concept
 
-## Development Workflow
+- À éviter : les questions composées reliées par « et » — les scinder en deux cartes.
+- Chaque question teste un point de connaissance précis.
+- Exemple : plutôt que « Quels sont les effets indésirables ET les contre-indications de l'amoxicilline ? », créer deux cartes.
 
-### Adding New Questions
+### Mise en forme des réponses
 
-#### Via Admin Panel (Recommended)
-1. Navigate to `/admin` in your browser
-2. Click "New Question" button
-3. Write question and answer in Markdown format
-4. Select appropriate tags from the dropdown
-5. Set difficulty level (easy/medium/hard)
-6. Preview the rendered HTML
-7. Save to database
+- Phrases complètes avec sujet et verbe hors des listes.
+- Les puces sont acceptables pour les énumérations, mais doivent être introduites par une phrase complète.
+- Correct : « Les contre-indications absolues de l'amoxicilline sont les suivantes : » suivi des puces.
+- À éviter : les fragments isolés comme « Allergie pénicillines ».
+- Correct : « Une allergie aux pénicillines constitue une contre-indication absolue. »
 
-#### Via Database Migration
-1. Add questions to JSON files in `zz_questions/questions/` directory
-2. Run `npm run migrate:preview` to check the migration
-3. Run `npm run migrate:execute` to import into PostgreSQL
-4. Verify in admin panel that questions imported correctly
+### Exemple de réécriture
 
-#### Direct Database Insert
-1. Use SQL INSERT statements in `database/migrations/`
-2. Run `npm run db:setup` to apply migrations
-3. Questions will be available immediately in the API
+Version trop télégraphique :
 
-### Question Writing Guidelines
-**Questions should focus on a single concept:**
-- ❌ Avoid compound questions with "et" (and) - split into separate cards
-- ✅ Each question should test one specific knowledge point
-- ✅ Example: Instead of "Quels sont les effets indésirables ET les contre-indications de l'amoxicilline?", create two cards
+> Venlafaxine : IRSNA avec profil dose-dépendant.
+> Faibles doses : effet sérotoninergique prédominant
+> Fortes doses (>150 mg) : inhibition significative recapture noradrénaline → effet noradrénergique → stimulation α1 et β1 → hypertension artérielle
+> Surveillance TA recommandée dès 225 mg/j. Mécanisme direct, non lié à une interaction.
 
-**Answer formatting standards:**
-- Use complete sentences with proper subject-verb structure outside of lists
-- Bullet points are acceptable for enumerations but should be introduced by a complete sentence
-- ✅ Example: "Les contre-indications absolues de l'amoxicilline sont les suivantes:"
-  - Followed by bullet points
-- ❌ Avoid standalone fragments like "Allergie pénicillines" 
-- ✅ Use complete sentences like "Une allergie aux pénicillines constitue une contre-indication absolue."
+Version attendue :
 
-**Example with a more complete answer:**
-- "Venlafaxine : IRSNA avec profil dose-dépendant.
+> La venlafaxine est un IRSNA avec un profil dose-dépendant.
+> À faibles doses, l'effet sérotoninergique est prédominant. À fortes doses (>150 mg), il se produit une inhibition significative de la recapture de la noradrénaline → effet noradrénergique → stimulation des récepteurs α1 et β1 → hypertension artérielle.
+> La surveillance de la tension artérielle est recommandée dès une dose de 225 mg/j. Ce mécanisme est direct, non lié à une interaction.
 
-Faibles doses : effet sérotoninergique prédominant
-Fortes doses (>150 mg) : inhibition significative recapture noradrénaline → effet noradrénergique → stimulation α1 et β1 → hypertension artérielle
-Surveillance TA recommandée dès 225 mg/j. Mécanisme direct, non lié à une interaction."
+### Structure
 
-The first sentence is too cryptic, it should have a verb and use articles : "La venlafaxine est un IRSNA avec un profil dose-dépendant."
+- Commencer par une phrase qui pose le contexte.
+- Utiliser les puces pour les listes, correctement introduites.
+- Terminer par une synthèse ou la portée clinique quand c'est pertinent.
 
-Then : "À faible doses, l'effet sérotoninergique est prédominant. À fortes doses (>150 mg), il se produit une inhibition significative de la recapture de la noradrénaline → effet noradrénergique → stimulation des récepteurs α1 et β1 → hypertension artérielle.
-La surveillance de la tension artérielle est recommandée dès une dose de 225 mg/j. Ce mécanisme est direct, non lié à une interaction."
+### Ajouter des questions
 
-**Content structure:**
-- Start answers with context-setting sentences
-- Use bullet points for lists, but introduce them properly  
-- End with synthesis or clinical relevance when appropriate
+**Via le panneau d'administration (recommandé) :** `/admin` → « Nouvelle question » → Markdown, tags, difficulté → prévisualisation → enregistrement.
 
-### Styling Changes
-- CSS uses modern custom properties for theming
-- Dark theme is default, light theme available via toggle
-- Responsive design with mobile-first approach
-- Animation system based on CSS transforms and transitions
+**Via import JSON :** placer les questions dans `zz_questions/`, puis `node tools/load_questions_to_db.js`, et vérifier dans l'administration.
 
-### Current Status and Next Steps
+## Conventions de code
 
-The project has already progressed beyond the initial Phase 1 MVP:
-- ✅ **Completed:** PostgreSQL database integration
-- ✅ **Completed:** RESTful API with Express.js
-- ✅ **Completed:** Admin panel for content management
-- ✅ **Completed:** Security middleware (Helmet, CORS, rate limiting)
+### Général
 
-**Next Development Priorities:**
-- User authentication and personal progress tracking
-- Spaced repetition algorithm implementation
-- React frontend migration for better state management
-- PWA features (offline mode, installability)
-- Mobile app deployment via Capacitor
+**Pas d'emoji ni d'emoticône** dans le code, la documentation, les commentaires ou les sorties console.
 
-Current code follows clean architecture principles with clear separation between API, database, and frontend layers to facilitate future migrations.
+- Correct : `console.log('Migration completed successfully');`
+- À éviter : `console.log('✅ Migration completed successfully');`
 
-## Feature Ideas for Future Development
+Toutes les sorties console, les messages d'erreur et les textes visibles par l'utilisateur restent sobres et sans caractères décoratifs.
 
-### Progress Tracking Features
+### API
 
-**Study Session Analytics:**
-- Track correct/incorrect answers per session
-- Calculate accuracy percentage and improvement trends
-- Monitor study streaks and consistency
-- Session duration and cards reviewed per session
+- Valider les entrées avec Joi.
+- Requêtes paramétrées systématiquement, jamais de concaténation SQL.
+- Ne pas exposer d'information sensible dans les messages d'erreur renvoyés au client.
+- Conventions REST : GET pour lire, POST pour créer, PUT / PATCH pour modifier, DELETE pour supprimer. Codes HTTP appropriés.
+- Erreurs : format de réponse homogène, journalisation côté serveur via `utils/logger.js`, classes d'erreur de `utils/errors.js`, `try / catch` sur toute opération base.
 
-**Spaced Repetition System:**
-- Implement confidence levels (1-5) after each answer
-- Schedule card reviews based on performance (easy cards less frequently)
-- Track review intervals and optimize timing
-- Show "due for review" cards based on algorithm
+### Base de données
 
-**Long-term Progress:**
-- Mastery levels per card (new → learning → review → mastered)
-- Visual progress bars by tag category
-- Statistics dashboard showing weak areas
-- Historical performance graphs
+- Index sur les colonnes fréquemment filtrées.
+- Pagination systématique sur les listes.
+- Éviter les requêtes N+1.
+- Transactions pour les opérations liées.
+- Contraintes de clé étrangère et `NOT NULL` là où c'est pertinent.
 
-### Tag-Based Selection Features
+## État et priorités
 
-**Smart Filtering:**
-- Multi-tag selection with AND/OR logic
-- "Focus mode" for specific topics (e.g., only Beta-lactamines)
-- Exclude mastered cards option
-- Difficulty-based filtering
+**Fait :** base SQLite, API REST, panneau d'administration, sécurité de base (Helmet, CORS, limitation de débit), journalisation Winston, gestion d'erreurs centralisée, déploiement mono-processus.
 
-**Tag-Based Study Modes:**
-- "Weak areas" mode (cards with low success rates)
-- "Mixed review" (proportional sampling from all categories)
-- "Topic deep dive" (all cards from selected tag hierarchy)
-- "Quick review" (only previously mastered cards)
+**Manquant, par ordre de priorité :**
 
-**Tag Analytics:**
-- Performance heatmap by tag category
-- Identify knowledge gaps in tag hierarchies
-- Recommend study priorities based on tag performance
-- Track improvement in specific pharmaceutical areas
+1. **Authentification.** `/admin` expose tout le CRUD sans contrôle d'accès. Bloquant pour toute exposition publique. La table `users` et les dépendances `bcryptjs` / `jsonwebtoken` sont déjà là.
+2. **Tests.** Aucun framework configuré.
+3. Répétition espacée et suivi de progression côté serveur (aujourd'hui en stockage local du navigateur).
+4. Fonctionnalités PWA : hors-ligne, installation.
 
-**Implementation Notes:**
-- Local storage for progress data (Phase 1)
-- Tag selection checkboxes in sidebar
-- Progress visualization with charts
-- Study recommendations based on performance patterns
+## Fichiers de référence
 
-## Important Files and Locations
-
-### Configuration
-- `.env` - Environment variables (database connection, API settings)
-- `00_requirements.md` - Complete technical specifications and design system
-
-### Database
-- `database/schema.sql` - PostgreSQL database structure
-- `database/migrate-questions.js` - JSON to PostgreSQL migration tool
-- `api/config/database.js` - Database connection configuration
-
-### API Server
-- `api/server.js` - Main API server with security middleware
-- `api/models/Question.js` - Question model with CRUD operations
-- `api/routes/questions.js` - RESTful endpoints for questions
-
-### Frontend
-- `src/js/scripts.js` - Main flashcard application logic
-- `src/css/styles.css:1-50` - CSS custom properties and theming
-- `admin/js/admin.js` - Admin panel functionality
-
-### Data Sources
-- `zz_questions/questions/00_questions.json` - Legacy JSON question bank
-- `zz_questions/guides/` - Content creation and AI prompt guides
-
-## Coding Standards
-
-### General Rules
-
-**No Emoticons:** Never use emoticons or emoji characters in code, documentation, console output, or comments. Use clear, professional text instead.
-- Good: `console.log('Migration completed successfully');`
-- Bad: `console.log('✅ Migration completed successfully');`
-
-**Professional Output:** All console messages, error handling, and user-facing text should be professional and clear without decorative characters.
-
-### API Development Standards
-
-**Security First:**
-- Always validate input data using Joi schemas
-- Sanitize user inputs before database operations
-- Use parameterized queries to prevent SQL injection
-- Never expose sensitive information in error messages
-
-**RESTful Conventions:**
-- GET for reading data
-- POST for creating new resources
-- PUT/PATCH for updating existing resources
-- DELETE for removing resources
-- Return appropriate HTTP status codes
-
-**Error Handling:**
-- Consistent error response format
-- Log errors server-side but return safe messages to clients
-- Use try-catch blocks for all database operations
-- Implement proper error middleware
-
-### Database Standards
-
-**Query Optimization:**
-- Use indexes on frequently queried columns
-- Limit result sets with pagination
-- Avoid N+1 query problems
-- Use database transactions for related operations
-
-**Data Integrity:**
-- Foreign key constraints for relationships
-- NOT NULL constraints where appropriate
-- Unique constraints for fields like email, username
-- Default values for optional fields
+| Sujet | Fichier |
+| :--- | :--- |
+| Configuration | `.env` (modèle : `.env.example`) |
+| Spécifications | `docs/00_requirements.md` |
+| Déploiement | `docs/RAILWAY_DEPLOYMENT.md`, `railway.json` |
+| Schéma actif | `database/schema-sqlite.sql` |
+| Connexion base | `api/config/database.js` |
+| Modèle Question | `api/models/Question.js` |
+| Routes questions | `api/routes/questions.js` |
+| Logique d'étude | `public/js/scripts.js` |
+| Thème et variables CSS | `public/css/styles.css` |
+| Logique d'administration | `admin/js/admin.js` |

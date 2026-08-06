@@ -1,134 +1,213 @@
-# FlashPharma: Pharmacist Flashcard Application
+# FlashPharma
 
-## 1. Overview
+Application de cartes mémoire (flashcards) en français pour les pharmaciens d'officine et les étudiants en pharmacie. Interface d'étude publique + panneau d'administration pour la gestion du contenu.
 
-FlashPharma is a full-stack web application designed to help pharmacy students and professionals study and review their knowledge using interactive flashcards. The application features a clean, user-facing study interface and a powerful backend admin panel for comprehensive content management.
+## 1. Architecture
 
-![Flashcards Screen](flashcards_screen.png)
+Trois composants dans un seul dépôt :
 
-## 2. Architecture
-
-The project is a monorepo containing three main components:
-
-*   **Frontend Application (`/src`):** The main study interface for users. It's a single-page application (SPA) built with vanilla JavaScript that fetches published flashcards from the API. It handles study session setup, progress tracking, and user statistics.
-
-*   **Admin Panel (`/admin`):** A separate SPA dedicated to content management. It allows administrators to create, edit, review, and publish flashcard content. It includes a Markdown editor with live preview, tag management, and a review workflow.
-
-*   **Backend API (`/api`):** A Node.js and Express.js RESTful API that serves as the application's backbone. It connects to a PostgreSQL database, manages all data persistence, handles content rendering (Markdown to HTML), and enforces a content validation workflow.
-
-The application runs on two servers:
-1.  A root server (`server.js`) that serves the static files for the frontend and admin panel, and acts as a proxy for API requests.
-2.  An API server (`api/server.js`) that handles all business logic and database interactions.
-
-## 3. Features
-
-### User Application
-- **Interactive Flashcards:** Clean, intuitive interface with card-flipping animations.
-- **Custom Study Sessions:** Configure sessions by number of questions, study mode (quick, focused, review), and difficulty.
-- **Tag-Based Filtering:** Filter questions by specific tags and categories to focus on certain topics.
-- **Progress Tracking:** In-depth statistics modal showing overall progress, recent session history, and identifying "weak" cards.
-- **Revision Mode:** A dedicated mode to review cards the user has struggled with.
-- **Dark/Light Mode:** Theme toggle for user preference.
-
-### Admin Panel
-- **Full CRUD for Questions & Tags:** Create, Read, Update, and Delete flashcards and their associated tags.
-- **Markdown Editor:** A rich text editor for questions and answers with a live HTML preview.
-- **Content Workflow:** A robust review and validation system (Draft -> Pending Review -> Validated -> Published).
-- **Source Management:** Attach and manage multiple sources and citations for each flashcard.
-- **Powerful Filtering and Sorting:** Easily find and manage questions with various filters (status, search term) and sorting options.
-
-## 4. Tech Stack
-
-| Component | Technology |
+| Dossier | Rôle |
 | :--- | :--- |
-| **Frontend** | Vanilla JavaScript (ES6+), HTML5, CSS3 |
-| **Backend** | Node.js, Express.js |
-| **Database** | PostgreSQL |
-| **API** | RESTful |
-| **Styling** | Plain CSS with Font Awesome icons |
-| **Markdown** | `marked` for server-side rendering |
+| `public/` | Application d'étude (SPA, JavaScript vanilla en modules ES6) |
+| `admin/` | Panneau d'administration du contenu (SPA, modules IIFE) |
+| `api/` | API REST Node.js / Express, base SQLite |
 
-## 5. Getting Started
+Deux processus en développement :
 
-### Prerequisites
-- Node.js (v18 or later)
+1. **Serveur frontend** (`server.js`, port 8080) : sert les fichiers statiques de `public/` et `admin/`, et proxifie `/api/*` vers le serveur API.
+2. **Serveur API** (`api/server.js`, port 3001) : logique métier, accès base, rendu Markdown → HTML.
+
+En production, un seul processus suffit : `api/server.js` sert aussi les fichiers statiques quand `NODE_ENV=production` (ou `SERVE_STATIC=true`). Voir la section Déploiement.
+
+## 2. Pile technique
+
+| Composant | Technologie |
+| :--- | :--- |
+| Frontend | JavaScript vanilla (ES6+), HTML5, CSS3 |
+| Backend | Node.js 18+, Express 4 |
+| Base de données | SQLite (`sqlite3` + `sqlite`) |
+| Sécurité | Helmet, CORS, `express-rate-limit` |
+| Journalisation | Winston |
+| Markdown | `marked` (rendu serveur), `turndown` (HTML → Markdown) |
+
+## 3. Démarrage
+
+### Prérequis
+
+- Node.js 18 ou supérieur
 - npm
-- PostgreSQL
 
-### Installation & Setup
+Aucun serveur de base de données à installer : SQLite écrit dans un fichier local.
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/laurentstaub/kevin_cards.git
-    cd kevin_cards
-    ```
+### Installation
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+```bash
+git clone https://github.com/laurentstaub4/kevin_cards.git
+cd kevin_cards
+npm install
+cp .env.example .env
+```
 
-3.  **Set up the database:**
-    - Make sure your PostgreSQL server is running.
-    - Create a new database named `flashpharma`.
-    - Run the setup script to create the schema and initial data.
-    ```bash
-    npm run db:setup
-    ```
-    *Note: If you need to reset the database, you can run `npm run db:reset`.*
+### Lancement
 
-4.  **Environment Variables:**
-    The API server uses a `.env` file for configuration. While one is not provided, you can create a file named `.env` in the `/api` directory for custom settings (e.g., `PORT`, database connection details if they differ from the defaults in `api/config/database.js`).
+Une seule commande, un seul processus :
 
-### Running the Application
+```bash
+npm run dev
+```
 
-The application requires two separate terminal sessions to run both the frontend/proxy server and the backend API server.
+Le serveur API sert aussi le frontend et l'administration : tout est sur le port 8080, sans proxy. `nodemon` ne surveille que `api/` et `database/` (voir `nodemon.json`), donc éditer le frontend ne redémarre pas le serveur.
 
-1.  **Start the Backend API Server:**
-    In your first terminal, run:
-    ```bash
-    npm run api
-    ```
-    This will start the Node.js API server on `http://localhost:8084` (by default) using `nodemon`, which will automatically restart on file changes.
+### Accès
 
-2.  **Start the Frontend Server:**
-    In your second terminal, run:
-    ```bash
-    npm start
-    ```
-    This will start the main server on `http://localhost:8080` (by default).
+- Application d'étude : `http://localhost:8080`
+- Panneau d'administration : `http://localhost:8080/admin`
+- Health check : `http://localhost:8080/api/health`
 
-3.  **Access the applications:**
-    - **Study App:** Open your browser and navigate to `http://localhost:8080`
-    - **Admin Panel:** Open your browser and navigate to `http://localhost:8080/admin`
+### Mode deux processus (optionnel)
 
-## 6. Available Scripts
+Utile uniquement pour travailler sur `server.js` ou diagnostiquer le proxy :
 
-- `npm start`: Starts the main frontend server.
-- `npm run dev`: An alias for `npm start`.
-- `npm run api`: Starts the backend API server with `nodemon` for development.
-- `npm run db:setup`: Sets up the database schema.
-- `npm run db:reset`: Drops the existing database, creates a new one, and runs the setup script.
-- `npm run load:db`: Runs a script to load questions into the database (see `load_questions_to_db.js`).
+```bash
+npm run dev:api   # API seule, port 3001
+npm run dev:web   # Frontend + proxy, port 8080
+```
 
-# Documentation de l'API Questions
+Dans ce mode l'ordre compte : sans l'API, le frontend renvoie `502 API server unreachable`.
 
-## Points de terminaison (Endpoints)
+La base `database/flashpharma.db` est créée automatiquement au premier démarrage à partir de `database/schema-sqlite.sql`, puis les fichiers de `database/migrations/` sont appliqués.
 
-### `POST /api/questions/regenerate-html`
+## 4. Scripts npm
 
-Régénère le contenu HTML de toutes les questions existantes ou d'une sélection de questions à partir de leur source Markdown.
+| Commande | Effet |
+| :--- | :--- |
+| `npm run dev` | Tout-en-un avec rechargement automatique, port 8080 |
+| `npm start` | Tout-en-un sans rechargement, port 8080 |
+| `npm run dev:api` | API seule avec nodemon, port 3001 |
+| `npm run dev:web` | Frontend + proxy seul, port 8080 |
+| `npm run db:reset` | Supprime `database/flashpharma.db` ; la base est recréée au démarrage suivant |
 
-**Objectif :** Cette route est principalement un outil de migration et de maintenance. Elle est conçue pour être utilisée après un changement dans le système de rendu Markdown ou pour remplir les champs HTML pour des données anciennement stockées sans ces champs.
+Les scripts de maintenance ponctuels vivent dans `tools/` et se lancent directement avec `node` :
 
-**Description :**
-Ce point de terminaison parcourt les questions dans la base de données et exécute la fonction `regenerateHtml` pour chacune d'elles. Cette fonction prend `questionText` et `answerText` (qui sont au format Markdown) et génère leur équivalent HTML, puis met à jour l'enregistrement de la question dans la base de données avec ce nouveau contenu.
+```bash
+node tools/export_db_to_json.js
+node tools/load_questions_to_db.js
+node tools/regenerate_html.js
+```
 
-**Corps de la requête (Optionnel) :**
+Aucun framework de test n'est configuré : `npm test` échoue volontairement.
 
-Vous pouvez envoyer un corps JSON pour spécifier quelles questions régénérer.
+## 5. Configuration
 
-*   `questionIds` (Array[Number], optionnel) : Une liste d'IDs de questions spécifiques à régénérer. Si ce champ est omis ou est un tableau vide, **toutes les questions** de la base de données seront régénérées.
+Tout passe par `.env` (voir `.env.example`).
 
-**Exemple de corps de requête (pour des questions spécifiques) :**
+| Variable | Défaut | Rôle |
+| :--- | :--- | :--- |
+| `NODE_ENV` | `development` | Bascule les défauts de sécurité et le service des fichiers statiques |
+| `FRONTEND_PORT` | `8080` | Port du serveur frontend |
+| `API_PORT` | `3001` | Port du serveur API |
+| `PORT` | — | Injecté par la plateforme d'hébergement ; prioritaire sur les deux précédents |
+| `FRONTEND_URL` | `http://localhost:8080` | Origine autorisée par CORS |
+| `API_URL` | `http://localhost:$API_PORT` | Cible du proxy `/api` |
+| `SERVE_STATIC` | `true` si production | Le processus API sert aussi `public/` et `admin/` |
+| `SQLITE_DB_PATH` | `./database/flashpharma.db` | Fichier de base |
+| `RATE_LIMIT_MAX_REQUESTS` | 1000 en dev, 100 en prod | Requêtes par fenêtre |
+| `RATE_LIMIT_WINDOW_MS` | `900000` | Fenêtre de limitation (15 min) |
 
+## 6. Base de données
+
+Tables : `questions`, `tags`, `question_tags`, `question_versions`, `study_sessions`, `users`.
+
+Colonnes principales de `questions` :
+
+- `question_text`, `answer_text` : source Markdown, seule référence éditoriale
+- `question_html`, `answer_html` : rendu HTML mis en cache, régénérable via l'API
+- `is_active` : la carte est-elle servie à l'application d'étude
+- `deleted_at` : suppression logique, réversible
+- `sources`, `metadata`, `review_history` : JSON sérialisé
+
+Le fichier `database/flashpharma.db` **n'est pas versionné** (voir `.gitignore`). Pour sauvegarder ou partager le contenu, exporter en JSON :
+
+```bash
+node tools/export_db_to_json.js
+```
+
+## 7. API
+
+Base : `/api`. Toutes les réponses sont en JSON.
+
+### Questions
+
+| Méthode | Route | Description |
+| :--- | :--- | :--- |
+| GET | `/api/questions/active` | Cartes actives, servies à l'application d'étude |
+| GET | `/api/questions/published` | Alias historique, redirige (307) vers `/active` |
+| GET | `/api/questions` | Liste paginée et filtrable (`page`, `limit`, `active`, `tagIds`, `search`, `orderBy`, `orderDirection`) |
+| GET | `/api/questions/:id` | Détail d'une question |
+| GET | `/api/questions/:id/rendered` | Question avec HTML rendu |
+| POST | `/api/questions` | Création |
+| PUT | `/api/questions/:id` | Mise à jour |
+| PUT | `/api/questions/:id/tags` | Remplacement des tags associés |
+| PATCH | `/api/questions/:id/toggle-active` | Active ou désactive la carte |
+| PATCH | `/api/questions/:id/restore` | Annule une suppression logique |
+| DELETE | `/api/questions/:id` | Suppression logique |
+| POST | `/api/questions/:id/regenerate-html` | Régénère le HTML depuis le Markdown |
+
+### Tags
+
+| Méthode | Route | Description |
+| :--- | :--- | :--- |
+| GET | `/api/tags` | Liste (`priorityOrder=true` pour l'ordre d'affichage) |
+| GET | `/api/tags/categories` | Catégories de tags |
+| GET | `/api/tags/stats` | Statistiques d'usage |
+| GET | `/api/tags/most-used` | Tags les plus utilisés |
+| GET | `/api/tags/priority` | Tags prioritaires |
+| GET | `/api/tags/:id` | Détail |
+| GET | `/api/tags/:id/questions` | Questions portant ce tag |
+| POST | `/api/tags` | Création |
+| PUT | `/api/tags/:id` | Mise à jour |
+| POST | `/api/tags/:id/merge` | Fusion de deux tags |
+| DELETE | `/api/tags/:id` | Suppression |
+
+### Santé
+
+`GET /api/health` renvoie l'état du service. Cette route est exclue de la limitation de débit.
+
+## 8. Fonctionnalités
+
+### Application d'étude
+
+- Cartes recto-verso avec animation de retournement
+- Sessions configurables : nombre de questions, mode, difficulté
+- Filtrage par tags et catégories
+- Suivi de progression et statistiques (stockage local du navigateur)
+- Mode révision sur les cartes en difficulté
+- Thème clair / sombre
+
+### Panneau d'administration
+
+- CRUD complet sur les questions et les tags
+- Éditeur Markdown avec prévisualisation HTML
+- Activation / désactivation des cartes, suppression réversible
+- Gestion des sources et citations
+- Recherche, filtres et tri
+- Fusion de tags
+
+## 9. Déploiement
+
+La configuration `railway.json` lance un seul processus :
+
+```json
+"startCommand": "node api/server.js",
+"healthcheckPath": "/api/health"
+```
+
+Avec `NODE_ENV=production`, `api/server.js` sert `public/` et `admin/` en plus de l'API : le serveur frontend et son proxy ne sont pas nécessaires. Variables à définir sur la plateforme : `NODE_ENV=production`, `FRONTEND_URL` (URL publique de l'application) et, si le disque est éphémère, `SQLITE_DB_PATH` pointant vers un volume persistant.
+
+Voir `docs/RAILWAY_DEPLOYMENT.md` pour le détail.
+
+## 10. Limites connues
+
+- **Pas d'authentification.** `/admin` expose l'intégralité du CRUD sans contrôle d'accès. Acceptable en local, bloquant dès que l'application est exposée publiquement. La table `users` et les dépendances `bcryptjs` / `jsonwebtoken` sont présentes mais inutilisées.
+- **Pas de tests automatisés.**
+- **SQLite sur disque éphémère.** Sur un hébergement sans volume persistant, la base est réinitialisée à chaque redéploiement.
