@@ -39,3 +39,8 @@ build/
 
 # Sauvegardes de base
 database/*.db.bak-*
+
+# Sauvegardes rotatives du pool (locales).
+# L'export de reference zz_questions/questions_master.json est, lui, suivi
+# en version : c'est le filet de securite qui a manque en aout 2026.
+backups/

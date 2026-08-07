@@ -1,0 +1,166 @@
+{
+  "metadata": {
+    "title": "Questions comptoir 02 - iatrogenie, populations, vaccination",
+    "total_cards": 30,
+    "date": "2026-08-05",
+    "principe": "Chaque carte part d'une situation reelle au comptoir. La reponse commence par la decision ou le geste, puis en donne la justification pharmacologique ou reglementaire, puis le conseil pratique.",
+    "sources": "Guides internes zz_questions/guides. Calendrier vaccinal et cadre reglementaire verifies sur HAS, Legifrance, ameli.fr, Vaccination Info Service et Ordre national des pharmaciens en aout 2026.",
+    "tag_categories": {
+      "Iatrogénie": "topic",
+      "Allaitement": "special_population",
+      "Comptoir": "situation"
+    }
+  },
+  "questions": [
+    {
+      "question": "Une patiente de 82 ans sous **périndopril** et **furosémide** vous demande de l'ibuprofène pour une douleur au genou. Que faites-vous ?",
+      "answer": "**Vous refusez et proposez du paracétamol.**\n\nL'association d'un bloqueur du système rénine-angiotensine, d'un diurétique et d'un AINS constitue le « triple whammy », la combinaison la plus néphrotoxique rencontrée en ville.\n\nLes trois médicaments attaquent la perfusion glomérulaire par des voies différentes : baisse du tonus de l'artériole efférente, hypovolémie, et vasoconstriction de l'artériole afférente. L'insuffisance rénale aiguë peut survenir en quelques jours.\n\nSi un AINS est malgré tout prescrit, la créatininémie doit être contrôlée dans les 24 à 48 heures.",
+      "tags": ["Iatrogénie", "Insuffisance-rénale", "Comptoir"]
+    },
+    {
+      "question": "Un patient de 78 ans se voit prescrire de l'**oxycodone** alors qu'il prend déjà du **bromazépam**. Quel risque signalez-vous ?",
+      "answer": "**La dépression respiratoire, dont le risque est nettement supérieur à celui de chaque médicament pris isolément.**\n\nLes deux dépriment le système nerveux central par des voies distinctes, le récepteur GABA-A pour la benzodiazépine et le récepteur mu pour l'opioïde, avec un effet synergique sur les centres respiratoires.\n\nSignalez l'association au prescripteur et évaluez si la benzodiazépine peut être réduite ou arrêtée. Alertez l'entourage sur les signes de surdosage : somnolence inhabituelle, ronflement nouveau, respiration lente.",
+      "tags": ["Iatrogénie", "Effets-indésirables-graves", "Comptoir"]
+    },
+    {
+      "question": "Une patiente de 84 ans devient confuse depuis quelques semaines. Son ordonnance comporte **oxybutynine**, **hydroxyzine** et **amitriptyline**. Que suspectez-vous ?",
+      "answer": "**Une intoxication anticholinergique par cumul de trois molécules à forte charge.**\n\nLes effets s'additionnent : confusion, hallucinations visuelles, sécheresse buccale, constipation, rétention urinaire, troubles de l'accommodation. La confusion est trop souvent mise sur le compte de l'âge plutôt que du traitement.\n\nSignalez la charge anticholinergique au médecin et proposez des pistes : un antihistaminique de seconde génération à la place de l'hydroxyzine, un antidépresseur non tricyclique à la place de l'amitriptyline.",
+      "tags": ["Iatrogénie", "Comptoir", "Orientation-médicale"]
+    },
+    {
+      "question": "Qu'appelle-t-on une cascade médicamenteuse, et comment la repérer au comptoir ?",
+      "answer": "**C'est la prescription d'un nouveau médicament destiné à traiter l'effet indésirable d'un premier, effet non reconnu comme tel.**\n\nLe repère est chronologique : une ligne apparaît sur l'ordonnance peu après l'instauration d'un autre traitement.\n\nLes enchaînements classiques sont un inhibiteur calcique suivi d'un diurétique pour des œdèmes des chevilles, un anticholinestérasique suivi d'un anticholinergique urinaire, un AINS suivi d'un antihypertenseur, ou un neuroleptique suivi d'un antiparkinsonien.\n\nLa bonne question à poser au prescripteur n'est pas quel médicament ajouter, mais lequel arrêter.",
+      "tags": ["Iatrogénie", "Comptoir"]
+    },
+    {
+      "question": "Une patiente de 79 ans débute de l'**escitalopram**. Quelle surveillance biologique proposez-vous, et à quel moment ?",
+      "answer": "**Un ionogramme sanguin dans les 2 à 4 premières semaines, pour dépister une hyponatrémie.**\n\nLes ISRS induisent une sécrétion inappropriée d'hormone antidiurétique. Le risque est maximal au début du traitement, chez le sujet âgé, et davantage encore en cas d'association à un diurétique thiazidique.\n\nLes signes d'alerte sont peu spécifiques et facilement attribués à la dépression elle-même : asthénie, nausées, céphalées, confusion, et au maximum convulsions.",
+      "tags": ["Iatrogénie", "Surveillance", "Psychiatrie", "Comptoir"]
+    },
+    {
+      "question": "Un patient sous **warfarine** équilibrée se voit prescrire de l'**amiodarone**. Que signalez-vous ?",
+      "answer": "**La dose de warfarine doit être réduite d'emblée, de l'ordre de 30 à 50 %, avec un contrôle rapproché de l'INR.**\n\nL'amiodarone inhibe le CYP2C9 et le CYP3A4, ce qui peut doubler voire tripler l'INR.\n\nLa particularité tient à la cinétique : la demi-vie de l'amiodarone atteint plusieurs semaines. L'interaction s'installe donc progressivement sur un mois et persiste plusieurs mois après l'arrêt. Un INR contrôlé une seule fois à J3 ne suffit pas à écarter le risque.",
+      "tags": ["Anticoagulants", "Interactions-majeures", "Iatrogénie", "Comptoir"]
+    },
+    {
+      "question": "Quels conseils donnez-vous à un patient âgé qui débute un **alpha-bloquant** pour un adénome de prostate ?",
+      "answer": "**La première prise se fait le soir au coucher, et le lever doit être progressif.**\n\nL'effet hypotenseur est maximal lors des premières doses. Conseillez de s'asseoir au bord du lit quelques instants avant de se mettre debout, en particulier la nuit.\n\nLe risque de chute est majoré par l'association à un antihypertenseur, à un diurétique ou à un dérivé nitré. L'association aux inhibiteurs de la phosphodiestérase de type 5 est contre-indiquée.\n\nEnfin, le patient doit signaler ce traitement avant toute chirurgie de la cataracte, en raison du syndrome de l'iris flasque peropératoire.",
+      "tags": ["Iatrogénie", "Urologie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Un patient de 76 ans souhaite arrêter le **zolpidem** qu'il prend depuis trois ans. Que lui proposez-vous ?",
+      "answer": "**Un arrêt progressif, par paliers d'environ 25 % de la dose toutes les une à deux semaines, sur 8 à 12 semaines.**\n\nUn arrêt brutal expose à une insomnie de rebond, à une anxiété majorée et, à fortes doses, à des convulsions.\n\nL'insomnie de rebond des premières nuits ne signe pas l'échec du sevrage : prévenez-en le patient, sans quoi il reprendra le traitement de lui-même. La démarche se prépare avec le médecin traitant et s'accompagne de mesures d'hygiène du sommeil.",
+      "tags": ["Iatrogénie", "Psychiatrie", "Comptoir"]
+    },
+    {
+      "question": "Un patient sous **ramipril**, **hydrochlorothiazide** et **metformine** vous appelle : il vomit depuis deux jours. Que lui conseillez-vous ?",
+      "answer": "**Vous appliquez la règle des jours de maladie : suspension temporaire de ces trois médicaments et contact avec le médecin traitant.**\n\nEn situation de déshydratation aiguë, l'IEC et le diurétique précipitent une insuffisance rénale fonctionnelle ; la metformine s'accumule alors et expose à une acidose lactique.\n\nLa même règle s'applique en cas de diarrhée profuse, de fièvre élevée ou de canicule. La reprise se fait après réhydratation, sur avis médical.",
+      "tags": ["Insuffisance-rénale", "Iatrogénie", "Urgences", "Comptoir"]
+    },
+    {
+      "question": "Un patient diabétique sous **metformine** doit passer un scanner avec injection de produit de contraste iodé. Que lui dites-vous ?",
+      "answer": "**La metformine doit être suspendue le jour de l'examen et reprise seulement 48 heures après, après contrôle de la fonction rénale.**\n\nLe produit de contraste peut induire une néphropathie aiguë ; l'accumulation de metformine qui en résulte expose à une acidose lactique, dont la mortalité est élevée.\n\nRappelez également l'importance d'une hydratation abondante avant et après l'examen.",
+      "tags": ["Insuffisance-rénale", "Diabétologie", "Comptoir"]
+    },
+    {
+      "question": "Pourquoi éviter les formes effervescentes chez un patient hypertendu ou insuffisant cardiaque ?",
+      "answer": "**Chaque comprimé effervescent apporte plusieurs centaines de milligrammes de sodium.**\n\nUn comprimé de paracétamol effervescent à 1 g contient environ 370 mg de sodium. Quatre prises quotidiennes représentent près de 1,5 g de sodium, soit une part majeure de l'apport journalier recommandé.\n\nProposez systématiquement une forme non effervescente chez ces patients, ainsi qu'en cas d'insuffisance rénale.",
+      "tags": ["Iatrogénie", "Cardiovasculaire", "Comptoir"]
+    },
+    {
+      "question": "Une femme qui allaite demande un antalgique pour une douleur dentaire. Que lui délivrez-vous ?",
+      "answer": "**Le paracétamol en première intention, et l'ibuprofène si un anti-inflammatoire est nécessaire : les deux sont compatibles avec l'allaitement.**\n\nL'ibuprofène a une demi-vie courte, une forte liaison aux protéines plasmatiques et un passage lacté très faible : l'enfant reçoit moins de 1 % de la dose pédiatrique usuelle.\n\nLe résumé des caractéristiques du produit reste souvent restrictif par prudence médico-légale. Sur cette question, la référence à consulter est le CRAT, plus précis que la mention du dictionnaire.",
+      "tags": ["Allaitement", "Antalgiques", "Comptoir"]
+    },
+    {
+      "question": "Une jeune mère présente une mastite et vous demande si elle doit arrêter d'allaiter. Que répondez-vous ?",
+      "answer": "**Non : la poursuite des tétées fait partie du traitement.**\n\nLe drainage du sein est indispensable à la résolution de l'inflammation, et le lait ne présente aucun risque pour un nourrisson à terme et en bonne santé.\n\nLa mastite impose en revanche une consultation médicale rapide, en particulier devant une fièvre, un placard rouge et douloureux ou un syndrome pseudo-grippal. Un antibiotique compatible avec l'allaitement pourra être prescrit.",
+      "tags": ["Allaitement", "Gynécologie", "Orientation-médicale", "Comptoir"]
+    },
+    {
+      "question": "Une mère allaitante demande une crème pour des crevasses du mamelon. Quel est le conseil prioritaire ?",
+      "answer": "**Corriger la position de la tétée avant tout traitement local.**\n\nLa très grande majorité des crevasses résulte d'une mauvaise prise du sein : l'enfant doit prendre l'aréole, et pas seulement le mamelon. Un topique appliqué sans correction de la position ne fait que retarder la guérison.\n\nOrientez vers une sage-femme ou une consultante en lactation. Une consultation médicale s'impose devant un écoulement purulent, une douleur atypique ou l'absence d'amélioration après correction.",
+      "tags": ["Allaitement", "Orientation-médicale", "Comptoir"]
+    },
+    {
+      "question": "Une patiente sous contraception œstroprogestative décrit des migraines désormais précédées de troubles visuels. Que faites-vous ?",
+      "answer": "**Vous l'orientez sans délai vers son médecin : la migraine avec aura contre-indique la contraception œstroprogestative.**\n\nL'association multiplie le risque d'accident vasculaire cérébral ischémique. Une aura d'apparition récente sous pilule impose une réévaluation urgente du rapport bénéfice-risque.\n\nUne contraception progestative seule ou un dispositif intra-utérin sont les alternatives à envisager avec le prescripteur.",
+      "tags": ["Gynécologie", "Contre-indications-absolues", "Orientation-médicale", "Comptoir"]
+    },
+    {
+      "question": "Une patiente sous **lévothyroxine** vous annonce qu'elle est enceinte. Quelle est votre réaction ?",
+      "answer": "**Vous l'orientez vers son médecin sans attendre : les besoins augmentent de 30 à 50 % dès le premier trimestre.**\n\nLe fœtus dépend entièrement des hormones thyroïdiennes maternelles pendant les premières semaines, et une hypothyroïdie non corrigée retentit sur son développement neurologique.\n\nLa posologie est habituellement augmentée dès la confirmation de la grossesse, avec un contrôle mensuel de la TSH et une cible inférieure à 2,5 mUI/L au premier trimestre. Le traitement ne doit en aucun cas être interrompu.",
+      "tags": ["Grossesse", "Endocrinologie", "Comptoir"]
+    },
+    {
+      "question": "Quelles vaccinations du nourrisson sont devenues obligatoires au 1er janvier 2025 ?",
+      "answer": "**Les vaccinations contre le méningocoque B et contre les méningocoques ACWY, qui remplacent l'obligation portant sur le seul méningocoque C.**\n\nLe schéma du méningocoque B comporte une dose à 3 mois, une à 5 mois et un rappel à 12 mois. Celui des méningocoques ACWY comporte une dose à 6 mois et un rappel à 12 mois.\n\nUne dose de méningocoque ACWY est par ailleurs recommandée chez l'adolescent entre 11 et 14 ans. Un enfant ayant déjà reçu une dose de méningocoque C avant 2025 complète son schéma par l'ACWY.",
+      "tags": ["Vaccins", "Pédiatrie", "Comptoir"]
+    },
+    {
+      "question": "Un patient de 67 ans vous interroge sur le vaccin contre le zona. Que lui dites-vous ?",
+      "answer": "**Shingrix est recommandé chez l'adulte immunocompétent à partir de 65 ans, en deux doses espacées de deux mois.**\n\nL'intervalle peut être étendu jusqu'à six mois sans qu'il soit nécessaire de reprendre le schéma. Chez l'adulte immunodéprimé, la recommandation débute dès 18 ans et l'intervalle peut être réduit à un mois.\n\nIl s'agit d'un vaccin recombinant adjuvanté, donc utilisable chez l'immunodéprimé, contrairement à l'ancien vaccin vivant atténué. Il est pris en charge à 65 % par l'Assurance maladie depuis décembre 2024.",
+      "tags": ["Vaccins", "Comptoir"]
+    },
+    {
+      "question": "À quel moment de la grossesse la vaccination contre la coqueluche est-elle recommandée, et pourquoi ?",
+      "answer": "**À chaque grossesse, entre 20 et 36 semaines d'aménorrhée, idéalement entre 24 et 32 semaines.**\n\nLes anticorps maternels traversent le placenta et protègent le nourrisson pendant ses premiers mois, avant que sa propre vaccination ne soit efficace.\n\nC'est la mesure la plus efficace contre les formes graves du nouveau-né. Elle est à renouveler à chaque grossesse, quel que soit le statut vaccinal antérieur de la mère.",
+      "tags": ["Vaccins", "Grossesse", "Comptoir"]
+    },
+    {
+      "question": "Quelles sont les deux stratégies de prévention de la bronchiolite à VRS chez le nourrisson ?",
+      "answer": "**La vaccination de la femme enceinte par Abrysvo entre 32 et 36 semaines d'aménorrhée, ou l'immunisation passive du nourrisson par le nirsevimab (Beyfortus).**\n\nLes deux approches ne se cumulent pas : un nourrisson dont la mère a été vaccinée au moins quinze jours avant l'accouchement ne reçoit pas de nirsevimab, sauf situation particulière.\n\nAbrysvo peut être administré à l'officine et est pris en charge à 100 % par l'assurance maternité à partir du sixième mois de grossesse. Le nirsevimab est administré en maternité dès la naissance pendant la campagne saisonnière.",
+      "tags": ["Vaccins", "Pédiatrie", "Grossesse", "Comptoir"]
+    },
+    {
+      "question": "Quels vaccins pouvez-vous prescrire et administrer à l'officine, et à partir de quel âge ?",
+      "answer": "**Tous les vaccins du calendrier vaccinal, à toute personne de 11 ans et plus.**\n\nLa seule exclusion porte sur les vaccins vivants atténués chez la personne immunodéprimée.\n\nUn vaccin fait exception sur l'âge : la Covid-19, possible dès 5 ans. Le pharmacien doit être formé et déclaré, alimenter le dossier médical partagé et transmettre l'information au médecin traitant.",
+      "tags": ["Vaccins", "Délivrance", "Comptoir"]
+    },
+    {
+      "question": "Jusqu'à quel âge le rattrapage vaccinal contre les papillomavirus est-il recommandé, et selon quel schéma ?",
+      "answer": "**Jusqu'à 26 ans révolus, pour les femmes comme pour les hommes, selon un schéma à trois doses.**\n\nEntre 11 et 14 ans révolus, deux doses espacées de 5 à 13 mois suffisent. Au-delà, le rattrapage comporte trois doses, à 0, 2 et 6 mois.\n\nLe remboursement du Gardasil 9 pour tous jusqu'à 26 ans révolus est effectif depuis décembre 2025. Une campagne est par ailleurs proposée en classe de cinquième.",
+      "tags": ["Vaccins", "Comptoir"]
+    },
+    {
+      "question": "Une patiente sous **Levothyrox®** vient de se voir prescrire du **fer**. Quel conseil donnez-vous ?",
+      "answer": "**Les deux prises doivent être espacées d'au moins deux heures, idéalement quatre.**\n\nLe fer chélate la lévothyroxine et réduit son absorption de 40 à 55 %, ce qui suffit à déséquilibrer une hypothyroïdie jusque-là stable.\n\nLa même précaution vaut pour le calcium, les antiacides et les résines. Le café pris simultanément réduit également l'absorption d'environ un quart : la lévothyroxine se prend à jeun, 30 à 60 minutes avant le petit-déjeuner.\n\nUn contrôle de la TSH est justifié 6 à 8 semaines après l'introduction du fer.",
+      "tags": ["Endocrinologie", "Interactions-majeures", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "La TSH d'un patient reste élevée malgré une posologie de lévothyroxine jugée adaptée. Quelle est la première hypothèse ?",
+      "answer": "**Un défaut d'observance ou une erreur de prise, avant toute augmentation de dose.**\n\nVérifiez le moment de la prise, le jeûne, le délai avant le petit-déjeuner et le café, ainsi que l'espacement des chélateurs.\n\nRecherchez ensuite une cause d'augmentation des besoins : introduction d'œstrogènes, d'un inducteur enzymatique, d'un IPP, ou une grossesse. Augmenter la dose sans avoir levé ces causes expose à un surdosage secondaire.",
+      "tags": ["Endocrinologie", "Surveillance", "Comptoir"]
+    },
+    {
+      "question": "Un patient sous **clopidogrel** a besoin d'une protection gastrique. Quel IPP proposez-vous ?",
+      "answer": "**Le pantoprazole.**\n\nL'oméprazole et l'ésoméprazole inhibent le CYP2C19, l'enzyme qui transforme le clopidogrel en son métabolite actif : l'effet antiagrégant est réduit d'environ 20 à 25 %.\n\nLe pantoprazole dépend beaucoup moins de cette voie et constitue l'IPP de choix dans cette situation. Le rabéprazole est une alternative acceptable.",
+      "tags": ["Interactions-majeures", "Gastro-entérologie", "Comptoir"]
+    },
+    {
+      "question": "Un patient souhaite arrêter l'IPP qu'il prend depuis deux ans. Comment l'accompagnez-vous ?",
+      "answer": "**Par une décroissance progressive, en le prévenant du rebond acide.**\n\nLe schéma habituel réduit la dose de moitié pendant 2 à 4 semaines, puis passe à une prise un jour sur deux pendant 2 à 3 semaines, avant l'arrêt.\n\nL'hypersécrétion acide de rebond concerne une large part des patients traités plus de quatre semaines. Elle débute dans les quinze jours suivant l'arrêt et peut persister plusieurs semaines : prévenu, le patient ne l'interprétera pas comme une rechute.\n\nUn alginate ou un anti-H2 peut couvrir cette période. Une dysphagie, un amaigrissement ou une anémie imposent en revanche une consultation.",
+      "tags": ["Gastro-entérologie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Une patiente migraineuse vous dit prendre son triptan dès l'apparition de son aura. Que corrigez-vous ?",
+      "answer": "**Le triptan se prend dès le début de la céphalée, et non pendant l'aura.**\n\nPris au stade de l'aura, il est inefficace : son action s'exerce sur la phase céphalalgique.\n\nUn AINS peut en revanche être pris dès l'aura. Rappelez la limite de deux prises de triptan par 24 heures et de dix jours par mois, au-delà de laquelle s'installe une céphalée par abus médicamenteux.",
+      "tags": ["Neurologie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Quels signes doivent faire adresser en urgence un patient qui demande un antalgique pour un mal de tête ?",
+      "answer": "**Une céphalée d'installation brutale, atteignant son maximum en moins d'une minute, impose un appel au 15.**\n\nElle fait suspecter une hémorragie méningée.\n\nD'autres situations imposent une consultation sans délai : une céphalée inhabituelle chez un patient qui n'en a jamais eu, une fièvre avec raideur de nuque, un déficit neurologique, une aggravation progressive sur plusieurs jours, ou une céphalée survenant après un traumatisme crânien chez un patient anticoagulé.",
+      "tags": ["Neurologie", "Urgences", "Orientation-médicale", "Comptoir"]
+    },
+    {
+      "question": "Une patiente de 68 ans demande du **Motilium®** pour des nausées persistantes. Que faites-vous ?",
+      "answer": "**Vous l'orientez vers le médecin plutôt que de délivrer de la dompéridone.**\n\nLa dompéridone allonge l'intervalle QT et a été associée à des morts subites d'origine cardiaque. Le risque est majoré après 60 ans, en cas d'hypokaliémie, de bradycardie, ou d'association à un inhibiteur puissant du CYP3A4.\n\nSon usage se limite aux nausées et vomissements, à la dose efficace la plus faible et pour une semaine au maximum.\n\nDes nausées persistantes à cet âge justifient de toute façon un avis médical plutôt qu'un traitement symptomatique prolongé.",
+      "tags": ["Gastro-entérologie", "Effets-indésirables-graves", "Orientation-médicale", "Comptoir"]
+    },
+    {
+      "question": "Quel effet indésirable des agonistes dopaminergiques faut-il rechercher activement, car il n'est presque jamais rapporté spontanément ?",
+      "answer": "**Les troubles du contrôle des impulsions : jeu pathologique, achats compulsifs, hypersexualité, hyperphagie.**\n\nLeur fréquence est nettement augmentée sous agonistes dopaminergiques, mais la honte et l'absence de lien perçu avec le traitement font qu'ils ne remontent presque jamais jusqu'au médecin.\n\nInterrogez le patient et son entourage en formulant la question comme une conséquence connue du médicament, et non comme un jugement. Signalez également le risque d'accès de sommeil soudains, y compris au volant.",
+      "tags": ["Neurologie", "Effets-indésirables-graves", "Comptoir"]
+    }
+  ]
+}

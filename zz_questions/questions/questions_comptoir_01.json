@@ -1,0 +1,161 @@
+{
+  "metadata": {
+    "title": "Questions comptoir 01 - situations de dispensation",
+    "total_cards": 30,
+    "date": "2026-08-04",
+    "principe": "Chaque carte part d'une situation reelle au comptoir. La reponse commence par la decision ou le geste, puis en donne la justification pharmacologique ou reglementaire, puis le conseil pratique.",
+    "sources": "Guides internes zz_questions/guides et zz_questions/fiches. Cadre reglementaire verifie sur ANSM, ameli.fr, Ordre national des pharmaciens et Legifrance en aout 2026."
+  },
+  "questions": [
+    {
+      "question": "Un patient sous **Previscan®** demande un gel buccal **Daktarin®** pour un muguet. Que faites-vous ?",
+      "answer": "**Vous refusez la délivrance et orientez vers le médecin.**\n\nL'association d'un AVK et du miconazole, y compris par voie buccale, constitue une contre-indication absolue. Le miconazole inhibe le CYP2C9 et déplace l'AVK de sa liaison aux protéines plasmatiques, ce qui provoque des hémorragies imprévisibles.\n\nLe piège tient au caractère apparemment local du gel buccal : le passage systémique est pourtant suffisant pour déséquilibrer l'INR.",
+      "tags": ["Anticoagulants", "Interactions-majeures", "Comptoir"]
+    },
+    {
+      "question": "Quel conseil de prise est indispensable lors de la délivrance de **Xarelto® 20 mg** ?",
+      "answer": "**Le comprimé doit être pris au cours d'un repas.**\n\nÀ jeun, la biodisponibilité du rivaroxaban chute à environ 66 %, contre près de 100 % avec un repas. Le risque est donc une sous-anticoagulation.\n\nCette contrainte ne concerne que les dosages à 15 et 20 mg. Le rivaroxaban 10 mg, l'apixaban et l'édoxaban se prennent indifféremment avec ou sans aliments.",
+      "tags": ["Anticoagulants", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Une aidante demande si elle peut ouvrir les gélules de **Pradaxa®** pour les mélanger à une compote. Que répondez-vous ?",
+      "answer": "**Non, les gélules de dabigatran ne doivent jamais être ouvertes ni écrasées.**\n\nL'ouverture de la gélule augmente la biodisponibilité d'environ 75 %, avec un risque hémorragique majeur.\n\nEn cas de trouble de la déglutition, l'apixaban peut être écrasé et mélangé à de l'eau ou à une compote : c'est l'alternative à proposer au prescripteur.\n\nRappelez également que le dabigatran est sensible à l'humidité et se conserve dans son emballage d'origine : il ne doit pas être déconditionné en pilulier.",
+      "tags": ["Anticoagulants", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Un patient sous AVK vous appelle : il a oublié sa prise de la veille au soir. Que lui conseillez-vous ?",
+      "answer": "**Le rattrapage n'est possible que dans les 8 heures suivant l'heure habituelle de prise. Au-delà, la prise est sautée.**\n\nLa dose ne doit jamais être doublée le lendemain : c'est l'erreur la plus fréquente et elle expose à un surdosage.\n\nL'oubli doit être noté dans le carnet de suivi et signalé au médecin lors du prochain contrôle de l'INR.",
+      "tags": ["Anticoagulants", "Comptoir", "Surveillance"]
+    },
+    {
+      "question": "Quels signes non hémorragiques doivent faire suspecter un saignement occulte chez un patient anticoagulé ?",
+      "answer": "**Une fatigue inhabituelle, une pâleur, un essoufflement à l'effort ou des céphalées résistantes doivent alerter.**\n\nCes signes traduisent une anémie par saignement chronique, le plus souvent digestif, sans extériorisation visible.\n\nIls justifient une consultation et une numération formule sanguine, au même titre que les signes francs que sont l'hématurie, le méléna ou les rectorragies.",
+      "tags": ["Anticoagulants", "Effets-indésirables-graves", "Orientation-médicale"]
+    },
+    {
+      "question": "Une patiente vous demande si elle doit remettre au réfrigérateur le stylo d'insuline qu'elle a entamé. Que répondez-vous ?",
+      "answer": "**Non : un stylo entamé se conserve à température ambiante, à l'abri de la lumière, pendant 4 à 6 semaines selon la spécialité.**\n\nSeules les boîtes non entamées se conservent entre 2 et 8 °C, jusqu'à la date de péremption.\n\nL'injection d'une insuline froide est plus douloureuse. En revanche, une insuline ayant gelé ou ayant subi une forte chaleur doit être jetée, même si son aspect paraît normal.",
+      "tags": ["Diabétologie", "Frais", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Quel geste est indispensable avant l'injection d'une insuline d'aspect trouble ?",
+      "answer": "**La remise en suspension, par une vingtaine de retournements doux du stylo.**\n\nCe geste concerne les insulines NPH et les mélanges biphasiques, dont l'aspect trouble est normal. Sans homogénéisation, la dose réellement injectée est imprévisible.\n\nLe stylo ne doit pas être agité énergiquement. À l'inverse, les insulines rapides et les analogues lents sont des solutions limpides : un aspect trouble ou un précipité impose de ne pas les injecter.",
+      "tags": ["Diabétologie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Un patient diabétique sous insuline se voit prescrire du **propranolol**. Quel point de vigilance signalez-vous ?",
+      "answer": "**Les bêta-bloquants masquent les signes adrénergiques de l'hypoglycémie : tremblements, palpitations et sueurs.**\n\nLe patient risque de ne percevoir son hypoglycémie qu'au stade neuroglycopénique, c'est-à-dire troubles de la concentration, confusion ou malaise.\n\nUn bêta-bloquant cardiosélectif est préférable dans ce contexte. Renforcez l'éducation aux signes tardifs et conseillez une autosurveillance plus fréquente à l'instauration.",
+      "tags": ["Diabétologie", "Interactions-majeures", "Comptoir"]
+    },
+    {
+      "question": "Un patient diabétique insulinotraité présente une ordonnance de **prednisolone 40 mg** pour 7 jours. Que lui dites-vous ?",
+      "answer": "**Vous l'alertez sur la montée des glycémies et l'invitez à renforcer son autosurveillance dès le premier jour.**\n\nLes corticoïdes induisent une insulinorésistance qui impose souvent une majoration des doses d'insuline de 30 à 50 %, portant surtout sur les glycémies de l'après-midi et du soir.\n\nLe patient ne doit pas adapter seul ses doses s'il n'a pas de protocole : orientez-le vers son médecin. Rappelez enfin la prise unique le matin du corticoïde.",
+      "tags": ["Diabétologie", "Interactions-majeures", "Comptoir"]
+    },
+    {
+      "question": "Pourquoi l'alcool expose-t-il un patient insulinotraité à une hypoglycémie sévère et retardée ?",
+      "answer": "**L'éthanol inhibe la néoglucogenèse hépatique, supprimant la principale réponse de l'organisme à une baisse de la glycémie.**\n\nL'effet peut se manifester plusieurs heures après la consommation, typiquement la nuit, et la symptomatologie est facilement confondue avec l'ivresse par l'entourage.\n\nLe conseil est de ne jamais boire à jeun, d'accompagner la consommation d'un apport glucidique et de contrôler la glycémie au coucher.",
+      "tags": ["Diabétologie", "Urgences", "Comptoir"]
+    },
+    {
+      "question": "Une patiente asthmatique vient chercher sa troisième **Ventoline®** en quatre mois. Que faites-vous ?",
+      "answer": "**Vous identifiez un asthme non contrôlé et orientez vers une réévaluation médicale du traitement de fond.**\n\nAu-delà de deux flacons de 200 doses par an, ou de trois prises par semaine, la consommation de bêta-2 mimétiques de courte durée d'action traduit un défaut de contrôle et constitue un facteur de risque d'exacerbation grave.\n\nProfitez de la délivrance pour vérifier l'observance du corticoïde inhalé et refaire la technique d'inhalation.",
+      "tags": ["Pneumologie", "Comptoir", "Orientation-médicale"]
+    },
+    {
+      "question": "Quel conseil accompagne systématiquement la délivrance d'un corticoïde inhalé ?",
+      "answer": "**Le rinçage de la bouche après chaque prise, avec recrachage de l'eau.**\n\nCe geste limite le dépôt oropharyngé responsable de candidose buccale et de dysphonie.\n\nAvec un aérosol-doseur pressurisé, l'usage d'une chambre d'inhalation réduit encore ce dépôt et améliore la fraction déposée dans les poumons.",
+      "tags": ["Pneumologie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "En quoi la technique d'inhalation d'un dispositif à poudre sèche diffère-t-elle de celle d'un aérosol-doseur ?",
+      "answer": "**Le dispositif à poudre sèche exige une inspiration rapide et forcée, l'aérosol-doseur une inspiration lente et profonde.**\n\nLa poudre doit être désagrégée par le flux inspiratoire, d'où la nécessité d'un débit suffisant. À l'inverse, une inspiration trop rapide avec un aérosol-doseur augmente l'impaction dans l'oropharynx.\n\nDans les deux cas, une apnée d'une dizaine de secondes suit l'inhalation. Il ne faut jamais expirer dans un dispositif à poudre, l'humidité altérant la dose.",
+      "tags": ["Pneumologie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Un patient asthmatique présente une ordonnance de **Serevent®** seul, sans corticoïde inhalé. Que faites-vous ?",
+      "answer": "**Vous contactez le prescripteur : un bêta-2 mimétique de longue durée d'action ne doit jamais être utilisé seul dans l'asthme.**\n\nLa monothérapie par LABA lève le bronchospasme sans traiter l'inflammation bronchique sous-jacente, et a été associée à une surmortalité par asthme.\n\nL'association à un corticoïde inhalé est impérative, de préférence dans un dispositif combiné afin que le patient ne puisse pas dissocier les deux traitements.",
+      "tags": ["Pneumologie", "Contre-indications-absolues", "Comptoir"]
+    },
+    {
+      "question": "Pourquoi ne peut-on pas substituer dose pour dose une béclométasone classique par une béclométasone extra-fine ?",
+      "answer": "**Les formulations extra-fines délivrent une dose pulmonaire équivalente pour une dose nominale environ deux fois plus faible.**\n\nLeurs particules de plus petit diamètre atteignent les voies aériennes distales avec un dépôt bien supérieur.\n\nUn changement de spécialité réalisé à dose nominale identique conduit donc à un surdosage. Toute substitution de corticoïde inhalé doit être validée par le prescripteur.",
+      "tags": ["Pneumologie", "Comptoir", "Surveillance"]
+    },
+    {
+      "question": "Un patient hypertendu présente une ordonnance expirée depuis deux semaines et n'a plus de traitement. Que pouvez-vous faire ?",
+      "answer": "**Vous pouvez procéder à une dispensation supplémentaire exceptionnelle, par périodes d'un mois et dans la limite de trois mois au total.**\n\nDepuis le décret du 26 novembre 2024, cette durée maximale est passée d'un à trois mois. Le dispositif suppose un traitement chronique initialement prescrit pour au moins trois mois et dont l'interruption ferait courir un risque au patient.\n\nVous délivrez le conditionnement le plus économique, portez la mention de dispensation supplémentaire exceptionnelle sur l'ordonnance et informez le prescripteur par messagerie sécurisée de santé.\n\nLes stupéfiants et les psychotropes à durée de prescription limitée sont exclus du dispositif.",
+      "tags": ["Délivrance", "Comptoir"]
+    },
+    {
+      "question": "Une ordonnance de **Skenan LP®** pour 28 jours a été établie il y a 8 jours. Que délivrez-vous ?",
+      "answer": "**Vous ne délivrez que la fraction du traitement restant à courir, soit 20 jours.**\n\nPour un stupéfiant, l'ordonnance doit être présentée dans les 3 jours suivant sa date d'établissement pour ouvrir droit à la totalité de la période prescrite. Passé ce délai, la délivrance est amputée du temps écoulé depuis la prescription.\n\nLa durée maximale de prescription reste de 28 jours et le chevauchement de deux ordonnances est interdit, sauf mention expresse du prescripteur.",
+      "tags": ["Stupéfiants", "Délivrance", "Comptoir"]
+    },
+    {
+      "question": "Quelles règles de prescription s'appliquent au **tramadol** et à la **codéine** depuis le 1er mars 2025 ?",
+      "answer": "**Ces antalgiques doivent désormais être prescrits sur ordonnance sécurisée.**\n\nLa mesure, décidée par l'ANSM, répond à l'augmentation des cas de mésusage, de dépendance et de décès liés aux opioïdes faibles. La durée maximale de prescription reste de 12 semaines.\n\nCes médicaments ne sont pas pour autant classés comme stupéfiants : le délai de carence de 3 jours et la règle du chevauchement ne s'appliquent pas.",
+      "tags": ["Délivrance", "Antalgiques", "Comptoir"]
+    },
+    {
+      "question": "Quels sont les seuls motifs autorisant la mention « non substituable » sur une ordonnance ?",
+      "answer": "**Trois motifs seulement sont recevables : MTE, EFG et CIF.**\n\nMTE désigne les médicaments à marge thérapeutique étroite figurant sur la liste fixée par arrêté. EFG vise l'enfant de moins de 6 ans lorsqu'aucune forme galénique générique n'est adaptée. CIF correspond à une contre-indication formelle et démontrée à un excipient à effet notoire présent dans tous les génériques disponibles.\n\nLa mention doit être portée en toutes lettres devant la ligne de prescription concernée, suivie du sigle du motif. En son absence, la substitution s'applique.",
+      "tags": ["Délivrance", "Comptoir"]
+    },
+    {
+      "question": "Une patiente présente une ordonnance de pilule datant de 11 mois, dont la validité est écoulée. Que pouvez-vous délivrer ?",
+      "answer": "**Vous pouvez dispenser une contraception orale pour 6 mois supplémentaires au maximum, non renouvelables, à condition que la prescription date de moins d'un an.**\n\nLa délivrance se fait par périodes de 3 mois maximum. Vous portez sur l'ordonnance la mention de dispensation supplémentaire de contraceptifs oraux ainsi que la durée délivrée.\n\nSeules les pilules sont concernées, ni les dispositifs intra-utérins ni les implants. Ce droit se cumule avec celui des infirmiers, dans la limite globale de 6 mois.",
+      "tags": ["Gynécologie", "Délivrance", "Comptoir"]
+    },
+    {
+      "question": "Dans quelles situations pouvez-vous délivrer un antibiotique sans ordonnance après un test rapide d'orientation diagnostique ?",
+      "answer": "**Dans l'angine à partir de 10 ans et dans la cystite simple chez la femme de 16 à 65 ans, après un TROD positif et en l'absence de critère d'exclusion.**\n\nLe dispositif suppose une formation du pharmacien et le respect d'un arbre décisionnel excluant notamment la grossesse, l'immunodépression et les formes compliquées.\n\nLe résultat du test et la dispensation sont transmis au médecin traitant.",
+      "tags": ["Délivrance", "Infectiologie", "Comptoir"]
+    },
+    {
+      "question": "Une patiente présente une ordonnance de **Curacne®** datant de 10 jours. Pouvez-vous délivrer ?",
+      "answer": "**Non : chez une femme en âge de procréer, la prescription d'isotrétinoïne doit être présentée dans les 7 jours suivant sa date d'établissement.**\n\nCe délai court garantit que le test de grossesse, réalisé dans les 3 jours précédant la prescription, reste pertinent au moment de la délivrance.\n\nLa délivrance est en outre conditionnée à un accord de soins signé et à un carnet-patiente à jour, et elle est limitée à 30 jours de traitement.",
+      "tags": ["Délivrance", "Dermatologie", "Grossesse", "Comptoir"]
+    },
+    {
+      "question": "Une patiente âgée souhaite un laxatif de lest à base de **psyllium**. Quel avertissement est indispensable ?",
+      "answer": "**Chaque prise doit être accompagnée d'un grand verre d'eau, soit 200 à 300 mL, et l'hydratation maintenue sur la journée.**\n\nSans apport hydrique suffisant, le mucilage forme un bol compact et expose à une obstruction intestinale, en particulier chez la personne âgée ou peu mobile.\n\nLa prise se fait à distance du coucher. L'effet n'apparaît qu'après 2 à 3 jours : prévenez la patiente, sans quoi elle se tournera vers un laxatif stimulant.",
+      "tags": ["Gastro-entérologie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Une patiente prend chaque soir depuis plusieurs mois une tisane laxative. Que lui expliquez-vous ?",
+      "answer": "**Ces tisanes contiennent des laxatifs stimulants, séné ou bourdaine, dont l'usage prolongé est déconseillé.**\n\nLeur emploi chronique entraîne une accoutumance avec aggravation de la constipation à l'arrêt, des diarrhées, une hypokaliémie et, exceptionnellement, une hépatotoxicité.\n\nLe caractère naturel du produit ne présume en rien de son innocuité. Réorientez vers les mesures diététiques et un macrogol, et adressez au médecin devant un besoin quotidien de laxatif.",
+      "tags": ["Gastro-entérologie", "Comptoir", "Orientation-médicale"]
+    },
+    {
+      "question": "Quelles classes médicamenteuses faut-il systématiquement rechercher devant une constipation d'apparition récente ?",
+      "answer": "**Les opioïdes, les anticholinergiques, les sels de fer, les inhibiteurs calciques et les sétrons.**\n\nChez un patient polymédiqué, une constipation récente est le plus souvent iatrogène : l'analyse du traitement précède donc le conseil d'un laxatif.\n\nLa constipation sous opioïde en particulier ne s'atténue pas avec le temps et justifie un laxatif dès l'instauration du traitement.",
+      "tags": ["Gastro-entérologie", "Iatrogénie", "Comptoir"]
+    },
+    {
+      "question": "Comment reconstituer et conserver une solution de réhydratation orale ?",
+      "answer": "**Un sachet se dilue dans 200 mL d'eau, jamais dans un autre volume ni dans un autre liquide.**\n\nUne solution trop concentrée aggrave la diarrhée par appel osmotique, une solution trop diluée n'apporte pas assez de sodium.\n\nLa solution reconstituée se conserve 24 heures au réfrigérateur et 1 heure seulement à température ambiante. Elle se donne par petites quantités répétées, y compris en cas de vomissements.",
+      "tags": ["Gastro-entérologie", "Pédiatrie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Un patient enrhumé demande à la fois un spray décongestionnant et un traitement oral contre le rhume. Que vérifiez-vous ?",
+      "answer": "**Le cumul de vasoconstricteurs et le cumul de paracétamol.**\n\nAssocier une forme nasale et une forme orale de vasoconstricteur additionne le risque cardiovasculaire et neurologique sans bénéfice supplémentaire. La durée d'utilisation ne doit pas dépasser 5 jours, au-delà desquels s'installe une rhinite médicamenteuse de rebond.\n\nLes spécialités anti-rhume contiennent fréquemment du paracétamol : additionné à une prise autonome, le patient peut dépasser sans le savoir la dose maximale journalière.\n\nCes produits sont contre-indiqués en cas d'hypertension non contrôlée, de coronaropathie, de glaucome par fermeture de l'angle et de troubles urinaires obstructifs.",
+      "tags": ["ORL", "Contre-indications-absolues", "Comptoir"]
+    },
+    {
+      "question": "Une jeune femme décrit pour la première fois des symptômes de mycose vaginale et demande un ovule. Que faites-vous ?",
+      "answer": "**Vous orientez vers une consultation médicale : la délivrance sans ordonnance n'est possible qu'en cas de récidive d'une candidose déjà diagnostiquée par un médecin.**\n\nLe premier épisode impose un diagnostic, car les symptômes recouvrent aussi la vaginose bactérienne, la trichomonase ou une simple irritation chimique.\n\nOrientez de même devant des pertes malodorantes ou colorées, des douleurs pelviennes, de la fièvre, des saignements, plus de quatre épisodes par an, ou l'échec d'un traitement bien conduit.",
+      "tags": ["Gynécologie", "Comptoir", "Orientation-médicale"]
+    },
+    {
+      "question": "Quels conseils accompagnent la délivrance d'un collyre multidose ?",
+      "answer": "**Le flacon se conserve 28 jours après ouverture et son usage est strictement personnel.**\n\nNotez la date d'ouverture sur le flacon. L'embout ne doit toucher ni l'œil ni les doigts, et l'instillation se fait dans le cul-de-sac conjonctival inférieur.\n\nEn cas de collyres multiples, espacez les instillations de 5 minutes. Le port de lentilles souples est à suspendre pendant le traitement, sauf mention contraire.",
+      "tags": ["Ophtalmologie", "Plan-de-prise", "Comptoir"]
+    },
+    {
+      "question": "Quel conseil de prise est impératif lors de la délivrance d'un **bisphosphonate** oral hebdomadaire ?",
+      "answer": "**Le comprimé se prend le matin à jeun, avec un grand verre d'eau du robinet, en restant en position verticale pendant 30 minutes.**\n\nLa position verticale prévient l'œsophagite ulcérée, principal effet indésirable de la classe. Toute dysphagie ou douleur rétrosternale impose l'arrêt et un avis médical.\n\nLes eaux minérales riches en calcium, les produits laitiers, le calcium et le fer chélatent le bisphosphonate et effondrent son absorption : aucun autre apport avant la fin des 30 minutes.",
+      "tags": ["Rhumatologie", "Plan-de-prise", "Comptoir"]
+    }
+  ]
+}
